@@ -1,0 +1,388 @@
+﻿@model Panis.ViewModels.EmployeeViewModel
+
+
+<head>
+    <link href="~/Content/CreateEdit.css" rel="stylesheet" />
+    <link href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css" rel="stylesheet" />
+</head>
+
+
+@using (Html.BeginForm("Create", "Employee", FormMethod.Post, new
+{
+    enctype = "multipart/form-data",
+    id = "fileForm"
+}))
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(model => model.EmployeeID)
+    <div class="container-fluid">
+        <hr />
+        <br />
+        <img id="picture" src="http://ssl.gstatic.com/accounts/ui/avatar_2x.png" class="avatar img-circle img-thumbnail" style="max-height:100px;max-width:100px;" alt="avatar">
+        <input id="inputID" type="file" name="image" size="40" accept="image/*"
+               style="display:none;"
+               onchange="readURL(this);" />
+
+        <span class="label label-info" id="upload-file-info"></span>
+
+        <br />
+        <i id="addIcon" class="fa fa-edit" data-toggle="tooltip" data-placement="right" title="You can edit photo by clicking here"></i>
+
+        <ul class="list-unstyled" id="toImage" style="margin-left:12%; margin-top:2.4% ">
+            <li><i class="glyphicon glyphicon-user"></i> Full Name: <span id="targetFirstName"> </span> <span id="targetLastName"></span> </li>
+            <li> <i class="glyphicon glyphicon-home"></i> Address: <span id="targetLivingCity"> </span> <span id="targetLivingStreet"></span> <span id="targetLivingStreetNumber"></span> </li>
+        </ul>
+        <div class="fade_rule"></div>
+
+        <div class="col-sm-9" style="margin-top:10px;">
+            <ul class="nav nav-tabs" id="listTabs">
+                <li class="active"><a data-toggle="tab" href="#personal-details">Personal Details</a></li>
+                <li><a data-toggle="tab" href="#residence">Residence</a></li>
+                <li><a data-toggle="tab" href="#organizational">Organizational</a></li>
+                <li><a data-toggle="tab" id="systemTab" href="#system">System</a></li>
+            </ul>
+            <div class="tab-content">
+                <div class="tab-pane active" id="personal-details">
+
+                    <div class="form-group">
+                        <div class="col-xs-6">
+                            <label for="FirstName"><h4>First name</h4></label>
+                            @Html.EditorFor(model => model.FirstName, new { htmlAttributes = new { @class = "form-control", @placeholder = "enter first name", @id = "firstName" } })
+                            @Html.ValidationMessageFor(model => model.FirstName, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-xs-6">
+                            <label for="LastName"><h4>Last name</h4></label>
+                            @Html.EditorFor(model => model.LastName, new { htmlAttributes = new { @class = "form-control", @placeholder = "enter last name", @id = "lastName" } })
+                            @Html.ValidationMessageFor(model => model.LastName, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-xs-6">
+                            <label for="Education"><h4>Education</h4></label>
+                            @Html.EditorFor(model => model.Education, new { htmlAttributes = new { @class = "form-control", @placeholder = "enter education" } })
+                            @Html.ValidationMessageFor(model => model.Education, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-xs-6">
+                            <h4>Is active?</h4>
+                            <label class="switch" style="margin:0px;">
+                                <input id="isActive" name="IsActive" type="checkbox" value="true" class="switch-input" checked>
+                                <span class="switch-label" data-on="" data-off=""></span>
+                                <span class="switch-handle"></span>
+                            </label>
+                        </div>
+                    </div>
+                    <hr>
+
+                </div><!--/tab-pane-->
+                <div class="tab-pane" id="residence">
+                    <div class="form-group">
+                        <div class="col-xs-6">
+                            <label for="LivingCity"><h4>Living City</h4></label>
+                            @Html.EditorFor(model => model.LivingCity, new { htmlAttributes = new { @class = "form-control", @placeholder = "enter living city ", @id = "livingCity" } })
+                            @Html.ValidationMessageFor(model => model.LivingCity, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-xs-6">
+                            <label for="CityFromID"><h4>City From ID</h4></label>
+                            @Html.EditorFor(model => model.CityFromID, new { htmlAttributes = new { @class = "form-control", @placeholder = "enter city from id" } })
+                            @Html.ValidationMessageFor(model => model.CityFromID, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-xs-6">
+                            <label for="LivingStreet"><h4>Living Street </h4></label>
+                            @Html.EditorFor(model => model.LivingStreet, new { htmlAttributes = new { @class = "form-control", @placeholder = "enter living street", @id = "livingStreet" } })
+                            @Html.ValidationMessageFor(model => model.LivingStreet, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-xs-6">
+                            <label for="StreetFromID"><h4>Street From ID</h4></label>
+                            @Html.EditorFor(model => model.StreetFromID, new { htmlAttributes = new { @class = "form-control", @placeholder = "enter street from ID" } })
+                            @Html.ValidationMessageFor(model => model.StreetFromID, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-xs-6">
+                            <label for="LivingStreetNumber"><h4>Living Street Number</h4></label>
+                            @Html.EditorFor(model => model.LivingStreetNumber, new { htmlAttributes = new { @class = "form-control", @placeholder = "enter living street number", @id = "livingStreetNumber" } })
+                            @Html.ValidationMessageFor(model => model.LivingStreetNumber, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-xs-6">
+                            <label for="StreetNumberFromID"><h4>Street Number From ID  </h4></label>
+                            @Html.EditorFor(model => model.StreetNumberFromID, new { htmlAttributes = new { @class = "form-control", @placeholder = "enter street number from id" } })
+                            @Html.ValidationMessageFor(model => model.StreetNumberFromID, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-xs-6">
+                            <label for="AppartmentNumberFromID"><h4>Appartment Number From ID </h4></label>
+                            @Html.EditorFor(model => model.AppartmentNumberFromID, new { htmlAttributes = new { @class = "form-control", @placeholder = "enter appartment number from id" } })
+                            @Html.ValidationMessageFor(model => model.AppartmentNumberFromID, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+
+                </div>
+
+                <div class="tab-pane" id="organizational">
+
+                    <div class="form-group">
+
+                        <div class="col-xs-6">
+                            <label for="ReportsTo"><h4>Reports to</h4></label>
+                            <input type="text" class="form-control" name="ReportsTo" id="last_name" placeholder="last name" title="enter your last name if any.">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-xs-6">
+                            <label for="Mobile"><h4>Mobile</h4></label>
+                            @Html.EditorFor(model => model.Mobile, new { htmlAttributes = new { @class = "form-control", @placeholder = "enter address from ID" } })
+                            @Html.ValidationMessageFor(model => model.Mobile, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-xs-6">
+                            <label for="WorkStart"><h4>Work start</h4></label>
+                            @Html.EditorFor(model => model.WorkStart, new { htmlAttributes = new { @class = "form-control", @placeholder = "enter your enrollmentdate" } })
+                            @Html.ValidationMessageFor(model => model.WorkStart, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-xs-6">
+                            <label for="OfficialWorkStart"><h4>OfficialWork start </h4></label>
+                            @Html.EditorFor(model => model.OfficialWorkStart, new { htmlAttributes = new { @class = "form-control", @placeholder = "enter your enrollmentdate" } })
+                            @Html.ValidationMessageFor(model => model.OfficialWorkStart, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-xs-6">
+                            <h4>Is team lead?</h4>
+                            <label class="switch" style="margin:0px;">
+                                <input id="isTeamLead" name="IsTeamLead" type="checkbox" value="true" class="switch-input">
+                                <span class="switch-label" data-on="" data-off=""></span>
+                                <span class="switch-handle"></span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-xs-6">
+                            <label for="SectorID"><h4>Sectors</h4></label>
+                            <select class="form-control" name="SectorID" id="sector">
+                            </select>
+                        </div>
+                    </div>
+
+
+                    <div class="form-group">
+                        <div class="col-xs-6">
+                            <label for="TeamLeadID"><h4>Team Leaders</h4></label>
+                            @Html.DropDownList("TeamLeadID", null, "Select option", htmlAttributes: new { @id = "dropdownTeamLead", @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-xs-6">
+                            <label for="ClientSectorID"><h4>Client sectors</h4></label>
+                            <select class="form-control" id="clientSector" name="ClientSectorID">
+                            </select>
+                        </div>
+                    </div>
+                </div><!--/tab-pane-->
+                <div class="tab-pane" id="system">
+                    <div class="form-group">
+                        <div class="col-xs-6">
+                            <label for="User.UserName"><h4>Username</h4></label>
+                            @Html.EditorFor(model => model.UserName, new { htmlAttributes = new { @class = "form-control", @placeholder = "enter living address" } })
+                            @Html.ValidationMessageFor(model => model.UserName, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-xs-6">
+                            <label for="Password"><h4>Password</h4></label>
+                            @Html.EditorFor(model => model.Password, new { htmlAttributes = new { @class = "form-control", @placeholder = "enter living address" } })
+                            @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-xs-6">
+                            <label for="Email"><h4>Email</h4></label>
+                            @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control", @placeholder = "enter living address" } })
+                            @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+
+                        <div class="col-xs-6">
+                            <label for="UserRole"><h4>User role</h4></label>
+                            <select class="form-control" id="userRole" name="UserRole">
+                                <option value="Admin">Admin</option>
+                                <option value="RegularUser">Regular user</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-xs-6">
+                            <label for="Position"><h4>Developer level</h4></label>
+                            @Html.EnumDropDownListFor(
+                    x => x.Positions,
+                    "Select level",
+                    new { @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-xs-6">
+                            <label for="Position"><h4>Developer level</h4></label>
+                            @Html.EnumDropDownListFor(
+                    x => x.EmployeePositions,
+                    "Select position",
+                    new { @class = "form-control" })
+                        </div>
+                    </div>
+
+                </div><!--/tab-pane-->
+            </div><!--/tab-content-->
+
+            <div class="form-group">
+                <div class="col-xs-12">
+                    <br>
+                    <input id="generate" class="btn btn-lg btn-success pull-right" type="submit">
+                    <!--<button class="btn btn-lg" type="reset"><i class="glyphicon glyphicon-repeat"></i> Reset</button>-->
+                </div>
+            </div>
+        </div>
+    </div>
+
+}
+<style>
+    .container-fluid {
+        -moz-transform: scale(0.9, 0.9); /* Moz-browsers */
+        zoom: 0.9; /* Other non-webkit browsers */
+        zoom: 90%; /* Webkit browsers */
+    }
+</style>
+<script src="~/Scripts/jquery-3.4.1.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.js"></script>
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script>
+
+    $("#addIcon").click(function () {
+        $("#inputID").click();
+    });
+
+    function readURL(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+
+            reader.onload = function (e) {
+                $('#picture').attr('src', e.target.result);
+            }
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    $('#isActive').click(function () {
+        var checking = $(this).prop("checked");
+        if (checking === false) {
+            $("#systemTab").remove();
+        } else if (checking === true) {
+            $('#listTabs').append(' <li><a data-toggle="tab" id="systemTab" href="#system">System</a></li>');
+        }
+    });
+
+    $('#isTeamLead').click(function () {
+        var checking = $(this).prop("checked");
+        if (checking === true) {
+            document.getElementById("dropdownTeamLead").disabled = true;
+        } else if (checking === false) {
+            document.getElementById("dropdownTeamLead").disabled = false;
+        }
+    });
+
+
+
+    $(document).ready(function () {
+        $('#fileForm').on('submit', function (e) {
+
+            if (valid) {
+                e.preventDefault();
+            }
+        });
+    });
+
+    var inputFirstName = document.getElementById('firstName');
+    var inputLastName = document.getElementById('lastName');
+    var inputLivingCity = document.getElementById('livingCity');
+    var inputLivingStreet = document.getElementById('livingStreet');
+    var inputLivingStreetNumber = document.getElementById('livingStreetNumber');
+
+
+    inputFirstName.onkeyup = function () {
+        document.getElementById('targetFirstName').innerHTML = inputFirstName.value;
+    }
+    inputLastName.onkeyup = function () {
+        document.getElementById('targetLastName').innerHTML = inputLastName.value;
+    }
+    inputLivingCity.onkeyup = function () {
+        document.getElementById('targetLivingCity').innerHTML = inputLivingCity.value;
+    }
+    inputLivingStreet.onkeyup = function () {
+        document.getElementById('targetLivingStreet').innerHTML = inputLivingStreet.value;
+    }
+    inputLivingStreetNumber.onkeyup = function () {
+        document.getElementById('targetLivingStreetNumber').innerHTML = inputLivingStreetNumber.value;
+    }
+
+    $(document).ready(function () {
+        $.getJSON('/Employee/GetSectors', null, function (data) {
+            $.each(data, function () {
+                $('#sector').append('<option value=' +
+                    this.SectorID + '>' + this.Name + '</option>');
+            });
+            $.getJSON('/Employee/GetClientSector', { SectorID: $('#sector').val() }, function (data) {
+                $.each(data, function () {
+                    $('#clientSector').append('<option value=' +
+                        this.ClientSectorID + '>' + this.Name + '</option>');
+                });
+            }).fail(function (jqXHR, textStatus, errorThrown) {
+                alert('Error getting client sectors!');
+            });
+        }).fail(function (jqXHR, textStatus, errorThrown) {
+            alert('Error getting sectors!');
+        });
+
+        $('#sector').change(function () {
+            $('#clientSector option').remove();
+            $.getJSON('/Employee/GetClientSector', { SectorID: $('#sector').val() }, function (data) {
+                $.each(data, function () {
+                    $('#clientSector').append('<option value=' +
+                        this.ClientSectorID + '>' + this.Name + '</option>');
+                });
+            }).fail(function (jqXHR, textStatus, errorThrown) {
+                alert('Error getting client sectors!');
+            });
+        });
+    });
+
+    $(document).ready(function () {
+        $("input").attr("autocomplete", "new-password");
+    });
+
+
+</script>
+
+
+

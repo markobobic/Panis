@@ -1,0 +1,354 @@
+﻿@model  Panis.Models.Employee
+<head>
+    <title>Dashboard</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href=" https://cdn.datatables.net/buttons/1.6.1/css/buttons.dataTables.min.css" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css">
+    <link href="~/Content/DashBoard.css" rel="stylesheet" />
+</head>
+<hr>
+<br />
+<div class="container">
+    <div class="row">
+        <div class="col-sm-3">
+            <div class="text-center">
+                @if (Model.Photo == null)
+                {
+                    <img id="profilePiciture" class="avatar img-circle img-thumbnail" src="http://ssl.gstatic.com/accounts/ui/avatar_2x.png" style="max-height:100px; margin-left:45px; max-width:100px;" alt="">
+                }
+                else
+                {
+                    <img id="profilePiciture" class="avatar  img-circle img-thumbnail" src=@("data:" + Model.PhotoType + ";base64," + Convert.ToBase64String(Model.Photo)) style="max-height:100px;  margin-left:45px; max-width:100px;" alt="" />
+
+                }
+            </div></hr><br>
+
+            <ul class="list-group">
+                @if (Model.FullName != null)
+                {
+                    <li class="list-group-item text-right"><span class="pull-left"><strong>Full Name</strong></span>@Model.FullName</li>
+                }
+                else
+                {
+                    <li class="list-group-item text-right"><span class="pull-left"><strong>Full Name</strong></span>/</li>
+                }
+                @if (Model.LivingCity != null)
+                {
+                    <li class="list-group-item text-right"><span class="pull-left"><strong>Living Address</strong></span>@Model.LivingCity @Model.LivingStreet, @Model.LivingStreetNumber</li>
+
+                }
+                else
+                {
+                    <li class="list-group-item text-right"><span class="pull-left"><strong>Living Address</strong></span>/</li>
+                }
+                @if (Model.Education != null)
+                {
+                    <li class="list-group-item text-right"><span class="pull-left"><strong>Education</strong></span>@Model.Education</li>
+
+                }
+                else
+                {
+                    <li class="list-group-item text-right"><span class="pull-left"><strong>Education</strong></span>/</li>
+                }
+            </ul>
+            <div class="text-center">
+                <button onclick="@Url.Action("Edit", "Employee")" class="btn btn-lg btn-success" id="editProfile"><span class="glyphicon glyphicon-edit"></span> Edit</button>
+
+            </div>
+            <br />
+            <div class="panel panel-default ">
+                <div class="panel-heading text-muted">Absences</div>
+                <ul class="skill-list">
+                    <li class="skill">
+                        <h3>Vacations</h3>
+                        <progress class="skill-1" max="100" value="50">
+                            <strong>Skill Level: 50%</strong>
+                        </progress>
+                    </li>
+                    <li class="skill">
+                        <h3>Sick Leave</h3>
+                        <progress class="skill-2" max="100" value="75">
+                            <strong>Skill Level: 75%</strong>
+                        </progress>
+                    </li>
+                    <li class="skill">
+                        <h3>Free Days</h3>
+                        <progress class="skill-3" max="100" value="25">
+                            <strong>Skill Level: 25%</strong>
+                        </progress>
+                    </li>
+                </ul>
+            </div>
+
+        </div>
+        <div class="col-sm-9">
+            <ul class="nav nav-tabs" id="tabs">
+                <li class="active"><a data-toggle="tab" href="#profile">User report</a></li>
+            </ul>
+            <div class="tab-content">
+                <div class="tab-pane active" id="profile">
+                    <section id="skills1" class="skills-section">
+                      <div id="chartdiv"></div>
+                    </section>
+                    <div id="user-boxes">
+                        <div class="features row">
+
+                            <div class="medium-4 columns">
+                                <div class="container">
+                                    <div class="counter">
+                                        <div class="fa fa-clock-o fa-2x stats-icon">
+                                            <h2 class="timer count-title count-number">45</h2>
+                                            <div class="stats-line-black"></div>
+                                            <p class="stats-text">Month's Experience</p>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="medium-4 columns" id="project-box" onclick="location.href='#';" style="cursor: pointer;">
+                                <div class="container">
+                                    <div class="counter">
+                                        <div class="fa fa-laptop fa-2x stats-icon">
+                                            <h2 class="timer count-title count-number">@ViewBag.NumberOfProjects</h2>
+                                            <div class="stats-line-black"></div>
+                                            <p class="stats-text">Projects</p>
+                                        </div>
+                                        <div class="overlay">See your projects</div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="medium-4 columns">
+                                <div class="container">
+                                    <div class="counter">
+                                        <div class="fa fa-code fa-2x stats-icon">
+                                            <h2 class="count-title">
+                                                 @ViewBag.Level
+                                            </h2>
+                                            <div class="stats-line-black"></div>
+                                            <p class="stats-text">Seniority Level</p>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <p></p>
+                        </div>
+                    </div>
+                </div><!--/tab-pane-->
+
+                <div class="tab-pane" id="editDetails">
+                    @using (Html.BeginForm("EditProfile", "Employee", FormMethod.Post, new
+                    {
+                        enctype = "multipart/form-data",
+                        id = "fileForm"
+                    }))
+                    {
+                        @Html.HiddenFor(model => model.EmployeeID)
+
+                        <div class="form-group">
+                            <div class="col-xs-6">
+                                <label for="LivingCity"><h4>City</h4></label>
+                                @Html.EditorFor(model => model.LivingCity, new { htmlAttributes = new { @class = "form-control", @placeholder = "enter living address", @id = "livingAddress" } })
+                                @Html.ValidationMessageFor(model => model.LivingCity, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <input id="inputID" type="file" name="image" size="40" accept="image/*"
+                               style="display:none;"
+                               onchange="readURL(this);" />
+                        <div class="form-group">
+                            <div class="col-xs-6">
+                                <label for="Education"><h4>Education</h4></label>
+                                @Html.EditorFor(model => model.Education, new { htmlAttributes = new { @class = "form-control", @placeholder = "enter address from ID" } })
+                                @Html.ValidationMessageFor(model => model.Education, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-xs-6">
+                                <label for="LivingStreet"><h4>Street</h4></label>
+                                @Html.EditorFor(model => model.LivingStreet, new { htmlAttributes = new { @class = "form-control", @placeholder = "enter address from ID" } })
+                                @Html.ValidationMessageFor(model => model.LivingStreet, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-xs-6">
+                                <label for="Mobile"><h4>Mobile</h4></label>
+                                @Html.EditorFor(model => model.Mobile, new { htmlAttributes = new { @class = "form-control", @placeholder = "enter address from ID" } })
+                                @Html.ValidationMessageFor(model => model.Mobile, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-xs-6">
+                                <label for="LivingStreetNumber"><h4>Street number</h4></label>
+                                @Html.EditorFor(model => model.LivingStreetNumber, new { htmlAttributes = new { @class = "form-control", @placeholder = "enter address from ID" } })
+                                @Html.ValidationMessageFor(model => model.LivingStreetNumber, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="form-group">
+                            <div class="col-xs-12">
+                                <br>
+                                <button class="btn btn-lg btn-success" type="submit"><i class="glyphicon glyphicon-ok-sign"></i> Save</button>
+                                <button class="btn btn-lg" type="reset"><i class="glyphicon glyphicon-repeat"></i> Reset</button>
+                            </div>
+                        </div>
+                    }
+                </div><!--/tab-pane-->
+                <div class="tab-pane" id="showProjects">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <table id="Table" class="display">
+                                <thead>
+                                    <tr>
+                                        <th></th>
+                                        <th>Project Name</th>
+                                        <th>Project Owner</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+<script src="https://www.amcharts.com/lib/3/amcharts.js"></script>
+<script src="https://www.amcharts.com/lib/3/pie.js"></script>
+<script src="https://www.amcharts.com/lib/3/themes/light.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/waypoints/2.0.3/waypoints.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Counter-Up/1.0.0/jquery.counterup.min.js"></script>
+<script type="text/javascript" language="javascript" src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.21.0/moment.min.js"></script>
+<style>
+    .container {
+        -moz-transform: scale(0.9, 0.9); /* Moz-browsers */
+        zoom: 0.9; /* Other non-webkit browsers */
+        zoom: 90%; /* Webkit browsers */
+    }
+    #chartdiv {
+        width: 100%;
+        height: 435px;
+        font-size: 11px;
+    }
+</style>
+
+<script>
+    $(document).ready(function ($) {
+        $('.count-number').counterUp({
+            delay: 10,
+            time: 1000
+        });
+    });
+    var chart = AmCharts.makeChart("chartdiv", {
+        "type": "pie",
+        "theme": "light",
+        "dataProvider": [{
+            "Department": "Training",
+            "value": 260 
+        }, {
+            "Department": "Bug Fixing",
+            "value": 201 
+        }, {
+            "Department": "Development",
+            "value": 65
+        }, {
+            "Department": "Support",
+            "value": 39
+        }, {
+            "Department": "Testing",
+            "value": 19
+        }],
+        "valueField": "value",
+        "titleField": "Department",
+        "outlineAlpha": 0.4,
+        "depth3D": 30,
+        "balloonText": "[[title]]<br><span style='font-size:14px'><b>[[value]]h</span>",
+        "angle": 30,
+        "export": {
+            "enabled": true
+        }
+    });
+
+    $('#editProfile').one("click", function () {
+        $("#profilePiciture").after('<i id="editIcon" class="fa fa-edit" data-toggle="tooltip" data-placement="right" title="You can edit photo by clicking here" ></i>');
+        $('#editIcon').tooltip({ trigger: 'manual' }).tooltip('show');
+        setTimeout(function () { $('#editIcon').tooltip('hide'); }, 2000);
+        $("#editIcon").click(function () {
+            $("#inputID").click();
+        });
+        $('#tabs').append('<li><a data-toggle="tab" id="editTab" href="#editDetails">Edit Personal Details</a></li>');
+        $("#editTab").click();
+        $('#editProfile').remove();
+    });
+    $('#project-box').one("click", function () {
+        $('#tabs').append('<li><a data-toggle="tab" id="projects" href="#showProjects">Projects</a></li>');
+        $("#projects").click();
+        $.noConflict();
+        $(document).ready(function () {
+            dataTable = $("#Table").DataTable({
+                "ajax": {
+                    "url": "/Home/GetProjects/",
+                    "type": "GET",
+                    "datatype": "json",
+                    "dataSrc": ""
+                },
+                "columns": [
+                    { 'data': 'id', defaultContent: '' },
+                    { "data": "ProjectName" },
+                    { "data": "ProjectOwner" },
+                ],
+                "columnDefs": [
+                    {
+                        "searchable": false,
+                        "orderable": false,
+                        "targets": 0
+                    },
+                ],
+                "order": [[1, 'asc']],
+                "language": {
+                    "emptyTable": "No data found"
+                },
+                "responsive": true,
+                "dom": 'lrtip'
+            });
+            dataTable.on('order.dt search.dt', function () {
+                dataTable.column(0, { search: 'applied', order: 'applied' }).nodes().each(function (cell, i) {
+                    cell.innerHTML = i + 1;
+                });
+            }).draw();
+            $('.searchable').each(function () {
+                var title = $('#Table thead th').eq($(this).index()).text();
+                $(this).html('<input class="form-control " type="text" placeholder="Search ' + title + ' " ' + ' style="width: 160px;"/>')
+            });
+            dataTable.columns().every(function () {
+                var datatableColumn = this;
+                $(this.footer()).find('input').on('keyup change', function () {
+                    datatableColumn.search(this.value).draw();
+                });
+            })
+        });
+    });
+
+    function readURL(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+
+            reader.onload = function (e) {
+                $('#profilePiciture').attr('src', e.target.result);
+            }
+
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+</script>
+

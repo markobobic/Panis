@@ -1,0 +1,24 @@
+﻿.btn-success {
+    color: #fff;
+    background-color: #1f97b7;
+    border-color: #1f97b7;
+}
+
+    .btn-success:hover, .btn-success:active, .btn-success:focus {
+        color: #ffffff !important;
+        background-color: #34495E !important;
+        border-color: #34495E !important;
+    }
+
+
+@media only screen and (max-width: 760px) {
+    #show-side-navigation1 {
+        display: none;
+    }
+}
+
+@media only screen and (max-width: 760px) {
+    #show-side-navigation1 {
+        display: none;
+    }
+}

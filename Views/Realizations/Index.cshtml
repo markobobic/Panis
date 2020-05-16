@@ -1,0 +1,319 @@
+﻿@model Panis.Models.Realization
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.4.0/fullcalendar.min.css" rel="stylesheet" />
+<link href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.4.0/fullcalendar.print.css" rel="stylesheet" media="print" />
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css" rel="stylesheet" />
+<div class="container">
+    <div id="fullcalendar">
+        <br /><br /><br />
+        <div id="calender"></div>
+
+        <div id="myModal" class="modal fade" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title"><span id="eventTitle"></span></h4>
+                    </div>
+                    <div class="modal-body">
+                        <button id="btnDelete" class="btn btn-default btn-sm pull-right">
+                            <span class="glyphicon glyphicon-remove"></span> Remove
+                        </button>
+                        <button id="btnEdit" class="btn btn-default btn-sm pull-right" style="margin-right:5px;">
+                            <span class="glyphicon glyphicon-pencil"></span> Edit
+                        </button>
+                        <p id="pDetails"></p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="myModalSave" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
+            
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-body">
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <form>
+                            <input type="hidden" id="hdEventID" value="0" />
+                            <div class="form-group">
+                                <label for="Subject"><h4>Subject</h4></label>
+                                @Html.EditorFor(model => model.Subject, new { htmlAttributes = new { @class = "form-control", @id = "subject", @placeholder = "enter subject of realization" } })
+                                @Html.ValidationMessageFor(model => model.Subject, "", new { @class = "text-danger" })
+                            </div>
+
+                            <div class="form-group">
+                                <label for="ProjectID"><h4>Projects</h4></label>
+                                @Html.DropDownList("ProjectID", null, "Select option", htmlAttributes: new { @id = "dropdownProject", @class = "form-control" })
+                            </div>
+
+                            <div class="form-group">
+                                <label for="RealizationTypeID"><h4>Realization Type</h4></label>
+                                @Html.DropDownList("RealizationTypeID", null, "Select option", htmlAttributes: new { @id = "dropdownRealizationType", @class = "form-control" })
+                            </div>
+                            <div class="form-group">
+                                <label for="DepartmentID"><h4>Department</h4></label>
+                                @Html.DropDownList("DepartmentID", null, "Select option", htmlAttributes: new { @id = "dropdownDepartment", @class = "form-control" })
+                            </div>
+                            <div class="form-group">
+                                <label for="Hours"><h4>Hours</h4></label>
+                                @Html.EditorFor(model => model.Hours, new { htmlAttributes = new { @class = "form-control", @id = "hours", @placeholder = "enter hours you worked this day" } })
+                                @Html.ValidationMessageFor(model => model.Hours, "", new { @class = "text-danger" })
+                            </div>
+
+                            <div class="form-group">
+                                <label for="Description">Description</label>
+                                <textarea id="description" rows="3" class="form-control"></textarea>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="Start"><h4>Date</h4></label>
+                                <div class="input-group date" id="dtp1">
+                                    <input type="text" id="start" class="form-control" readonly="readonly" />
+                                    <span class="input-group-addon">
+                                        <span class="glyphicon glyphicon-calendar"></span>
+                                    </span>
+                                </div>
+                            </div>
+
+                            <button type="button" id="btnSave" class="btn btn-success">Save</button>
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+@section Scripts{
+    <script src="~/Scripts/jquery-3.4.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.4.0/fullcalendar.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script>
+    <script src="~/Scripts/notify.min.js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>
+
+
+    <script>
+
+        $(document).ready(function () {
+            var events = [];
+            var selectedEvent = null;
+            FetchEventAndRenderCalendar();
+
+            function FetchEventAndRenderCalendar() {
+
+                events = [];
+                $.ajax({
+                    type: "GET",
+                    url: "/Realizations/GetEvents",
+                    success: function (data) {
+                        $.each(data, function (i, v) {
+                            events.push({
+                                RealizationID: v.RealizationID,
+                                Subject: v.Subject,
+                                Description: v.Description,
+                                start: moment(v.Start),
+                                Hours: v.Hours,
+                                RealizationTypeID: v.RealizationTypeID,
+                                ProjectID: v.ProjectID,
+                                DepartmentID: v.DepartmentID
+                            });
+                        })
+
+                        GenerateCalender(events);
+                    },
+                   
+                    error: function (error) {
+                        alert('failed');
+                    }
+                })
+            }
+
+            function GenerateCalender(events) {
+                $('#calender').fullCalendar('destroy');
+                $('#calender').fullCalendar({
+                    contentHeight: 400,
+                    defaultDate: new Date(),
+                    timeFormat: 'h(:mm)a',
+                    header: {
+                        left: 'prev,next today',
+                        center: 'title',
+                        right: 'month,basicWeek,basicDay'
+                    },
+                    eventLimit: true,
+                    eventColor: '#77DD77',
+                    events: events,
+
+                    eventClick: function (calEvent, jsEvent, view) {
+                        selectedEvent = calEvent;
+                        $('#myModal #eventTitle').text(calEvent.subject);
+                        var $description = $('<div/>');
+                        $description.append($('<p/>').html('<b>Date:</b>' + calEvent.start.format("DD-MMM-YYYY")));
+                        $description.append($('<p/>').html('<b>Description:</b>' + calEvent.Description));
+                        $('#myModal #pDetails').empty().html($description);
+
+                        $('#myModal').modal();
+                    },
+                    selectable: true,
+                    select: function (start) {
+                        selectedEvent = {
+                            RealizationID: 0,
+                            Subject: '',
+                            Description: '',
+                            start: start,
+                            Hours: '',
+                            RealizationTypeID: 0,
+                            ProjectID: 0,
+                            DepartmentID: 0
+                        };
+                        console.log(start);
+                        openAddEditForm();
+                        $('#calendar').fullCalendar('unselect');
+                    },
+                    
+                    editable: true,
+                    eventDrop: function (event) {
+                        var data = {
+                            RealizationID: event.RealizationID,
+                            Subject: event.Subject,
+                            Start: event.start.format('YYYY-MM-DD'),
+                            Description: event.description,
+                            Hours: event.Hours,
+                            RealizationTypeID: event.RealizationTypeID,
+                            ProjectID: event.ProjectID,
+                            DepartmentID: event.DepartmentID
+                        };
+                        SaveEvent(data);
+                    },
+                    eventRender: function (event, element) {
+                        element.find('.fc-time').empty().append(event.Hours + 'h');
+                        element.find('.fc-title').empty().append("<br/>" + event.Subject);
+                    },
+                })
+            }
+
+            $('#btnEdit').click(function () {
+                //Open modal dialog for edit event
+                openAddEditForm();
+            })
+
+            $('#btnDelete').click(function () {
+                if (selectedEvent != null && confirm('Are you sure?')) {
+                    $.ajax({
+                        type: "POST",
+                        url: '/Realizations/DeleteEvent',
+                        data: { 'RealizationID': selectedEvent.RealizationID },
+                        success: function (data) {
+                            if (data.status) {
+                                //Refresh the calender
+                                FetchEventAndRenderCalendar();
+                                $('#myModal').modal('hide');
+                                $.notify("Realization has been removed successfully.", "success");
+                            }
+                        },
+                        error: function () {
+                            alert('Failed');
+                            $.notify("BOOM!", "error");
+                        }
+                    })
+                }
+            })
+
+            $('#dtp1').datetimepicker({
+                format: 'YYYY-MM-DD'
+            });
+
+
+            function openAddEditForm() {
+                if (selectedEvent != null) {
+                    $('#hdEventID').val(selectedEvent.RealizationID);
+                    $('#subject').val(selectedEvent.Subject);
+                    $('#start').val(selectedEvent.start.format('YYYY-MM-DD'));
+                    $('#description').val(selectedEvent.Description);
+                    $('#dropdownProject').val(selectedEvent.ProjectID);
+                    $('#dropdownRealizationType').val(selectedEvent.RealizationTypeID);
+                    $('#dropdownDepartment').val(selectedEvent.DepartmentID);
+                    $('#hours').val(selectedEvent.Hours);
+                }
+                $('#myModal').modal('hide');
+                $('#myModalSave').modal();
+            }
+
+            $('#btnSave').click(function () {
+
+                var data = {
+                    RealizationID: $('#hdEventID').val(),
+                    Subject: $('#subject').val().trim(),
+                    Start: $('#start').val().trim(),
+                    Description: $('#description').val(),
+                    Hours: $('#hours').val(),
+                    RealizationTypeID: $('#dropdownRealizationType').val(),
+                    ProjectID: $('#dropdownProject').val(),
+                    DepartmentID: $('#dropdownDepartment').val()
+                }
+                SaveEvent(data);
+                // call function for submit data to the server
+            })
+
+            function SaveEvent(data) {
+                $.ajax({
+                    type: "POST",
+                    url: '/Realizations/SaveEvent',
+                    data: data,
+                    success: function (data) {
+                        if (data.status === 'edit') {
+                            //Refresh the calender
+                            FetchEventAndRenderCalendar();
+                            $('#myModalSave').modal('hide');
+                            $.notify("Realization has been successfully edited", "info");
+                        }
+                        else if (data.status === 'save') {
+                            FetchEventAndRenderCalendar();
+                            $('#myModalSave').modal('hide');
+                            $.notify("Realization has been successfully added", "success");
+                        }
+                        else if (data.status === 'none') {
+                            FetchEventAndRenderCalendar();
+                            $('#myModalSave').modal('hide');
+                            $.notify("Warning: Self-destruct in 3.. 2..", "warn");
+                        }
+                    },
+                    error: function () {
+                        alert('Failed');
+                        $.notify("Error!", "error");
+                    }
+                })
+            }
+        })
+    </script>
+}
+
+<style>
+    #myModalSave {
+        -moz-transform: scale(0.9, 0.9); /* Moz-browsers */
+        zoom: 0.8; /* Other non-webkit browsers */
+        zoom: 80%; /* Webkit browsers */
+    }
+    .btn-success {
+        color: #fff;
+        background-color: #1f97b7;
+        border-color: #1f97b7;
+    }
+   
+   div.fc-content{
+        
+        text-align:center;
+    }
+   
+</style>

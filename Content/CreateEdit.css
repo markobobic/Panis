@@ -1,0 +1,170 @@
+﻿.switch {
+    display: block;
+    margin: 12px auto;
+    position: relative;
+    display: inline-block;
+    vertical-align: top;
+    width: 70px;
+    height: 30px;
+    padding: 3px;
+    background-color: white;
+    -moz-border-radius: 18px;
+    -webkit-border-radius: 18px;
+    border-radius: 18px;
+    cursor: pointer;
+}
+
+.switch-input {
+    position: absolute;
+    top: 0;
+    left: 0;
+    opacity: 0;
+}
+
+.switch-label {
+    position: relative;
+    display: block;
+    height: inherit;
+    font-size: 10px;
+    text-transform: uppercase;
+    background: #bdc3c7;
+    -moz-border-radius: inherit;
+    -webkit-border-radius: inherit;
+    border-radius: inherit;
+    -webkit-transition: 0.15s ease-out;
+    -moz-transition: 0.15s ease-out;
+    -o-transition: 0.15s ease-out;
+    transition: 0.15s ease-out;
+    -webkit-transition-property: opacity background border;
+    -moz-transition-property: opacity background border;
+    -o-transition-property: opacity background border;
+    transition-property: opacity background border;
+}
+
+    .switch-label:before, .switch-label:after {
+        position: absolute;
+        top: 50%;
+        margin-top: -.5em;
+        line-height: 1;
+        -webkit-transition: inherit;
+        -moz-transition: inherit;
+        -o-transition: inherit;
+        transition: inherit;
+        font-size: 14px;
+    }
+
+    .switch-label:before {
+        content: attr(data-off);
+        right: 11px;
+        color: #000;
+    }
+
+    .switch-label:after {
+        content: attr(data-on);
+        left: 11px;
+        color: white;
+        opacity: 0;
+    }
+
+.switch-input:checked ~ .switch-label {
+    background: #34495E;
+}
+
+    .switch-input:checked ~ .switch-label:before {
+        opacity: 0;
+    }
+
+    .switch-input:checked ~ .switch-label:after {
+        opacity: 1;
+    }
+
+.switch-handle {
+    position: absolute;
+    top: 9px;
+    left: 10px;
+    width: 18px;
+    height: 18px;
+    background: white;
+    -moz-border-radius: 10px;
+    -webkit-border-radius: 10px;
+    border-radius: 10px;
+    -webkit-transition: left 0.15s ease-out;
+    -moz-transition: left 0.15s ease-out;
+    -o-transition: left 0.15s ease-out;
+    transition: left 0.15s ease-out;
+}
+
+    .switch-handle:before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        margin: -6px 0 0 -6px;
+        width: 12px;
+        height: 12px;
+        background: #f9f9f9;
+        -moz-border-radius: 6px;
+        -webkit-border-radius: 6px;
+        border-radius: 6px;
+        -moz-box-shadow: inset 0 1px rgba(0, 0, 0, 0.02);
+        -webkit-box-shadow: inset 0 1px rgba(0, 0, 0, 0.02);
+        box-shadow: inset 0 1px rgba(0, 0, 0, 0.02);
+        background-image: -webkit-linear-gradient(top, #eeeeee, white);
+        background-image: -moz-linear-gradient(top, #eeeeee, white);
+        background-image: -o-linear-gradient(top, #eeeeee, white);
+        background-image: linear-gradient(to bottom, #eeeeee, white);
+    }
+
+
+.switch-input:checked ~ .switch-handle {
+    background: #1f97b7;
+    left: 45px;
+    -moz-box-shadow: -1px 1px 5px rgba(0, 0, 0, 0.2);
+    -webkit-box-shadow: -1px 1px 5px rgba(0, 0, 0, 0.2);
+    box-shadow: -1px 1px 5px rgba(0, 0, 0, 0.2);
+}
+
+    .switch-input:checked ~ .switch-handle:before {
+        background: #1f97b7;
+    }
+
+.switch-green > .switch-input:checked ~ .switch-label {
+    background: #4fb845;
+}
+
+
+
+#toImage {
+    display: inline-block;
+}
+
+#addIcon {
+    position: absolute;
+    top: 16.5%;
+    left: 7%;
+    /* border: 1px solid; */
+    border-radius: 50%;
+    /* padding: 11px; */
+    height: 30px;
+    width: 30px;
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    background-color: white;
+    color: #1f97b7;
+    box-shadow: 0 0 8px 3px #B8B8B8;
+}
+
+.fade_rule {
+    height: 2px;
+    background-color: #1f97b7;
+    width: 100%;
+    margin: 0 auto;
+    background-image: linear-gradient(left, #cfccd6 2%, #cfccd6 50%, #1f97b7 98%);
+    margin-top: 23px;
+}
+
+#picture {
+    position: absolute;
+    margin-left: 30px;
+}

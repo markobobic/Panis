@@ -1,0 +1,340 @@
+﻿@model Panis.Models.Employee
+@using System.Text.RegularExpressions
+
+<head>
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.4.0/cjs/popper.min.js" rel="stylesheet" />
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
+
+    <link href="https://fonts.googleapis.com/css?family=Raleway" rel="stylesheet">
+</head>
+<aside class="side-nav" id="show-side-navigation1">
+    <div class="heading cent">
+        @if (ViewBag.Photo == null)
+        {
+            <img id="dashboardPic" class="avatar img-circle img-thumbnailc align-content-center" src="http://ssl.gstatic.com/accounts/ui/avatar_2x.png" style="max-height:100px;   max-width:100px;" alt="">
+        }
+        else
+        {
+            <a href="@Url.Action("UserDashBoard", "Home")">
+                <img id="dashboardPic" class=" avatar  img-circle img-thumbnail justify-content-md-center" src=@("data:" + ViewBag.PhotoType + ";base64," + Convert.ToBase64String(ViewBag.Photo)) style="max-height:100px;   max-width:100px;" alt="" />
+            </a>
+        }
+        <div class=" info" style="margin-left:15%;">
+            <h3><a href="@Url.Action("UserDashBoard", "Home")">@ViewBag.FullName</a></h3>
+            <p>@ViewBag.Position</p>
+        </div>
+    </div>
+    <ul class="categories" style="margin-left:6%;">
+        <li>
+            <i class="fas fa-address-book" aria-hidden="true"></i><a href="/Employee/Index">Contacts</a>
+        </li>
+        <li>
+            <i class="far fa-calendar"></i><a href="/Absences/Index"> Absences</a>
+        </li>
+        <li>
+            <i class="far fa-calendar-alt"></i><a href="/Realizations/Index"> Realizations</a>
+        </li>
+
+        <li>
+            <i class="fas fa-file"></i><a href="#"> Documents</a>
+        </li>
+
+    </ul>
+</aside>
+<nav class="navbar-fixed-top navbar-expand-sm" id="navbarl" style=" background: linear-gradient(rgba(31, 151, 183, 1),rgba(52, 73, 94, 1));">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                <i class="fa fa-align-left"></i>
+            </button>
+            <a class="navbar-brand" href="/Home/UserDashBoard">
+                <img style="max-height:200px;  max-width:150px;" alt="" src="~/Content/Images/logo.png" />
+            </a>
+        </div>
+        <div class="collapse navbar-collapse navbar-right" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav">
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" style="color:white">@ViewBag.FullName</a>
+                    <ul class="dropdown-menu">
+                        @using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm" }))
+                        {
+                            @Html.AntiForgeryToken()
+                            @:<li> <a class="nav-link text-center" href="javascript:document.getElementById('logoutForm').submit()" <i class="fa fa-sign-out"></i>Log out</a></li>
+
+
+                        }
+
+                    </ul>
+                </li>
+            </ul>
+            <a href="#" id="teamLead" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                <div class="icons">
+                    <div class="notification ">
+                        <a href="#">
+                            <div class="notBtn" href="#" style="width:70px">
+                                @if (@ViewBag.CountNotify == 0)
+                                {
+                                    <div class="number"></div>
+                                }
+                                else
+                                {
+                                    <div class="number">@ViewBag.CountNotify</div>
+                                }
+                                <i id="bell" class="fas fa-bell cent"></i>
+                                <div class="box">
+                                    <div class="display">
+                                        <div class="nothing">
+                                            <i class="fas fa-child stick"></i>
+                                        </div>
+                                        <div class="cont">
+                                            @foreach (string item in ViewBag.Notify)
+                                            {
+                                                if (item.Contains("for period from"))
+                                                {
+                                                    <div class="sec new">
+                                                        @item
+                                                        <br />
+                                                        <button onclick="location.href ='@Url.Action("EmployeeProfile", "EmployeeProfiles")?id=@Regex.Match(item,@"(\d+)(?!.*\d)")'" class="btn btn-info text-center">Review</button>
+                                                    </div>
+                                                }
+                                                else
+                                                {
+                                                    <div class="sec new">
+                                                        @item
+                                                    </div>
+                                                }
+
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+
+            </a>
+        </div>
+    </div>
+</nav>
+<script src="~/Scripts/jquery-3.4.1.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
+<style>
+    .navbar {
+        position: relative;
+    }
+
+    #navbarl {
+        -moz-transform: scale(0.9, 0.9); /* Moz-browsers */
+        zoom: 0.9; /* Other non-webkit browsers */
+        zoom: 90%; /* Webkit browsers */
+    }
+
+    .navbar-brand {
+        position: fixed;
+        left: 50%;
+        display: inline;
+        top: -1%;
+    }
+
+    /* Notifications */
+
+
+
+    .box::-webkit-scrollbar-track {
+        -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+        background-color: #F5F5F5;
+        border-radius: 5px
+    }
+
+    .box::-webkit-scrollbar {
+        width: 10px;
+        background-color: #F5F5F5;
+        border-radius: 5px
+    }
+
+    .box::-webkit-scrollbar-thumb {
+        background-color: black;
+        border: 2px solid black;
+        border-radius: 5px
+    }
+
+
+    .icons {
+        display: inline;
+        float: right;
+    }
+
+    .notification {
+        margin-top: 20px;
+        position: relative;
+        display: inline;
+    }
+
+    .number {
+        height: 24px;
+        width: 22px;
+        background-color: #d63031;
+        border-radius: 20px;
+        color: white;
+        text-align: center;
+        position: absolute;
+        top: 3px;
+        left: 40px;
+        padding: 3px;
+        border-style: solid;
+        border-width: 2px;
+    }
+        .number:empty {
+            display: none;
+        }
+        
+
+    .notBtn {
+        transition: 0.5s;
+        cursor: pointer;
+        margin-top: 10px;
+    }
+
+    #bell {
+        font-size: 20pt;
+        color: white;
+    }
+
+    .box {
+        width: 400px;
+        height: 0px;
+        border-radius: 10px;
+        transition: 0.5s;
+        position: absolute;
+        overflow-y: scroll;
+        padding: 0px;
+        left: -300px;
+        margin-top: 5px;
+        background-color: #F4F4F4;
+        -webkit-box-shadow: 10px 10px 23px 0px rgba(0,0,0,0.2);
+        -moz-box-shadow: 10px 10px 23px 0px rgba(0,0,0,0.1);
+        box-shadow: 10px 10px 23px 0px rgba(0,0,0,0.1);
+        cursor: context-menu;
+    }
+
+    #bell:hover {
+        color: #d63031;
+    }
+
+
+    .content {
+        padding: 20px;
+        color: black;
+        vertical-align: middle;
+        text-align: left;
+    }
+
+    .gry {
+        background-color: #F4F4F4;
+    }
+
+    .top {
+        color: black;
+        padding: 10px
+    }
+
+    .display {
+        position: relative;
+    }
+
+    .cont {
+        position: absolute;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: #F4F4F4;
+    }
+
+        .cont:empty {
+            display: none;
+        }
+
+    .stick {
+        text-align: center;
+        display: block;
+        font-size: 50pt;
+        padding-top: 70px;
+        padding-left: 80px
+    }
+
+        .stick:hover {
+            color: black;
+        }
+
+    .cent {
+        text-align: center;
+        display: block;
+    }
+
+    .sec {
+        padding: 25px 10px;
+        background-color: #F4F4F4;
+        transition: 0.5s;
+    }
+
+    .profCont {
+        padding-left: 15px;
+    }
+
+
+    .txt {
+        vertical-align: top;
+        font-size: 1.25rem;
+        padding: 5px 10px 0px 115px;
+    }
+
+    .sub {
+        font-size: 1rem;
+        color: grey;
+    }
+
+    .new {
+        border-style: none none solid none;
+        border-color: red;
+    }
+
+    .sec:hover {
+        background-color: #BFBFBF;
+    }
+</style>
+
+
+<script>
+
+    $('.notBtn').on('click', function () {
+        var click = $(this).data('clicks');
+        if (click) {
+
+            $(".notBtn>.box").css({ "height": "0vh" });
+
+        } else {
+            $(".number").css({ "display": "none" });
+            $(".notBtn>.box").css({ "height": "60vh" });
+        };
+        $(this).data('clicks', !click); // you have to set it
+
+    });
+
+
+    $('.notBtn').click(function () {
+        $.ajax({
+            url: "@(Url.Action("DeleteNotifyCount", "Home"))",
+            type: "POST",
+            data: { deleteCount: '@ViewBag.CountNotify' },
+            cache: false,
+            async: true,
+            success: function (data) {
+            }
+        });
+         });
+
+
+
+</script>
