@@ -1,11 +1,12 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Panis.Models
 {
     public class RealizationType
     {
         [Key]
-        public int RealizationTypeID { get; set; }
+        public byte RealizationTypeID { get; set; }
         public string Name { get; set; }
     }
 }

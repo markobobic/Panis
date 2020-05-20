@@ -42,9 +42,9 @@
 
 
                             <div class="form-group">
-                                <div id="captcha" class="g-recaptcha" data-sitekey="6LdD7T4UAAAAACUSq-URfR5pQBCA3wV1SiyrIdmL" data-callback="enableBtn"></div>
+                                @*<div id="captcha" class="g-recaptcha" data-sitekey="6Lel4Z4UAAAAAOa8LO1Q9mqKRUiMYl_00o5mXJrR" data-callback="enableBtn"></div>*@
                                 <div class="mt-2">
-                                    <button id="button1" type="submit" class="btn btn-primary" disabled="true">Submit</button>
+                                    <button id="button1" type="submit" class="btn btn-primary" @*disabled="true"*@>Submit</button>
                                     <pre id='log'></pre>
                                 </div>
                             </div>
@@ -91,7 +91,7 @@
             body {
                 background: #1f97b7;
                 background: -webkit-linear-gradient(to bottom, #1f97b7, white,#34495E);
-                background: linear-gradient(to bottom, #1f97b7, white,#34495E);
+                background: linear-gradient(to bottom, #34495E,#1f97b7, white);
             }
 
             .login-block {
@@ -250,13 +250,12 @@
         </style>
 
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-        <script src="https://www.google.com/recaptcha/api.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.2.1/js/bootstrap.min.js"></script>
-
-
+        <script src="https://www.google.com/recaptcha/api.js"></script>
         <script>
             function enableBtn() {
                 document.getElementById("button1").disabled = false;
             }
-
+            $(".form-control").attr("autocomplete", "off");
+            
         </script>

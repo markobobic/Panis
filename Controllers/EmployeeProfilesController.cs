@@ -2,7 +2,9 @@
 using Panis.Models;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Helpers;
 using System.Web.Mvc;
@@ -19,41 +21,44 @@ namespace Panis.Controllers
             return View();
         }
 
-        public  ActionResult EmployeeProfile(int id)
+        public async Task<ActionResult> EmployeeProfile(int id)
         {
+            //by employee id we are getting all necesessery data to view
             Session["EmployeeID"] = id;
             var emp = db.Employees.Find(id);
             ViewBag.FullName = emp.FullName;
             ViewBag.PhotoType = emp.PhotoType;
             ViewBag.EmpPhoto = emp.Photo;
             ViewBag.City = emp.LivingCity;
-            var teamLead = db.TeamLeads.Find(emp.TeamLeadID);
-            var currentTeamLead = db.Employees.Find(teamLead.EmployeeID);
+            var teamLead = await db.TeamLeads.FindAsync(emp.TeamLeadID);
+            var currentTeamLead =await db.Employees.FindAsync(teamLead.EmployeeID);
             ViewBag.TeamLeadPhoto = currentTeamLead.Photo;
             ViewBag.TeamLeadPhotoType = currentTeamLead.PhotoType;
-            ViewBag.Seniority = db.employeeEnrollments.Find(emp.EmployeeID).Seniority.ToString();
-            var currentProject = db.Realizations.Where(x => x.EmployeeID == emp.EmployeeID).OrderByDescending(x => x.RealizationID).FirstOrDefault();
+            ViewBag.Seniority = db.employeeEnrollments.Where(x=>x.EmployeeID==emp.EmployeeID).FirstOrDefault().Seniority.ToString();
+            var currentProject = await db.Realizations.Where(x => x.EmployeeID == emp.EmployeeID).OrderByDescending(x => x.RealizationID).FirstOrDefaultAsync();
             ViewBag.CurrentProject = db.Projects.Where(x => x.ProjectID == currentProject.ProjectID).FirstOrDefault().Name;    
             return View();
         }
         [HttpGet]
-        public JsonResult GetAbsences()
+        public async Task<JsonResult> GetAbsences()
         {
-            int employeeID = (int)Session["EmployeeID"];
-           var dataJoin  = db.Absences.Join(db.AbsenceTypes,
-           absence => absence.AbsenceTypeID,
-           absenceType => absenceType.AbsenceTypeID,
-           (absence, absenceType) => new { Absence = absence, AbsenceType = absenceType })
-           .Where(x => x.Absence.EmployeeID == employeeID && x.Absence.Approved==false);
-            var data = dataJoin
-            .Select(x => new { AbsenceID = x.Absence.AbsenceID,TypeOfAbsence = x.AbsenceType.Name, Start = x.Absence.Start, End = x.Absence.End }).ToList();
+            //getting absences for particular employee to present in table 
+               int employeeID = (int)Session["EmployeeID"];
+               var dataJoin  =  db.Absences.Join(db.AbsenceTypes,
+               absence => absence.AbsenceTypeID,
+               absenceType => absenceType.AbsenceTypeID,
+               (absence, absenceType) => new { Absence = absence, AbsenceType = absenceType })
+               .Where(x => x.Absence.EmployeeID == employeeID && x.Absence.Approved==false);
+                var data = await dataJoin
+                .Select(x => new { AbsenceID = x.Absence.AbsenceID,TypeOfAbsence = x.AbsenceType.Name, Start = x.Absence.Start, End = x.Absence.End }).ToListAsync();
 
             return Json(data, JsonRequestBehavior.AllowGet);
 
         }
         [HttpPost]
-        public JsonResult ApproveAbsence(int AbsenceID)
+        public async Task<JsonResult> ApproveAbsence(int AbsenceID)
         {
+            //if absence is approved then we are sending notification to that user and also to all hr staff
             var absence = db.Absences.Find(AbsenceID);
             var absenceType = db.AbsenceTypes.Find(absence.AbsenceTypeID);
             absence.Approved = true;
@@ -65,12 +70,14 @@ namespace Panis.Controllers
             var user = db.Users.Where(x => x.EmployeeID == employeeID).FirstOrDefault();
             user.CountNotifications = user.CountNotifications + 1;
             user.ReadNotifications = false;
-            db.SaveChanges();
+            await db.SaveChangesAsync();
             return Json(new EmptyResult(), JsonRequestBehavior.AllowGet);
         }
         [HttpPost]
-        public JsonResult DeclineAbsence(int AbsenceID)
+        public async Task<JsonResult> DeclineAbsence(int AbsenceID)
         {
+            //if absence is declined then we are sending notification to that user and also to all hr staff
+            //absence is also being deleted 
             var absence = db.Absences.Find(AbsenceID);
             var absenceType = db.AbsenceTypes.Find(absence.AbsenceTypeID);
             int employeeID = (int)Session["EmployeeID"];
@@ -82,8 +89,7 @@ namespace Panis.Controllers
             user.CountNotifications = user.CountNotifications + 1;
             user.ReadNotifications = false;
             db.Absences.Remove(absence);
-
-            db.SaveChanges();
+            await db.SaveChangesAsync();
             return Json(new EmptyResult(), JsonRequestBehavior.AllowGet);
         }
         protected override void Dispose(bool disposing)

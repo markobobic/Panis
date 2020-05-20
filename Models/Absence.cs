@@ -19,11 +19,9 @@ namespace Panis.Models
         public DateTime End { get; set; }
 
         [ForeignKey("AbsenceType")]
-        public int? AbsenceTypeID { get; set; }
+        public byte? AbsenceTypeID { get; set; }
         public AbsenceType AbsenceType { get; set; }
-        [ForeignKey("AbsenceOfEmployee")]
-        public int? AbsenceOfEmployeeID { get; set; }
-        public AbsenceOfEmployee AbsenceOfEmployee { get; set; }
+        
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:dd-MM-yyyy}", ApplyFormatInEditMode = true)]
         public DateTime ApplicationDate { get; set; }

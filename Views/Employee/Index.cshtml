@@ -5,35 +5,39 @@
     <link rel="stylesheet" type="text/css" href=" https://cdn.datatables.net/buttons/1.6.1/css/buttons.dataTables.min.css" />
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css">
 </head>
-<div class="container">
-
-    <h3>Employees</h3>
-    @if (User.IsInRole("Admin"))
-    {
-        <a id="iconPlus" href="@Url.Action("Create", "Employee")">
-            <i class="glyphicon glyphicon-plus d-inline-block"></i>
-        </a>
-    }
-    <div class="row">
-        <div class="col-md-12">
+<div class="parent">
+    <div class="container">
+        <br /><br /><br />
+        <div class="row">
+           
             <table id="deductions" class="table table-striped" cellspacing="0" width="100%">
+                @if (User.IsInRole("Admin"))
+                {
+                    <div class="child">
+                        <i id="iconPlus" onclick="location.href='@Url.Action("Create", "Employee")'" class="glyphicon glyphicon-plus"></i>
+                    </div>
+                }
                 <thead>
                     <tr>
                         <th>First Name</th>
                         <th>Last Name</th>
                         <th>Mobile</th>
                         <th></th>
-                        <th></th>
+                        <th id="editButton"></th>
+                        <th id="deleteButton"></th>
+
                     </tr>
                 </thead>
                 <tbody>
                 </tbody>
             </table>
-
-
         </div>
     </div>
 </div>
+
+@{
+    string isAdmin = Request.IsAuthenticated && User.IsInRole("Admin") ? "true" : "false";
+}
 @section scripts
     {
     <script type="text/javascript" language="javascript" src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
@@ -47,7 +51,11 @@
     <script src=" https://cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js"></script>
 
     <script>
-       $(document).ready(loadTable());
+
+
+        $(document).ready(loadTable());
+        var UserIsAdmin = @Html.Raw(@isAdmin);
+        console.log(UserIsAdmin);
         function loadTable() {
             var table = $('#deductions').DataTable({
                 "async": true,
@@ -78,12 +86,35 @@
                             return '<img class="img-responsive"  src="' + imgsrc + '" alt="No image" height="50px" width="50px">';
                         }
                     },
+
                     {
                             "data": "Id",
                             "searchable": false,
                             "sortable": false,
-                            "render": function (data, type, full, meta) {
-                                return '<a href="@Url.Action("Edit","Employee")?id=' + data + '" class="editUser"><i class="fas fa-edit"></i></a>';
+                        "render": function (data, type, full, meta) {
+                            if (UserIsAdmin) {
+                                var renderHtml = '<a href="@Url.Action("Edit","Employee")?id=' + data + '" class="editUser"><i class="fas fa-edit"></i></a>';
+                                return renderHtml;
+                            } else {
+                                data = 0;
+                                table.column(4).visible(false);
+                                return null;
+                            }
+                        }
+                    },
+                    {
+                            "data": "Id",
+                            "searchable": false,
+                            "sortable": false,
+                        "render": function (data, type, full, meta) {
+                            if (UserIsAdmin) {
+                                var renderHtml = '<a href="@Url.Action("Delete","Employee")?id=' + data + '" class="deleteUser"><i class="fas fa-trash"></i></a>';
+                                return renderHtml;
+                            } else {
+                                data = 0;
+                                table.column(5).visible(false);
+                                return null;
+                            }
                         }
                     },
                 ],
@@ -106,52 +137,33 @@
             })
         }
 
-        jQuery.fn.dataTableExt.oApi.fnSetFilteringDelay = function ( oSettings, iDelay ) {
-    var _that = this;
-
-    if ( iDelay === undefined ) {
-        iDelay = 250;
-    }
-
-    this.each( function ( i ) {
-            if ( typeof _that.fnSettings().aanFeatures.f !== 'undefined' )
-            {
-            $.fn.dataTableExt.iApiIndex = i;
-            var
-                oTimerId = null,
-                sPreviousSearch = null,
-                anControl = $( 'input', _that.fnSettings().aanFeatures.f );
-
-            anControl.unbind( 'keyup search input' ).bind( 'keyup search input', function() {
-
-                if (sPreviousSearch === null || sPreviousSearch != anControl.val()) {
-                    window.clearTimeout(oTimerId);
-                    sPreviousSearch = anControl.val();
-                    oTimerId = window.setTimeout(function() {
-                        $.fn.dataTableExt.iApiIndex = i;
-                        _that.fnFilter( anControl.val() );
-                    }, iDelay);
-                }
-            });
-
-            return this;
-            }
-    } );
-    return this;
-};
 
         $('input').attr('class', 'form-control');
+        if (!UserIsAdmin) {
+            $(".dt-buttons").css("display", "none");
+        }
+
+
 
     </script>
 }
 
 <style>
-    .glyphicon.glyphicon-plus {
-        font-size: 50px;
+    .parent {
+        display: flex;
     }
 
+    .child {
+        height: 2%;
+        width: 2%%;
+        align-self: flex-start;
+    }
+    
     #iconPlus {
         color: #1f97b7;
+        font-size: 50px;
+        cursor:pointer;
+        
     }
 
     .zoom img:hover {
@@ -166,127 +178,17 @@
     }
 
 
-    table.dataTable.hover tbody tr:hover,
-    table.dataTable.hover tbody tr.odd:hover,
-    table.dataTable.hover tbody tr.even:hover, table.dataTable.display tbody tr:hover,
-    table.dataTable.display tbody tr.odd:hover,
-    table.dataTable.display tbody tr.even:hover {
-        background-color: whitesmoke;
+    @@media screen and (max-width: 767px) {
+        div .dataTables_length, div.dataTables_filter, div.dataTables_info, div.dataTables_paginate {
+            text-align: center;
+        }
     }
-table.dataTable.hover tbody tr:hover.selected,
-table.dataTable.hover tbody tr.odd:hover.selected,
-table.dataTable.hover tbody tr.even:hover.selected, table.dataTable.display tbody tr:hover.selected,
-table.dataTable.display tbody tr.odd:hover.selected,
-table.dataTable.display tbody tr.even:hover.selected {
-  background-color: #a9b7d1;
-}
-@@media screen and (max-width: 767px) {
-	div.dataTables_length,
-	div.dataTables_filter,
-	div.dataTables_info,
-	div.dataTables_paginate {
-		text-align: center;
-	}
-}
 
-
-table.dataTable td,
-table.dataTable th {
-	-webkit-box-sizing: content-box;
-	-moz-box-sizing: content-box;
-	box-sizing: content-box;
-}
-
-
-table.dataTable {
-	clear: both;
-	margin-top: 6px !important;
-	margin-bottom: 6px !important;
-	max-width: none !important;
-}
-
-table.dataTable thead .sorting,
-table.dataTable thead .sorting_asc,
-table.dataTable thead .sorting_desc,
-table.dataTable thead .sorting_asc_disabled,
-table.dataTable thead .sorting_desc_disabled {
-	cursor: pointer;
-}
-
-
-
-table.dataTable thead > tr > th {
-	padding-left: 18px;
-	padding-right: 18px;
-  font-family: 'open sans', sans-serif;
-  background: #1b83be !important;
-  color: #fff;
-}
-
-table.dataTable th:active {
-	outline: none;
-}
-
-/* Scrolling */
-div.dataTables_scrollHead table {
-	margin-bottom: 0 !important;
-	border-bottom-left-radius: 0;
-	border-bottom-right-radius: 0;
-}
-
-div.dataTables_scrollHead table thead tr:last-child th:first-child,
-div.dataTables_scrollHead table thead tr:last-child td:first-child {
-	border-bottom-left-radius: 0 !important;
-	border-bottom-right-radius: 0 !important;
-}
-
-div.dataTables_scrollBody table {
-	border-top: none;
-	margin-top: 0 !important;
-	margin-bottom: 0 !important;
-}
-
-div.dataTables_scrollBody tbody tr:first-child th,
-div.dataTables_scrollBody tbody tr:first-child td {
-	border-top: none;
-}
-
-div.dataTables_scrollFoot table {
-	margin-top: 0 !important;
-	border-top: none;
-}
-
-
-
-table.DTTT_selectable tbody tr {
-	cursor: pointer;
-}
-
-div.DTTT .btn:hover {
-	text-decoration: none !important;
-}
-
-ul.DTTT_dropdown.dropdown-menu {
-  z-index: 2003;
-}
-
-ul.DTTT_dropdown.dropdown-menu a {
-	color: #333 !important; /* needed only when demo_page.css is included */
-}
-
-ul.DTTT_dropdown.dropdown-menu li {
-	position: relative;
-}
-
-ul.DTTT_dropdown.dropdown-menu li:hover a {
-	background-color: #0088cc;
-	color: white !important;
-}
-
-div.DTTT_collection_background {
-	z-index: 2002;
-}
-
-
-
+    table.dataTable thead > tr > th {
+        padding-left: 18px;
+        padding-right: 18px;
+        font-family: 'open sans', sans-serif;
+        background: #1b83be !important;
+        color: #fff;
+    }
 </style>

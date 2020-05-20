@@ -10,6 +10,10 @@ namespace Panis.Models
         [Key]
         public int ProjectID { get; set; }
         public string Name { get; set; }
+
+        [ForeignKey("Sector")]
+        public int? SectorID { get; set; }
+        public Sector Sector { get; set; }
         public virtual ICollection<Employee> Employees { get; set; }
 
         public Project()

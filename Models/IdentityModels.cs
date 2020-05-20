@@ -24,7 +24,7 @@ namespace Panis.Models
         public WorkPosition? EmpPosition { get; set; }
         public enum WorkPosition
         {
-            Developer = 0, QA = 1, HR = 2, Manager = 3
+            Developer = 1, QA = 2, HR = 3, Manager = 4
         }
 
         public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<ApplicationUser> manager)

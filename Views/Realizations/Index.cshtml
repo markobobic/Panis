@@ -20,10 +20,10 @@
                         <h4 class="modal-title"><span id="eventTitle"></span></h4>
                     </div>
                     <div class="modal-body">
-                        <button id="btnDelete" class="btn btn-default btn-sm pull-right">
+                        <button id="btnDelete" class="btn btn-danger btn-sm pull-right">
                             <span class="glyphicon glyphicon-remove"></span> Remove
                         </button>
-                        <button id="btnEdit" class="btn btn-default btn-sm pull-right" style="margin-right:5px;">
+                        <button id="btnEdit" class="btn btn-info btn-sm pull-right" style="margin-right:5px;">
                             <span class="glyphicon glyphicon-pencil"></span> Edit
                         </button>
                         <p id="pDetails"></p>
@@ -36,11 +36,11 @@
         </div>
 
         <div id="myModalSave" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
-            
+
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-body">
-                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
                         <form>
                             <input type="hidden" id="hdEventID" value="0" />
                             <div class="form-group">
@@ -83,7 +83,7 @@
                                 </div>
                             </div>
 
-                            <button type="button" id="btnSave" class="btn btn-success">Save</button>
+                            <button type="button" id="btnSave" class="btn btn-info">Save</button>
                             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                         </form>
                     </div>
@@ -101,6 +101,7 @@
     <script src="//cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.4.0/fullcalendar.min.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script>
     <script src="~/Scripts/notify.min.js"></script>
+    <script src="https://rawgit.com/makeusabrew/bootbox/f3a04a57877cab071738de558581fbc91812dce9/bootbox.js"></script>
     <script src="~/Scripts/bootstrap.min.js"></script>
 
 
@@ -133,7 +134,7 @@
 
                         GenerateCalender(events);
                     },
-                   
+
                     error: function (error) {
                         alert('failed');
                     }
@@ -181,7 +182,7 @@
                         openAddEditForm();
                         $('#calendar').fullCalendar('unselect');
                     },
-                    
+
                     editable: true,
                     eventDrop: function (event) {
                         var data = {
@@ -209,8 +210,22 @@
             })
 
             $('#btnDelete').click(function () {
-                if (selectedEvent != null && confirm('Are you sure?')) {
-                    $.ajax({
+                if (selectedEvent != null) {
+                    bootbox.confirm({
+        message: "Are you sure you want to delete?",
+        buttons: {
+            cancel: {
+                label: 'No',
+                className: 'btn-danger'
+            },
+            confirm: {
+                label: 'Yes',
+                className: 'btn-info'
+            }
+        },
+        callback: function(result) {
+            if (result) {
+               $.ajax({
                         type: "POST",
                         url: '/Realizations/DeleteEvent',
                         data: { 'RealizationID': selectedEvent.RealizationID },
@@ -221,13 +236,13 @@
                                 $('#myModal').modal('hide');
                                 $.notify("Realization has been removed successfully.", "success");
                             }
-                        },
-                        error: function () {
-                            alert('Failed');
-                            $.notify("BOOM!", "error");
-                        }
-                    })
-                }
+                    }
+                });
+            }
+        }
+    });
+                   
+                } //tu je kraj
             })
 
             $('#dtp1').datetimepicker({
@@ -302,18 +317,17 @@
 <style>
     #myModalSave {
         -moz-transform: scale(0.9, 0.9); /* Moz-browsers */
-        zoom: 0.8; /* Other non-webkit browsers */
-        zoom: 80%; /* Webkit browsers */
+        zoom: 0.9; /* Other non-webkit browsers */
+        zoom: 90%; /* Webkit browsers */
     }
+
     .btn-success {
         color: #fff;
         background-color: #1f97b7;
         border-color: #1f97b7;
     }
-   
-   div.fc-content{
-        
-        text-align:center;
+
+    div.fc-content {
+        text-align: center;
     }
-   
 </style>

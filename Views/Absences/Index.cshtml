@@ -16,10 +16,10 @@
                         <h4 class="modal-title"><span id="eventTitle"></span></h4>
                     </div>
                     <div class="modal-body">
-                        <button id="btnDelete" class="btn btn-default btn-sm pull-right">
+                        <button id="btnDelete" class="btn btn-danger btn-sm pull-right">
                             <span class="glyphicon glyphicon-remove"></span> Remove
                         </button>
-                        <button id="btnEdit" class="btn btn-default btn-sm pull-right" style="margin-right:5px;">
+                        <button id="btnEdit" class="btn btn-info btn-sm pull-right" style="margin-right:5px;">
                             <span class="glyphicon glyphicon-pencil"></span> Edit
                         </button>
                         <p id="pDetails"></p>
@@ -77,7 +77,7 @@
                                 <textarea id="description" rows="3" class="form-control"></textarea>
                             </div>
 
-                            <button type="button" id="btnSave" class="btn btn-success">Save</button>
+                            <button type="button" id="btnSave" class="btn btn-info">Save</button>
                             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                         </form>
                     </div>
@@ -91,6 +91,7 @@
 <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css" rel="stylesheet" />
 @section Scripts{
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
+    <script src="https://rawgit.com/makeusabrew/bootbox/f3a04a57877cab071738de558581fbc91812dce9/bootbox.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.4.0/fullcalendar.min.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script>
     <script>
@@ -138,7 +139,7 @@
                     eventLimit: true,
                     events: events,
                     eventClick: function (calEvent, jsEvent, view) {
-                       
+
                         selectedEvent = calEvent;
                         $('#myModal #eventTitle').text(calEvent.title);
                         var $description = $('<div/>');
@@ -199,8 +200,23 @@
                 openAddEditForm();
             })
             $('#btnDelete').click(function () {
-                if (selectedEvent != null && confirm('Are you sure?')) {
-                    $.ajax({
+                if (selectedEvent != null) {
+
+                    bootbox.confirm({
+        message: "Are you sure you want to delete?",
+        buttons: {
+            cancel: {
+                label: 'No',
+                className: 'btn-danger'
+            },
+            confirm: {
+                label: 'Yes',
+                className: 'btn-info'
+            }
+        },
+        callback: function(result) {
+            if (result) {
+                $.ajax({
                         type: "POST",
                         url: '/Absences/DeleteAbsence',
                         data: { 'absenceID': selectedEvent.absenceID },
@@ -210,12 +226,13 @@
                                 FetchEventAndRenderCalendar();
                                 $('#myModal').modal('hide');
                             }
-                        },
-                        error: function () {
-                            alert('Failed');
-                        }
-                    })
-                }
+                    }
+                });
+            }
+        }
+        });
+                    
+                } 
             })
 
             $('#dtp1,#dtp2,#dtp3').datetimepicker({
@@ -230,7 +247,7 @@
                     $('#txtStart').val(selectedEvent.start.format('YYYY-MM-DD'));
                     $('#txtEnd').val(selectedEvent.end != null ? selectedEvent.end.format('YYYY-MM-DD') : '');
                     $('#description').val(selectedEvent.description);
-                    
+
                 }
                 $('#myModal').modal('hide');
                 $('#myModalSave').modal();

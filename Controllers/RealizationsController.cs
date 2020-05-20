@@ -51,7 +51,7 @@ namespace Panis.Controllers
         public async Task<JsonResult> SaveEvent(Realization e)
         {
             ApplicationUser currentUser = await System.Web.HttpContext.Current.GetOwinContext().
-           GetUserManager<ApplicationUserManager>().FindByIdAsync(System.Web.HttpContext.Current.User.Identity.GetUserId());
+            GetUserManager<ApplicationUserManager>().FindByIdAsync(System.Web.HttpContext.Current.User.Identity.GetUserId());
             var status = "none";
             try { 
             if (e.RealizationID > 0)
@@ -67,8 +67,9 @@ namespace Panis.Controllers
                     v.ProjectID = e.ProjectID;
                     v.RealizationTypeID = e.RealizationTypeID;
                     v.DepartmentID = e.DepartmentID;
+                    await db.SaveChangesAsync();
 
-                }
+                    }
                 status = "edit";
             }
             else

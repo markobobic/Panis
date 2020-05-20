@@ -1,145 +1,114 @@
 ﻿using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
+using Panis.Interfaces;
 using Panis.Migrations;
 using Panis.Models;
+using Panis.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.UI.WebControls;
 using Z.EntityFramework.Plus;
 using static Panis.Models.ApplicationUser;
 using static Panis.Models.EmployeeEnrollment;
 
 namespace Panis.Controllers
 {
-    public class AbsencesController : Controller
+    public class AbsencesController : BaseController
     {
-        public enum Senior
+        IUserRepo _dbUser;
+        IAbsence _dbAbsence;
+        IAbsenceTypeRepo _dbAbsenceType;
+        INotification _dbNotify;
+        ITeamLead _dbTeamLeads;
+        public AbsencesController(IUserRepo dbUser,IAbsence dbAbsence,IAbsenceTypeRepo dbAbsenceType,INotification dbNotify, ITeamLead dbTeamLeads)
         {
-            Junior,
-            Senior,
-            Medior
-        }
-        // GET: Absences
-        private ApplicationDbContext db = new ApplicationDbContext();
+            _dbUser = dbUser;
+            _dbAbsence = dbAbsence;
+            _dbAbsenceType = dbAbsenceType;
+            _dbNotify = dbNotify;
+            _dbTeamLeads = dbTeamLeads;
 
+        }
         public ActionResult Index()
         {
-            ViewBag.AbsenceTypeID = new SelectList(db.AbsenceTypes.ToList(), "AbsenceTypeID", "Name");
+            ViewBag.AbsenceTypeID = _dbAbsenceType.GetAllTypesDropDown();
             return View();
         }
 
         public async Task<JsonResult> GetAbsencesAsync()
         {
-            ApplicationUser currentUser = await System.Web.HttpContext.Current.GetOwinContext().
-            GetUserManager<ApplicationUserManager>().FindByIdAsync(System.Web.HttpContext.Current.User.Identity.GetUserId());
-            var employeeID = currentUser.EmployeeID;
-            var events = db.Absences.Where(x => x.EmployeeID == employeeID).Select(
-                x => new
-                {
-                    AbsenceID = x.AbsenceID,
-                    Start = x.Start,
-                    End = x.End,
-                    ApplicationDate = x.ApplicationDate,
-                    Description = x.Description,
-                    AbsenceTypeID=x.AbsenceTypeID,
-                    Approved = x.Approved
-                }
-
-
-                ).ToList();
-            return new JsonResult { Data = events, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
+            //getting absences for current user and sending json data
+            ApplicationUser currentUser = await _dbUser.GetCurrentUser();
+            var calendarData = _dbAbsence.GetCalendarData(currentUser.EmployeeID);
+            return new JsonResult { Data = calendarData, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
             
         }
 
         [HttpPost]
         public async Task<JsonResult> SaveAbsenceAsync(Absence e)
         {
-            ApplicationUser currentUser = await System.Web.HttpContext.Current.GetOwinContext().
-           GetUserManager<ApplicationUserManager>().FindByIdAsync(System.Web.HttpContext.Current.User.Identity.GetUserId());
-
+            //saving data for current user if ID is greater than 0 that means user wanted to update his absence
+            // if not then new absence is being created
+            ApplicationUser currentUser = await _dbUser.GetCurrentUser();
             var status = "none";
-            try
-            {
-                if (e.AbsenceID > 0)
-                {
-                    var v = db.Absences.Where(a => a.AbsenceID == e.AbsenceID).FirstOrDefault();
-                    if (v != null)
-                    {
-                        v.EmployeeID = currentUser.EmployeeID;
-                        v.Start = e.Start;
-                        v.Description = e.Description;
-                        v.End = e.End;
-                        v.ApplicationDate = DateTime.Now;
-                    }
+            try { 
+                if (e.AbsenceID > 0) {
+                    _dbAbsence.Update(await _dbAbsence.UpdateMapDataAsync(e,currentUser.EmployeeID));
+                     await _dbAbsence.SaveChangesAsync();
                     status = "edit";
-                }
+                 }
                 else
                 {
-                    Absence ev = new Absence();
-                    ev.Description = e.Description;
-                    ev.EmployeeID = currentUser.EmployeeID;
-                    ev.Start = e.Start;
-                    ev.Employee = db.Employees.Find(ev.EmployeeID);
-                    ev.End = e.End;
-                    ev.AbsenceTypeID = e.AbsenceTypeID;
-                    ev.ApplicationDate = DateTime.Now;
-                    ev.Approved = false;
-                    db.Absences.Add(ev);
-                    Notification notify = new Notification();
-                    var absenceType = db.AbsenceTypes.Find(ev.AbsenceTypeID); 
-                    notify.Message = $"{ev.Employee.FullName} is requesting {absenceType.Name.ToLower()} for period from {ev.Start.ToString("MMMM dd, yyyy")} to {ev.End.ToString("MMMM dd, yyyy")} {ev.EmployeeID} ";
-                    if (ev.Employee.TeamLeadID > 0)
+                    using (var dbContextTransaction = db.Database.BeginTransaction())
                     {
-                       notify.EmployeeID = db.TeamLeads.Where(x => x.TeamLeadID == ev.Employee.TeamLeadID).FirstOrDefault().EmployeeID;
+                        var absenceToSave = _dbAbsence.MapData(e, currentUser.EmployeeID);
+                        _dbAbsence.Add(absenceToSave);
+                        var absenceType = await _dbAbsenceType.GetById(absenceToSave.AbsenceTypeID);
+                        Notification notify = new Notification();
+                        notify.Message = $"{absenceToSave.Employee.FullName} is requesting absence {absenceType.Name.ToLower()} for period from {absenceToSave.Start.ToString("MMMM dd, yyyy")} to {absenceToSave.End.ToString("MMMM dd, yyyy")} {absenceToSave.EmployeeID} ";
+                        if (absenceToSave.Employee.TeamLeadID > 0 && !absenceToSave.Employee.IsTeamLead)
+                        {
+                            notify.EmployeeID = _dbTeamLeads.GetById(absenceToSave.Employee.TeamLeadID).EmployeeID;
+                        }
+                        await _dbUser.UpdateAllWithIncrementedNotification(WorkPosition.HR,1);
+                        status = "save";
+                        _dbNotify.Add(notify);
+                        await _dbAbsence.SaveChangesAsync();
+                        await _dbNotify.SaveChangesAsync(); 
+                        dbContextTransaction.Commit();
                     }
-                    db.Users.Where(x => x.EmpPosition == WorkPosition.HR)
-                   .Update(x => new ApplicationUser { ReadNotifications = false, CountNotifications = x.CountNotifications + 1 });
-                    status = "save";
-                    db.Notifications.Add(notify);
-                    await db.SaveChangesAsync();
+                   
                 }
             }
             catch
             {
 
             }
-
             return new JsonResult { Data = new { status } };
-
            
         }
 
         [HttpPost]
-        public JsonResult DeleteAbsence(int absenceID)
+        public async Task<JsonResult> DeleteAbsence(int absenceID)
         {
             var status = false;
-           
-                var v = db.Absences.Where(a => a.AbsenceID == absenceID).FirstOrDefault();
-                if (v != null)
-                {
-                    db.Absences.Remove(v);
-                    db.SaveChanges();
-                    status = true;
-                }
+            await _dbAbsence.DeleteAsync(absenceID); 
+            status = true;
+            await _dbAbsence.SaveChangesAsync();    
             return new JsonResult { Data = new { status = status } };
         }
-        protected override void Dispose(bool disposing)
+        
+        public enum Senior
         {
-            if (disposing)
-            {
-                db.Dispose();
-            }
-            base.Dispose(disposing);
+            Junior,
+            Senior,
+            Medior
         }
     }
 
-    public class Nesto
-    {
-        public ApplicationUser ApplicationUser { get; set; }
-
-        public EmployeeEnrollment EmployeeEnrollment { get; set; }
-    }
+   
 }

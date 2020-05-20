@@ -100,7 +100,7 @@
                                 <div class="container">
                                     <div class="counter">
                                         <div class="fa fa-clock-o fa-2x stats-icon">
-                                            <h2 class="timer count-title count-number">45</h2>
+                                            <h2 class="timer count-title count-number">@ViewBag.Experience</h2>
                                             <div class="stats-line-black"></div>
                                             <p class="stats-text">Month's Experience</p>
 
@@ -112,10 +112,11 @@
                             <div class="medium-4 columns" id="project-box" onclick="location.href='#';" style="cursor: pointer;">
                                 <div class="container">
                                     <div class="counter">
-                                        <div class="fa fa-laptop fa-2x stats-icon">
+                                        <div  class="fa fa-laptop fa-2x stats-icon">
                                             <h2 class="timer count-title count-number">@ViewBag.NumberOfProjects</h2>
                                             <div class="stats-line-black"></div>
                                             <p class="stats-text">Projects</p>
+                                            
                                         </div>
                                         <div class="overlay">See your projects</div>
                                     </div>
@@ -200,6 +201,7 @@
                     }
                 </div><!--/tab-pane-->
                 <div class="tab-pane" id="showProjects">
+                    <br />
                     <div class="row">
                         <div class="col-md-12">
                             <table id="Table" class="display">
@@ -249,24 +251,26 @@
             time: 1000
         });
     });
+
+
     var chart = AmCharts.makeChart("chartdiv", {
         "type": "pie",
         "theme": "light",
         "dataProvider": [{
             "Department": "Training",
-            "value": 260 
+            "value": '@ViewBag.Training'
         }, {
             "Department": "Bug Fixing",
-            "value": 201 
+            "value": '@ViewBag.Bugfixing'
         }, {
             "Department": "Development",
-            "value": 65
+            "value": '@ViewBag.Development'
         }, {
             "Department": "Support",
-            "value": 39
+                "value": '@ViewBag.TwentyFourSeven'
         }, {
             "Department": "Testing",
-            "value": 19
+            "value": '@ViewBag.Testing'
         }],
         "valueField": "value",
         "titleField": "Department",
@@ -320,6 +324,7 @@
                 },
                 "responsive": true,
                 "dom": 'lrtip'
+
             });
             dataTable.on('order.dt search.dt', function () {
                 dataTable.column(0, { search: 'applied', order: 'applied' }).nodes().each(function (cell, i) {
@@ -351,4 +356,134 @@
         }
     }
 </script>
+
+<style>
+    table.dataTable.hover tbody tr:hover,
+    table.dataTable.hover tbody tr.odd:hover,
+    table.dataTable.hover tbody tr.even:hover, table.dataTable.display tbody tr:hover,
+    table.dataTable.display tbody tr.odd:hover,
+    table.dataTable.display tbody tr.even:hover {
+        background-color: whitesmoke;
+    }
+
+        table.dataTable.hover tbody tr:hover.selected,
+        table.dataTable.hover tbody tr.odd:hover.selected,
+        table.dataTable.hover tbody tr.even:hover.selected, table.dataTable.display tbody tr:hover.selected,
+        table.dataTable.display tbody tr.odd:hover.selected,
+        table.dataTable.display tbody tr.even:hover.selected {
+            background-color: #a9b7d1;
+        }
+
+    @@media screen and (max-width: 767px) {
+        div.dataTables_length,
+        div.dataTables_filter,
+        div.dataTables_info,
+        div.dataTables_paginate {
+            text-align: center;
+        }
+    }
+    
+
+    table.dataTable td,
+    table.dataTable th {
+        -webkit-box-sizing: content-box;
+        -moz-box-sizing: content-box;
+        box-sizing: content-box;
+    }
+
+
+    table.dataTable {
+        clear: both;
+        margin-top: 6px !important;
+        margin-bottom: 6px !important;
+        max-width: none !important;
+    }
+
+        table.dataTable thead .sorting,
+        table.dataTable thead .sorting_asc,
+        table.dataTable thead .sorting_desc,
+        table.dataTable thead .sorting_asc_disabled,
+        table.dataTable thead .sorting_desc_disabled {
+            cursor: pointer;
+        }
+
+
+
+        table.dataTable thead > tr > th {
+            padding-left: 18px;
+            padding-right: 18px;
+            font-family: 'open sans', sans-serif;
+            background: #1b83be !important;
+            color: #fff;
+        }
+
+        table.dataTable th:active {
+            outline: none;
+        }
+
+    /* Scrolling */
+    div.dataTables_scrollHead table {
+        margin-bottom: 0 !important;
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0;
+    }
+
+        div.dataTables_scrollHead table thead tr:last-child th:first-child,
+        div.dataTables_scrollHead table thead tr:last-child td:first-child {
+            border-bottom-left-radius: 0 !important;
+            border-bottom-right-radius: 0 !important;
+        }
+
+    div.dataTables_scrollBody table {
+        border-top: none;
+        margin-top: 0 !important;
+        margin-bottom: 0 !important;
+    }
+
+    div.dataTables_scrollBody tbody tr:first-child th,
+    div.dataTables_scrollBody tbody tr:first-child td {
+        border-top: none;
+    }
+
+    div.dataTables_scrollFoot table {
+        margin-top: 0 !important;
+        border-top: none;
+    }
+
+
+
+    table.DTTT_selectable tbody tr {
+        cursor: pointer;
+    }
+
+    div.DTTT .btn:hover {
+        text-decoration: none !important;
+    }
+
+    ul.DTTT_dropdown.dropdown-menu {
+        z-index: 2003;
+    }
+
+        ul.DTTT_dropdown.dropdown-menu a {
+            color: #333 !important; /* needed only when demo_page.css is included */
+        }
+
+        ul.DTTT_dropdown.dropdown-menu li {
+            position: relative;
+        }
+
+            ul.DTTT_dropdown.dropdown-menu li:hover a {
+                background-color: #0088cc;
+                color: white !important;
+            }
+
+    div.DTTT_collection_background {
+        z-index: 2002;
+    }
+
+    
+    #project-box:hover .overlay {
+        opacity: 0;
+    }
+</style>
 

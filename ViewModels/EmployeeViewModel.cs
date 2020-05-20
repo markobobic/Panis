@@ -49,28 +49,28 @@ namespace Panis.ViewModels
 
         public string Email { get; set; }
         public string Mobile { get; set; }
-        public Level Positions { get; set; }
+        public Level? Positions { get; set; }
         public Position EmployeePositions { get; set; }
         public enum Level
         {
-            None = 0,
+            None = 1,
             [Display(Name = "Junior")]
-            Junior = 1,
+            Junior = 2,
             [Display(Name = "Medior")]
-            Medior = 2,
+            Medior = 3,
             [Display(Name = "Senior")]
-            Senior = 3
+            Senior = 4
         }
         public enum Position
         {
             [Display(Name ="Developer")]
-            Developer = 0,
+            Developer = 1,
             [Display(Name = "QA")]
-            QA = 1,
+            QA = 2,
             [Display(Name = "HR")]
-            HR = 2,
+            HR = 3,
             [Display(Name = "Manager")]
-            Manager = 3
+            Manager = 4
         }
     }
 }

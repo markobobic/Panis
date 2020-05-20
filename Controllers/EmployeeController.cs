@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Panis.DataTableModel;
+using Panis.Interfaces;
 using Panis.Models;
 using Panis.ViewModels;
 using System;
@@ -8,12 +9,14 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
+using System.Data.Entity.Validation;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Management;
 using System.Web.Mvc;
+using Z.EntityFramework.Plus;
 using static Panis.DataTableModel.JsonClasses;
 using static Panis.Models.ApplicationUser;
 using static Panis.Models.EmployeeEnrollment;
@@ -21,9 +24,23 @@ using static Panis.Models.EmployeeEnrollment;
 namespace Panis.Controllers
 {
     [Authorize]
-    public class EmployeeController : Controller
+    public class EmployeeController : BaseController
     {
-        private ApplicationDbContext db = new ApplicationDbContext();
+        IUserRepo _dbUser;
+        INotification _dbNotify;
+        ITeamLead _dbTeamLeads;
+        IEmployee _dbEmployees;
+        IEmployeeEnrollments _dbEmployeeEnrollments;
+        public EmployeeController(IUserRepo dbUser, INotification dbNotify, 
+            ITeamLead dbTeamLeads, IEmployee dbEmployees,IEmployeeEnrollments dbEEmployeeEnrollments)
+        {
+            _dbUser = dbUser;
+            _dbNotify = dbNotify;
+            _dbTeamLeads = dbTeamLeads;
+            _dbEmployees=dbEmployees;
+            _dbEmployeeEnrollments = dbEEmployeeEnrollments;
+
+        }
 
         ApplicationUserManager _userManager;
         public ApplicationUserManager UserManager
@@ -46,14 +63,9 @@ namespace Panis.Controllers
         [Authorize(Roles = RoleName.Admin)]
         public async Task<ActionResult> Create()
         {
+            //get team leads for get create view
 
-            var teamLeads =
-            from employee in db.Employees
-            join teamLead in db.TeamLeads on employee.EmployeeID equals teamLead.EmployeeID
-            select new { FullName = employee.FirstName + " " + employee.LastName, TeamLeadID = teamLead.TeamLeadID };
-            ViewBag.TeamLeadID = new SelectList(await teamLeads.ToListAsync(), "TeamLeadID", "FullName");
-
-            //ViewBag.SectorID = new SelectList(db.Sectors.ToList(), "SectorID", "Name");
+            ViewBag.TeamLeadID = await _dbTeamLeads.GetAllTeamLeadersForDropDown("add",0);
 
             return View();
         }
@@ -65,74 +77,111 @@ namespace Panis.Controllers
             try
             {
                 if (ModelState.IsValid)
-                {
-                    Employee employeeSave = new Employee();
-                    if (image != null)
-                    {
-                        employeeSave.PhotoType = image.ContentType;
-                        employeeSave.Photo = new byte[image.ContentLength];
-                        image.InputStream.Read(employeeSave.Photo, 0, image.ContentLength);
-                    }
-                    employeeSave.FirstName = employee.FirstName;
-                    employeeSave.LastName = employee.LastName;
-                    employeeSave.Education = employee.Education;
-                    employeeSave.TeamLeadID = employee.TeamLeadID;
-                    employeeSave.SectorID = employee.SectorID;
-                    employeeSave.ClientSectorID = employee.ClientSectorID;
-                    employeeSave.CityFromID = employee.CityFromID;
-                    employeeSave.StreetFromID = employee.StreetFromID;
-                    employeeSave.StreetNumberFromID = employee.StreetNumberFromID;
-                    employeeSave.AppartmentNumberFromID = employee.AppartmentNumberFromID;
-                    employeeSave.LivingCity = employee.LivingCity;
-                    employeeSave.LivingStreet = employee.LivingStreet;
-                    employeeSave.LivingStreetNumber = employee.LivingStreetNumber;
-                    employeeSave.Mobile = employee.Mobile;
-                    db.Employees.Add(employeeSave);
+                {   //mapping data
+                    var employeeToSave =_dbEmployees.MapData(employee,image);
+                    db.Employees.Add(employeeToSave);
                     try
                     {
-                        await db.SaveChangesAsync();
-                    }
+                        await db.SaveChangesAsync();                   }
                     catch (DbUpdateConcurrencyException)
                     {
                         throw;
                     }
                     if (employee.IsActive == true)
                     {
+                        await AddUser(employee, employeeToSave.EmployeeID);
+                        using (var dbContextTransaction = db.Database.BeginTransaction())
                         {
-                            await AddUser(employee, employeeSave.EmployeeID);
-                        };
-                    }
-                    if (employee.IsTeamLead == true)
-                    {
-                        await AddTeamLead(employeeSave);
-                    }
+                            if (employee.IsTeamLead == true)
+                            {
+                                await AddTeamLead(employeeToSave);
+                            }
+                            if (employee.TeamLeadID > 0 || employee.TeamLeadID != null)
+                            {
+                                await AsignTeamLeaderNotify(employeeToSave);
+                            }
+                            if (employee.OfficialWorkStart != null)
+                            {
+                                await AddEnnrolemnt(employee, employeeToSave.EmployeeID);
+                            }
 
-                    if (employee.OfficialWorkStart != null)
-                    {
-                        await AddEnnrolemnt(employee, employeeSave.EmployeeID);
+                            dbContextTransaction.Commit();
+                        }
                     }
                     return RedirectToAction("Index");
 
                 }
             }
-            catch (Exception)
+            catch (DbEntityValidationException ex)
             {
-
-                ModelState.AddModelError("", "Unable to save changes. Try again, and if the problem persists see your system administrator.");
+                foreach (var errors in ex.EntityValidationErrors)
+                {
+                    foreach (var validationError in errors.ValidationErrors)
+                    {
+                         // get the error message 
+                        string errorMessage = validationError.ErrorMessage;
+                    }
+                }
             }
-            var teamLeads =
-              from emp in db.Employees
-              join teamLead in db.TeamLeads on emp.EmployeeID equals teamLead.EmployeeID
-              select new { FullName = emp.FirstName + " " + emp.LastName, TeamLeadID = teamLead.TeamLeadID };
-            ViewBag.TeamLeadID = new SelectList(teamLeads.ToList(), "TeamLeadID", "FullName");
+            ViewBag.TeamLeadID = await _dbTeamLeads.GetAllTeamLeadersForDropDown("add",0);
             return View(employee);
         }
 
+        private async Task AsignTeamLeaderNotify(Employee emp)
+        {
+            //picking selected team lead from newly employee because we want to notify him 
+            //that the new employee is in his team
+            var pickedTeamLead = _dbTeamLeads.GetSelectedTeamLeadForEmployee(emp.TeamLeadID);
+            var pickedTeamLeadEmployeeID = (int)pickedTeamLead.EmployeeID;         
+            Notification notifyTeamLeader = new Notification();
+            notifyTeamLeader.Message = $"You({pickedTeamLead.FullName}) became a team leader to your colleague {emp.FirstName} {emp.LastName}.";
+            notifyTeamLeader.EmployeeID = pickedTeamLead.EmployeeID;
+            var userTeamLead = await _dbUser.GetUserByEmployeeID(pickedTeamLeadEmployeeID);
+            userTeamLead.CountNotifications = userTeamLead.CountNotifications + 1;
+            userTeamLead.ReadNotifications = false;
+            // then we are notifying employee which team lead is asigned to him 
+            Notification notifyEmployee = new Notification();
+            notifyEmployee.Message = $"You({emp.FirstName} {emp.LastName}) have been asigned to team leader {pickedTeamLead.FullName}.";
+            notifyEmployee.EmployeeID = emp.EmployeeID;
+            var user = await _dbUser.GetUserByEmployeeID(emp.EmployeeID);
+            if (user.CountNotifications == null)
+            {
+                user.CountNotifications = 0;
+            }
+            user.CountNotifications = user.CountNotifications + 1;
+            user.ReadNotifications = false;
+            //here we are updating,adding and saving all changes and notifying hr department
+            _dbUser.Update(userTeamLead);
+            _dbUser.Update(user);
+            db.Notifications.Add(notifyTeamLeader);
+            db.Notifications.Add(notifyEmployee);
+            await _dbUser.UpdateAllWithIncrementedNotification(WorkPosition.HR, 2);
+            try
+            {
+                await db.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                throw;
+            }
+           
+        }
         private async Task AddTeamLead(Employee emp)
         {
-            TeamLead teamLead = new TeamLead();
-            teamLead.EmployeeID = emp.EmployeeID;
-            teamLead.Employees.Add(emp);
+            //mapping data and creating notification for newly become team leader
+            //notification goes to hr department aswell
+            var teamLead =_dbTeamLeads.MapData(emp);
+            var notify = _dbNotify.MapData($"You({emp.FirstName} {emp.LastName}) have became a team leader.", emp.EmployeeID);
+            var user = await _dbUser.GetUserByEmployeeID(emp.EmployeeID);
+            if (user.CountNotifications == null)
+            {
+                user.CountNotifications = 0;
+            }
+            user.CountNotifications = user.CountNotifications + 1;
+            user.ReadNotifications = false;
+            db.Notifications.Add(notify);
+            _dbUser.Update(user);
+            await _dbUser.UpdateAllWithIncrementedNotification(WorkPosition.HR, 1);
             db.TeamLeads.Add(teamLead);
             try
             {
@@ -146,19 +195,19 @@ namespace Panis.Controllers
         }
         private async Task AddEnnrolemnt(EmployeeViewModel emp, int id)
         {
-            var employeeEnrollment = new EmployeeEnrollment();
-            employeeEnrollment.EmployeeID = id;
-            employeeEnrollment.Seniority = (Level)emp.Positions;
-            employeeEnrollment.OfficialWorkStart = emp.OfficialWorkStart;
-            employeeEnrollment.WorkStart = emp.WorkStart;
-            db.employeeEnrollments.Add(employeeEnrollment);
-            try
+            if (ModelState.IsValid)
             {
-                await db.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                throw;
+                //mapping data
+                var employeeEnrollment =_dbEmployeeEnrollments.MapData(emp, id);
+                db.employeeEnrollments.Add(employeeEnrollment);
+                try
+                {
+                    await db.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    throw;
+                }
             }
 
         }
@@ -166,13 +215,23 @@ namespace Panis.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser { UserName = model.UserName, Email = model.Email, EmployeeID = empId, EmpPosition= (WorkPosition)model.EmployeePositions };
+                //adding user
+                var user = new ApplicationUser
+                { UserName = model.UserName, Email = model.Email, EmployeeID = empId,
+                    EmpPosition= (WorkPosition)model.EmployeePositions,CountNotifications=0};
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
                     await UserManager.AddToRoleAsync(user.Id, model.UserRole);
                 }
-                await db.SaveChangesAsync();
+                try
+                {
+                    await db.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    throw;
+                }
             }
         }
 
@@ -277,11 +336,13 @@ namespace Panis.Controllers
                  Password = users.PasswordHash,
                  EmployeeID = id,
                  TeamLeadID = emp.TeamLeadID,
-                 SectorID = emp.SectorID
-
+                 SectorID = emp.SectorID,
+                 IsTeamLead = emp.IsTeamLead,
+                 Positions =(EmployeeViewModel.Level)enrollments.Seniority,
+                 EmployeePositions = (EmployeeViewModel.Position)users.EmpPosition
              }).FirstOrDefaultAsync();
-            ViewBag.TeamLeadID = new SelectList(teamLeads.ToList(), "TeamLeadID", "FullName", viewModel.TeamLeadID);
-            Session["CurrentSector"] = viewModel.SectorID;
+             ViewBag.TeamLeadID = _dbTeamLeads.GetAllTeamLeadersForDropDown("edit", viewModel.TeamLeadID);
+
             return View(viewModel);
 
         }
@@ -309,8 +370,6 @@ namespace Panis.Controllers
                     employeeSave.FirstName = employee.FirstName;
                     employeeSave.LastName = employee.LastName;
                     employeeSave.Education = employee.Education;
-                    //employeeSave.OfficialWorkStart = employee.OfficialWorkStart;
-                    //employeeSave.WorkStart = employee.WorkStart;
                     employeeSave.SectorID = employee.SectorID;
                     employeeSave.ClientSectorID = employee.ClientSectorID;
                     employeeSave.LivingCity = employee.LivingCity;
@@ -346,24 +405,23 @@ namespace Panis.Controllers
                 return RedirectToAction("Index");
 
             }
-            var teamLeads =
-             from emp in db.Employees
-             join teamLead in db.TeamLeads on emp.EmployeeID equals teamLead.EmployeeID
-             select new { FullName = emp.FirstName + " " + emp.LastName, TeamLeadID = teamLead.TeamLeadID };
-            ViewBag.TeamLeadID = new SelectList(teamLeads.ToList(), "TeamLeadID", "FullName");
+            ViewBag.TeamLeadID = _dbTeamLeads.GetAllTeamLeadersForDropDown("edit", employee.TeamLeadID);
             return View(employee);
         }
 
         private async Task EditPreviousTeamLeadNotification(int? teamLeadID,string firstName,string lastName)
         {
             var notify = new Notification();
-            notify.Message = $"You are no longer team leader to {firstName} {lastName}";
             var employeeID= db.TeamLeads.Find(teamLeadID).EmployeeID;
+            var teamLeadName = db.Employees.Find(employeeID);
             notify.EmployeeID = employeeID;
             var user = await db.Users.Where(x => x.EmployeeID == employeeID).SingleAsync();
+            notify.Message = $"You({teamLeadName.FirstName} {teamLeadName.LastName}) are no longer team leader to {firstName} {lastName}";
             user.CountNotifications = user.CountNotifications + 1;
             user.ReadNotifications = false;
             db.Notifications.Add(notify);
+            db.Users.Where(x => x.EmpPosition == WorkPosition.HR)
+                   .Update(x => new ApplicationUser { ReadNotifications = false, CountNotifications = x.CountNotifications + 1 });
             await db.SaveChangesAsync();
 
         }
@@ -371,24 +429,30 @@ namespace Panis.Controllers
         private async Task EditTeamLeadEmployeeNotification(string firstName, string lastName, int employeeID)
         {
             Notification notify = new Notification();
-            notify.Message = ($"You became a team leader to your colleague {firstName} {lastName}.");
             notify.EmployeeID = employeeID;
             var user = await db.Users.Where(x => x.EmployeeID == employeeID).SingleAsync();
+            var employeeName = await db.Employees.Where(x => x.EmployeeID == employeeID).SingleAsync();
+            notify.Message = ($"You({employeeName.FirstName} {employeeName.LastName}) became a team leader to your colleague {firstName} {lastName}.");
             user.CountNotifications = user.CountNotifications + 1;
             user.ReadNotifications = false;
             db.Notifications.Add(notify);
+            db.Users.Where(x => x.EmpPosition == WorkPosition.HR)
+                   .Update(x => new ApplicationUser { ReadNotifications = false, CountNotifications = x.CountNotifications + 1 });
             await db.SaveChangesAsync();
         }
 
         private async Task EditEmployeeTeamLeadNotification(string fullName, int? employeeID)
         {
             Notification notify = new Notification();
-            notify.Message = ($"{fullName}  is your new team leaad.");
             notify.EmployeeID = employeeID;
             var user = await db.Users.Where(x => x.EmployeeID == employeeID).SingleAsync();
+            var employeeName = await db.Employees.Where(x => x.EmployeeID == employeeID).SingleAsync();
+            notify.Message = ($"You({employeeName.FirstName} {employeeName.LastName}) have been assigned a new team leader {fullName}.");
             user.CountNotifications = user.CountNotifications + 1;
             user.ReadNotifications = false;
             db.Notifications.Add(notify);
+            db.Users.Where(x => x.EmpPosition == WorkPosition.HR)
+                   .Update(x => new ApplicationUser { ReadNotifications = false, CountNotifications = x.CountNotifications + 1 });
             await db.SaveChangesAsync();
         }
 
@@ -422,7 +486,7 @@ namespace Panis.Controllers
                 draw = model.draw,
                 recordsTotal = totalResultsCount,
                 recordsFiltered = filteredResultsCount,
-                data = myBag
+                data = myBag.OrderBy(x=>x.FirstName)
             });
         }
 
@@ -459,7 +523,7 @@ namespace Panis.Controllers
                 sortDir = true;
             }
             var list1 = db.Employees
-               .Where(z => db.Employees.OrderBy(x => x.EmployeeID).Select(x => x.EmployeeID).Skip(skip).Take(take).Contains(z.EmployeeID));
+               .Where(z => db.Employees.OrderBy(x => x.EmployeeID).Select(x => x.EmployeeID).Skip(skip).Take(take).Contains(z.EmployeeID)).ToList();
             var result = list1.AsParallel().Select(m => new EmployeeSearchClass
             {
                 Id = m.EmployeeID,

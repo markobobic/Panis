@@ -8,7 +8,7 @@ namespace Panis.Models
     {
         public enum Level
         {
-            None = 0, Junior = 1, Medior=2, Senior=3
+            None = 1, Junior = 2, Medior=3, Senior=4
         }
        
         [Key]

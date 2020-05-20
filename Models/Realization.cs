@@ -17,7 +17,7 @@ namespace Panis.Models
         [DisplayFormat(DataFormatString = "{0:dd-MM-yyyy}", ApplyFormatInEditMode = true)]
         public DateTime Start { get; set; }
         [ForeignKey("RealizationType")]
-        public int? RealizationTypeID { get; set; }
+        public byte? RealizationTypeID { get; set; }
         public RealizationType RealizationType { get; set; }
 
         [ForeignKey("Project")]
@@ -29,8 +29,8 @@ namespace Panis.Models
         [ForeignKey("Employee")]
         public int EmployeeID { get; set; }
         public Employee Employee { get; set; }
-        public int Hours { get; set; }
-       
+        public short Hours { get; set; }
+        
 
     }
 }

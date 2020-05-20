@@ -1,7 +1,7 @@
 ﻿
 <head>
     <link rel="stylesheet" type="text/css" href=" https://cdn.datatables.net/buttons/1.6.1/css/buttons.dataTables.min.css" />
-    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css">
+    <link rel="styleshee"t" type="text/css" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css">
     <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700" rel="stylesheet">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -203,6 +203,7 @@
     <script>
 
         $(document).ready(function () {
+            
             dataTable = $("#deductions").DataTable({
                 "ajax": {
                     "url": "/EmployeeProfiles/GetAbsences/",
@@ -230,7 +231,7 @@
                         "render": function (data, type, full, meta) {
 
 
-                            return '<a data-value= ' + data +' id="approve" onclick="approved()" href="#"><i class="fas fa-check"></i></a>';
+                            return '<a data-value= ' + data +' id="approve" onclick="approved()" href="javascript:void(0)"><i class="fas fa-check"></i></a>';
 
                         }
 
@@ -241,10 +242,10 @@
                             "searchable": false,
                             "sortable": false,
                             "render": function (data, type, full, meta) {
-                                return '<a data-value= ' + data + ' id="decline" onclick="declined()" href="#"><i class="fas fa-times"></i></a>';
+                                return '<a data-value= ' + data + ' id="decline" onclick="declined()" href="javascript:void(0)"><i class="fas fa-times"></i></a>';
 
 
-                        }
+                            }
 
                     },
 
@@ -262,8 +263,7 @@
                     "emptyTable": "No data found"
                 },
                 "responsive": true,
-                "dom": 'lrtip'
-
+                "dom": 'lrt',
 
 
             });
@@ -327,7 +327,9 @@
         * {
             box-sizing: border-box;
         }
-
+        dataTables_empty{
+            text-align:center;
+        }
         .body-container {
             width: 1000px;
             margin-left: 30px;
@@ -1187,21 +1189,7 @@
             opacity: 0;
         }
 
-        table.dataTable.hover tbody tr:hover,
-        table.dataTable.hover tbody tr.odd:hover,
-        table.dataTable.hover tbody tr.even:hover, table.dataTable.display tbody tr:hover,
-        table.dataTable.display tbody tr.odd:hover,
-        table.dataTable.display tbody tr.even:hover {
-            background-color: whitesmoke;
-        }
-
-            table.dataTable.hover tbody tr:hover.selected,
-            table.dataTable.hover tbody tr.odd:hover.selected,
-            table.dataTable.hover tbody tr.even:hover.selected, table.dataTable.display tbody tr:hover.selected,
-            table.dataTable.display tbody tr.odd:hover.selected,
-            table.dataTable.display tbody tr.even:hover.selected {
-                background-color: #a9b7d1;
-            }
+      
 
         @@media screen and (max-width: 767px) {
             div.dataTables_length,

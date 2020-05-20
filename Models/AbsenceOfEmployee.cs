@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Panis.Models
 {
@@ -7,9 +8,9 @@ namespace Panis.Models
     {
         [Key]
         public int AbsenceLimitID { get; set; }
-        public DateTime Year { get; set; }
-        public int NumberOfVacations { get; set; }
-        public int NumberOfSickLeave { get; set; }
-        public int NumberOfFreeDays { get; set; }
+        public short Year { get; set; }
+        public byte NumberOfVacations { get; set; }
+        public short NumberOfSickLeave { get; set; }
+        public byte NumberOfFreeDays { get; set; }
     }
 }

@@ -48,6 +48,7 @@ namespace Panis.Models
         public virtual Sector Sector { get; set; }
         public virtual Department Department { get; set; }
         public virtual ICollection<Project> Projects { get; set; }
+        public bool IsTeamLead { get; set; }
 
         public string FullName
         {

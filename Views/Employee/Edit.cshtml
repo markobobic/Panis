@@ -239,9 +239,18 @@
                         <div class="col-xs-6">
                             <label for="Position"><h4>Developer level</h4></label>
                             @Html.EnumDropDownListFor(
-                    x => x.Positions,
-                    "Select level",
-                    new { @class = "form-control" })
+                            x => x.Positions,
+                            "Select level",
+                            new { @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-xs-6">
+                            <label for="Position"><h4>Employee position</h4></label>
+                            @Html.EnumDropDownListFor(
+                            x => x.EmployeePositions,
+                            "Select  position",
+                            new { @class = "form-control" })
                         </div>
                     </div>
 
@@ -252,7 +261,7 @@
             <div class="form-group">
                 <div class="col-xs-12">
                     <br>
-                    <input id="generate" class="btn btn-lg btn-success pull-right" type="submit">
+                    <input id="generate" class="btn btn-lg btn-info pull-right" type="submit">
                     <!--<button class="btn btn-lg" type="reset"><i class="glyphicon glyphicon-repeat"></i> Reset</button>-->
                 </div>
             </div>
