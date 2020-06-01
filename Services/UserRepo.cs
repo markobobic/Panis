@@ -52,7 +52,7 @@ namespace Panis.Services
             GC.SuppressFinalize(this);
         }
 
-        public async Task<ApplicationUser> GetUserByEmployeeID(int employeeID)
+        public async Task<ApplicationUser> GetUserByEmployeeID(int? employeeID)
         {
            return await db.Users.Where(x=>x.EmployeeID==employeeID).AsNoTracking().SingleOrDefaultAsync();
         }

@@ -57,7 +57,7 @@ namespace Panis.Controllers
             ViewBag.NumberOfProjects = db.EmployeesProjects.Where(x => x.EmployeeID == currentUser.EmployeeID).Count();
             var startDate = db.employeeEnrollments.Where(x => x.EmployeeID == currentUser.EmployeeID).FirstOrDefault().WorkStart;
             var endDate = DateTime.Now;
-           ViewBag.Experience = ((endDate.Year - startDate.Year) * 12) + endDate.Month - startDate.Month;
+            ViewBag.Experience = ((endDate.Year - startDate.Year) * 12) + endDate.Month - startDate.Month;
             var groupByDepartments = db.Realizations.Where(x => x.EmployeeID == currentUser.EmployeeID).GroupBy(x => x.DepartmentID).ToList();
             #region Group departments
             foreach (var departments in groupByDepartments)

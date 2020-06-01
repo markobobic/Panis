@@ -16,6 +16,14 @@ namespace Panis.Interfaces
         Employee MapData(EmployeeViewModel employee, HttpPostedFileBase image);
         Task SaveChangesAsync();
 
+        Task<Employee> GetEmployeeByID(int? id);
+        void Update(Employee employee);
+
+        Task<Employee> MapDataUpdateProfile(int existingEmployeeID, Employee newEmployeeData, HttpPostedFileBase newImage);
+
+        Task<EmployeeViewModel> MapDataEmployeeViewModel(int? employeeID);
+
+        Employee MapDataEdit(Employee employeeSave, EmployeeViewModel employee, HttpPostedFileBase image);
 
     }
 }

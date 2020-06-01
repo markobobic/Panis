@@ -12,7 +12,7 @@ namespace Panis.Interfaces
     {
        Task<ApplicationUser>  GetCurrentUser();
        Task UpdateAllWithIncrementedNotification(WorkPosition workPosition, int numberOfNotification);
-       Task<ApplicationUser> GetUserByEmployeeID(int employeeID);
+       Task<ApplicationUser> GetUserByEmployeeID(int? employeeID);
        void Update(ApplicationUser user);
 
     }

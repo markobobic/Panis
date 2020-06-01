@@ -12,10 +12,9 @@ using Z.EntityFramework.Plus;
 
 namespace Panis.Controllers
 {
-    public class EmployeeProfilesController : Controller
+    public class EmployeeProfilesController : BaseController
     {
         // GET: EmployeeProfiles
-        private ApplicationDbContext db = new ApplicationDbContext();
         public ActionResult Index()
         {
             return View();

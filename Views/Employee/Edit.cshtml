@@ -172,7 +172,7 @@
                         <div class="col-xs-6">
                             <h4>Is team lead?</h4>
                             <label class="switch" style="margin:0px;">
-                                <input id="isTeamLead" name="IsTeamLead" type="checkbox" value="@Model.IsTeamLead" class="switch-input">
+                                <input id="isTeamLead" name="IsTeamLead" type="checkbox" value="@Model.IsTeamLead.ToString().ToLower()" class="switch-input" >
                                 <span class="switch-label" data-on="" data-off=""></span>
                                 <span class="switch-handle"></span>
                             </label>
@@ -306,6 +306,11 @@
             $('#listTabs').append(' <li><a data-toggle="tab" id="systemTab" href="#system">System</a></li>');
         }
     });
+
+    let isItTeamLead = $('#isTeamLead').attr("value");
+    if (isItTeamLead === "true") {
+        $('#isTeamLead').prop('checked', 'checked');
+    }
 
     $('#isTeamLead').click(function () {
         var checking = $(this).prop("checked");
