@@ -1,0 +1,105 @@
+﻿<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+</head>
+
+<body>
+    <br />
+    <div class="banner-bottom">
+        <div class="container">
+            <div class="flexbox-container-image">
+                <img src="~/Content/Images/transparentForProject.png" style="position:absolute;max-height:200px;max-width:200px; margin-bottom:20px;" />
+            </div>
+            <div class="flexbox-container">
+
+                <div class="flexbox-item fixed">
+                    <div class="demo">
+                        <h2>Deliver your confirmation from a doctor</h2>
+                        <p >You can deliver your confirmation by clicking on the button under the text, or by sending it from your personal email to <mark>bolovanje@panonit.com</mark>. </p>
+                        <button onclick="location.href ='@Url.Action("SendEMail", "SendMail")'" class="btn btn-primary btn-lg align-content-center">Deliver </button>
+                    </div>
+                </div>
+            </div>
+                <div class="clearfix"></div>
+        </div>
+   <br />
+    
+        <div class="container">
+            <div class="flexbox-container-image">
+                <img src="~/Content/Images/transparentQuestnMark.png" style="position:absolute;max-height:100px;max-width:100px; margin-bottom:20px;" />
+            </div>
+            <div class="flexbox-container">
+
+                <div class="flexbox-item fixed">
+                    <div class="demo">
+                        <h2>Request a meeting with HR</h2><p >You can request a meeting with HR if you have any questions or suggestions by clicking on the button under the text, or by sending it from your personal email to <mark>1na1@panonit.com</mark>.</p>
+                         <button   class="btn btn-primary btn-lg align-content-center">Request </button>
+                    </div>
+                </div>
+            </div>
+            <div class="clearfix"></div>
+        </div>
+    </div>
+</body>
+
+<style>
+    .banner-bottom {
+        padding: 3em 0;
+        background-color: #efefef;
+    }
+
+    .sort-by label {
+        margin-right: 10px;
+        font-size: 1.2em;
+    }
+
+    .banner-bottom1 {
+        padding: 3em 0;
+        background-color: #efefef;
+    }
+
+
+    body {
+        margin: 0;
+        color: #efefef;
+    }
+
+    .flexbox-container {
+        background: #659DBD;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: auto;
+        margin: 0;
+        min-height: 19em;
+        border-radius: 30px 30px;
+    }
+
+    .flexbox-container-image {
+        background: #efefef;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: auto;
+        margin-top: 30px;
+        min-height: 1em;
+    }
+
+
+    .flexbox-item {
+        max-width: 50%;
+        background: gray;
+        
+    }
+
+    .fixed {
+        flex: none;
+        max-width: 50%;
+    }
+
+    .demo {
+        width: 100%;
+        padding: 1em;
+        background-color: #659DBD;
+    }
+</style>

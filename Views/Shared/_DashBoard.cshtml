@@ -20,9 +20,9 @@
                 <img id="dashboardPic" class=" avatar  img-circle img-thumbnail justify-content-md-center" src=@("data:" + ViewBag.PhotoType + ";base64," + Convert.ToBase64String(ViewBag.Photo)) style="max-height:100px;   max-width:100px;" alt="" />
             </a>
         }
-        <div class=" info" style="margin-left:15%;">
-            <h3><a href="@Url.Action("UserDashBoard", "Home")">@ViewBag.FullName</a></h3>
-            <p>@ViewBag.Position</p>
+        <div class="info" style="margin-left:15%;">
+            <h3><a id="nesto55" href="@Url.Action("UserDashBoard", "Home")">@ViewBag.FullName</a></h3>
+            <p id="nesto66">@ViewBag.Position</p>
         </div>
     </div>
     <ul class="categories" style="margin-left:6%;">
@@ -35,10 +35,13 @@
         <li>
             <i class="far fa-calendar-alt"></i><a href="/Realizations/Index"> Realizations</a>
         </li>
-
+        <li>
+            <i class="far fa-comments"></i><a href="/SendMail/Index">Communications</a>
+        </li>
         <li>
             <i class="fas fa-file"></i><a href="#"> Documents</a>
         </li>
+
 
     </ul>
 </aside>

@@ -122,6 +122,7 @@ namespace Panis.Controllers
             ViewBag.Photo = currentEmployee.Photo;
             ViewBag.PhotoType = currentEmployee.PhotoType;
             ViewBag.Position = currentUser.EmpPosition.ToString();
+            Session["fullName"] = currentEmployee.FullName;
             if (currentUser.ReadNotifications == true)
             {
                 ViewBag.CountNotify = 0;

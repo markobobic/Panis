@@ -228,6 +228,7 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\RealizationsController.cs" />
+    <Compile Include="Controllers\SendMailController.cs" />
     <Compile Include="DataTableModel\EmployeeSearchClass.cs" />
     <Compile Include="DataTableModel\JsonClasses.cs" />
     <Compile Include="DependencyResolution\ControllerConvention.cs" />
@@ -351,6 +352,7 @@
     <Compile Include="Services\UserRepo.cs" />
     <Compile Include="ViewModels\EmployeeViewModel.cs" />
     <Compile Include="Startup.cs" />
+    <Compile Include="ViewModels\MailModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap-defaul.min.css" />
@@ -358,6 +360,8 @@
     <Content Include="Content\DashBoard.css" />
     <Content Include="Content\Images\logo.png" />
     <Content Include="Content\Images\panonitSlika.png" />
+    <Content Include="Content\Images\transparentForProject.png" />
+    <Content Include="Content\Images\transparentQuestnMark.png" />
     <Content Include="Content\Shared.css" />
     <Content Include="Content\Site.css" />
     <Content Include="favicon.ico" />
@@ -416,6 +420,8 @@
     <Content Include="Views\Employee\Edit.cshtml" />
     <Content Include="Views\Absences\Index.cshtml" />
     <Content Include="Views\EmployeeProfiles\EmployeeProfile.cshtml" />
+    <Content Include="Views\SendMail\Index.cshtml" />
+    <Content Include="Views\SendMail\SendEMail.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
