@@ -178,19 +178,6 @@ div .fa {
     border: 1px solid black;
 }
 
-@media only screen and (max-width:749px) {
-
-    .medium-4 {
-        width: 100%;
-    }
-
-    .column, .columns {
-        position: relative;
-        padding-left: 0rem;
-        padding-right: 0rem;
-        margin-bottom: 2em;
-    }
-}
 
 .statistic-section {
     padding-top: 70px;
@@ -236,11 +223,7 @@ div .fa {
     color: #1f97b7;
 }
 
-@media (max-width: 992px) {
-    .counter {
-        margin-bottom: 40px;
-    }
-}
+
 
 .container {
     position: relative;

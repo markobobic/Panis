@@ -1,11 +1,4 @@
 ﻿
-<head>
-    <link rel="stylesheet" type="text/css" href=" https://cdn.datatables.net/buttons/1.6.1/css/buttons.dataTables.min.css" />
-    <link rel="styleshee"t" type="text/css" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css">
-    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700" rel="stylesheet">
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-</head>
 <body>
     <div class="body-container">
 
@@ -16,11 +9,11 @@
                         <!--           <i class="fas fa-ellipsis-v"></i> -->
                         @if (ViewBag.EmpPhoto == null)
                         {
-                            <img   src="http://ssl.gstatic.com/accounts/ui/avatar_2x.png"  alt="">
+                            <img src="http://ssl.gstatic.com/accounts/ui/avatar_2x.png" alt="">
                         }
                         else
                         {
-                            <img  src=@("data:" + ViewBag.PhotoType + ";base64," + Convert.ToBase64String(ViewBag.EmpPhoto))  alt="" />
+                            <img src=@("data:" + ViewBag.PhotoType + ";base64," + Convert.ToBase64String(ViewBag.EmpPhoto)) alt="" />
 
                         }
                         <h3>@ViewBag.FullName</h3>
@@ -155,7 +148,7 @@
                     <div class="header">
                         <h1>Review absence requests </h1>
                     </div>
-                   
+
                     <h2 class="display-4 text-center">Team leader</h2>
                     <div class="profile-picture align-content-center">
 
@@ -165,7 +158,7 @@
                         }
                         else
                         {
-                            <img  src=@("data:" + ViewBag.TeamLeadPhotoType + ";base64," + Convert.ToBase64String(ViewBag.TeamLeadPhoto)) alt="" />
+                            <img src=@("data:" + ViewBag.TeamLeadPhotoType + ";base64," + Convert.ToBase64String(ViewBag.TeamLeadPhoto)) alt="" />
 
                         }
                     </div>
@@ -192,18 +185,18 @@
             </div>
         </div>
     </div>
-
+    
 </body>
 @section scripts
     {
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
     <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.21.0/moment.min.js"></script>
-
+    <script src="https://rawgithub.com/makeusabrew/bootbox/master/bootbox.js"></script>
     <script>
 
         $(document).ready(function () {
-            
+
             dataTable = $("#deductions").DataTable({
                 "ajax": {
                     "url": "/EmployeeProfiles/GetAbsences/",
@@ -299,910 +292,1013 @@
                 }
              });
         }
-        function declined() {
-            var val = $('#decline').data('value');
-            $.ajax({
-                type: 'POST',
-                url: "@(Url.Action("DeclineAbsence", "EmployeeProfiles"))",
-                data: { AbsenceID: val },
-                cache: false,
-                async: true,
-                success: function (data) {
-                    $('#deductions').DataTable().ajax.reload();
+        @*function declined() {
+            var modal = bootbox.dialog({
+                message: $(".form-content").html(),
+                title: "Confirmation",
+                buttons: [
+                    {
+                        label: "Save",
+                        className: "btn btn-primary pull-left",
+                        callback: function () {
+
+                            var val = $('#decline').data('value');
+                            var response = $('textarea#reponseArea').val();
+
+
+                            $.ajax({
+                            type: 'POST',
+                            url: "@(Url.Action("DeclineAbsence", "EmployeeProfiles"))",
+                                data: { AbsenceID: val, Reason: response },
+                            cache: false,
+                            async: true,
+                            success: function (data) {
+                                $('#deductions').DataTable().ajax.reload();
+                            }
+                         });
+                        }
+                    },
+                    {
+                        label: "Close",
+                        className: "btn btn-default pull-left",
+                        callback: function () {
+                        }
+                    }
+                ],
+                show: false,
+                onEscape: function () {
+                    modal.modal("hide");
                 }
-             });
+            });
+            $(function () {
+                $('input:radio').change(
+                    function () {
+
+                        $('textarea').show();
+                        $('label').show();
+                    }
+                );
+            });
+            modal.modal("show");
+
+        }*@
+
+
+
+
+        function declined() {
+            bootbox.dialog({
+                title: "Confirmation",
+                message: '<div class="form-content"  ' +
+                    '<form class="form" role="form"> ' +
+                    '<div class="form-check"> ' +
+                    '<input class="form-check-input" type="radio" name="responseOption" id="radioResponse1" value="option1" checked> ' +
+                    '<label class="form-check-label" for="exampleRadios1"> Decline without response </label> ' +
+                    '<div class="form-check">  ' +
+                    '<input class="form-check-input" type="radio" name="responseOption" id="radioResponse2" value="option2">' +
+                    '<label class="form-check-label" for="exampleRadios2">Decline with response</label> ' +
+                    '</div> ' +
+                    ' <div class="form-group "> ' +
+                    ' <label for="exampleFormControlTextarea1" id="labelResponse">Write your reasons for declined absence:</label>' +
+                    '<textarea class="form-control" name="response" id="reponseArea" rows="3"></textarea> ' +
+                    '</div> ' +
+                    '</form> ' +
+                    '</div>',
+
+                buttons: {
+                    success: {
+                        label: "Save",
+                        className: "btn btn-primary pull-left",
+                        callback: function () {
+                            var name = $('#reponseArea').val();
+                            var val = $('#decline').data('value');
+                            $.ajax({
+                            type: 'POST',
+                            url: "@(Url.Action("DeclineAbsence", "EmployeeProfiles"))",
+                                data: { AbsenceID: val, Reason: name },
+                            cache: false,
+                            async: true,
+                            success: function (data) {
+                                $('#deductions').DataTable().ajax.reload();
+                            }
+                         });
+                        }
+                    }
+                }
+            }
+            );
+            $(function () {
+                $('input:radio').change(
+                    function () {
+
+                        $('#reponseArea').show();
+                        $('#labelResponse').show();
+                    }
+                );
+            });
         }
     </script>
+}
+<style>
+    body {
+        background-color: #fafafa;
+        overflow-x: hidden;
+        padding-top: 50px;
+        font-family: 'Roboto', sans-serif;
+        color: #615f5e;
     }
-    <style>
-        body {
-            background-color: #fafafa;
-            overflow-x: hidden;
-            padding-top: 50px;
-            font-family: 'Roboto', sans-serif;
-            color: #615f5e;
-        }
-        
+    #reponseArea{
+        display:none;
+    }
 
-        * {
-            box-sizing: border-box;
-        }
-        dataTables_empty{
-            text-align:center;
-        }
-        .body-container {
-            width: 1000px;
-            margin-left: 30px;
-            min-height: 200px;
+    #labelResponse{
+        display:none;
+    }
+    * {
+        box-sizing: border-box;
+    }
+
+    dataTables_empty {
+        text-align: center;
+    }
+
+    .body-container {
+        width: 1000px;
+        margin-left: 30px;
+        min-height: 200px;
+    }
+
+    .notifyProfile {
+        width: 100%;
+    }
+
+    .dataTables_empty{
+        text-align:center;
+    }
+
+    .notifyProfile h2 {
+        color: #363b6d;
+        font-size: 18px;
+        letter-spacing: 0.5px;
+    }
+
+        .notifyProfile h5 {
+            position: absolute;
+            bottom: 0;
+            right: 20px;
+            z-index: 1;
+            color: #363b6d;
+            opacity: 0.5;
+            font-size: 15px;
+            margin-bottom: 0 !important;
         }
 
-        .notifyProfile {
-            width: 100%;
-        }
-
-            .notifyProfile h2 {
-                color: #363b6d;
-                font-size: 18px;
-                letter-spacing: 0.5px;
+            .notifyProfile h5.online {
+                color: #72c17c;
+                opacity: 1;
             }
 
-            .notifyProfile h5 {
-                position: absolute;
-                bottom: 0;
-                right: 20px;
-                z-index: 1;
-                color: #363b6d;
-                opacity: 0.5;
-                font-size: 15px;
-                margin-bottom: 0 !important;
+        .notifyProfile .notifyProfile-container {
+            height: 620px;
+            width: 400px;
+            background-color: white;
+            -webkit-box-shadow: 0px 2px 12px -4px rgba(0, 0, 0, 0.1);
+            -moz-box-shadow: 0px 2px 12px -4px rgba(0, 0, 0, 0.1);
+            box-shadow: 0px 2px 12px -4px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+            .notifyProfile .notifyProfile-container.last-profile {
+                width: 580px;
+                height: 300px;
             }
 
-                .notifyProfile h5.online {
-                    color: #72c17c;
-                    opacity: 1;
-                }
+        .notifyProfile .grid-container {
+            display: grid;
+            grid-template-columns: 1.3fr 1fr 1.2fr;
+            grid-template-rows: 1fr 1fr 1fr 1fr 1fr;
+            grid-template-areas: "profile last-view last-view" "profile last-like last-like" "edit-profile edit-profile matchs" "edit-profile edit-profile matchs" "edit-profile edit-profile matchs";
+            grid-gap: 0 20px;
+        }
 
-            .notifyProfile .notifyProfile-container {
-                height: 620px;
-                width: 400px;
+            .notifyProfile .grid-container .grid-area {
                 background-color: white;
                 -webkit-box-shadow: 0px 2px 12px -4px rgba(0, 0, 0, 0.1);
                 -moz-box-shadow: 0px 2px 12px -4px rgba(0, 0, 0, 0.1);
                 box-shadow: 0px 2px 12px -4px rgba(0, 0, 0, 0.1);
                 margin-bottom: 20px;
-            }
-
-                .notifyProfile .notifyProfile-container.last-profile {
-                    width: 580px;
-                    height: 300px;
-                }
-
-            .notifyProfile .grid-container {
-                display: grid;
-                grid-template-columns: 1.3fr 1fr 1.2fr;
-                grid-template-rows: 1fr 1fr 1fr 1fr 1fr;
-                grid-template-areas: "profile last-view last-view" "profile last-like last-like" "edit-profile edit-profile matchs" "edit-profile edit-profile matchs" "edit-profile edit-profile matchs";
-                grid-gap: 0 20px;
-            }
-
-                .notifyProfile .grid-container .grid-area {
-                    background-color: white;
-                    -webkit-box-shadow: 0px 2px 12px -4px rgba(0, 0, 0, 0.1);
-                    -moz-box-shadow: 0px 2px 12px -4px rgba(0, 0, 0, 0.1);
-                    box-shadow: 0px 2px 12px -4px rgba(0, 0, 0, 0.1);
-                    margin-bottom: 20px;
-                    border-radius: 0.25rem;
-                    overflow: hidden;
-                }
-
-                .notifyProfile .grid-container .profile {
-                    grid-area: profile;
-                }
-
-                    .notifyProfile .grid-container .profile .empPhoto {
-                        position: relative;
-                        overflow: hidden;
-                        height: 420px;
-                    }
-
-                        .notifyProfile .grid-container .profile .empPhoto i {
-                            position: absolute;
-                            top: 20px;
-                            right: 20px;
-                            color: white;
-                            font-size: 25px;
-                            cursor: pointer;
-                        }
-
-                        .notifyProfile .grid-container .profile .empPhoto h3 {
-                            position: absolute;
-                            bottom: 10px;
-                            right: 20px;
-                            color: #e83114;
-                            z-index: 1;
-                            font-weight: normal;
-                            letter-spacing: 0.5px;
-                            cursor: default;
-                        }
-
-                        .notifyProfile .grid-container .profile .empPhoto .button {
-                            position: absolute;
-                            bottom: 0;
-                            left: 10px;
-                            z-index: 1;
-                            height: 60px;
-                            width: 60px;
-                            border-radius: 50%;
-                            background-color: #363b6d;
-                            display: flex;
-                            align-items: center;
-                            justify-content: center;
-                            padding-top: 1px;
-                            cursor: pointer;
-                            transition: all 0.4s;
-                        }
-
-                            .notifyProfile .grid-container .profile .empPhoto .button:hover {
-                                bottom: 5px;
-                                box-shadow: 0px 2px 12px -4px rgba(0, 0, 0, 1);
-                            }
-
-                            .notifyProfile .grid-container .profile .empPhoto .button i {
-                                right: initial;
-                                top: initial;
-                                font-size: 25px;
-                                position: initial;
-                            }
-
-                        .notifyProfile .grid-container .profile .empPhoto img {
-                            width: 100%;
-                            height: 420px;
-                            object-fit: cover;
-                        }
-
-                        .notifyProfile .grid-container .profile .empPhoto:after {
-                            background-color: white;
-                            width: 550px;
-                            transform: rotate(-8deg) skewX(0deg);
-                            opacity: 1;
-                            content: "";
-                            position: absolute;
-                            top: 360px;
-                            left: -110px;
-                            height: 250px;
-                            border-radius: 400px 0px 239px 0px / 123px 0px 121px 0px;
-                            transition: all 0.4s;
-                        }
-
-                        .notifyProfile .grid-container .profile .empPhoto:before {
-                            background-color: #e83114;
-                            width: 450px;
-                            transform: rotate(-14deg) skewX(0deg);
-                            opacity: 0.6;
-                            content: "";
-                            position: absolute;
-                            top: 325px;
-                            height: 250px;
-                            left: -55px;
-                            border-radius: 400px 0px 239px 0px / 123px 0px 121px 0px;
-                            transition: all 0.4s;
-                        }
-
-                    .notifyProfile .grid-container .profile .profile-data {
-                        width: 100%;
-                        padding: 20px;
-                        padding-bottom: 10px;
-                        display: flex;
-                        justify-content: flex-end;
-                    }
-
-                        .notifyProfile .grid-container .profile .profile-data .data-details {
-                            display: flex;
-                            flex-direction: column;
-                            align-items: center;
-                            margin-left: 55px;
-                        }
-
-                            .notifyProfile .grid-container .profile .profile-data .data-details h5 {
-                                position: initial;
-                            }
-
-                            .notifyProfile .grid-container .profile .profile-data .data-details h4 {
-                                color: #363b6d;
-                                font-weight: normal;
-                            }
-
-                    .notifyProfile .grid-container .profile .profile-more {
-                        display: flex;
-                        padding: 0 20px;
-                        justify-content: flex-end;
-                    }
-
-                        .notifyProfile .grid-container .profile .profile-more h5 {
-                            position: initial;
-                            cursor: pointer;
-                            text-decoration: underline;
-                        }
-
-                            .notifyProfile .grid-container .profile .profile-more h5:hover {
-                                color: #e83114;
-                                opacity: 1;
-                            }
-
-                .notifyProfile .grid-container .last-view {
-                    grid-area: last-view;
-                }
-
-                .notifyProfile .grid-container .last-like {
-                    grid-area: last-like;
-                }
-
-                .notifyProfile .grid-container .edit-profile {
-                    grid-area: edit-profile;
-                    height: 800px;
-                    padding-bottom: 20px;
-                    width: 150%;
-                }
-
-                    .notifyProfile .grid-container .edit-profile h3 {
-                        font-size: 20px;
-                        color: #363b6d;
-                        display: flex;
-                    }
-
-                        .notifyProfile .grid-container .edit-profile h3 i {
-                            font-size: 18px;
-                            margin-left: 10px;
-                            cursor: pointer;
-                            transition: all 0.2s;
-                        }
-
-                            .notifyProfile .grid-container .edit-profile h3 i:hover {
-                                color: #e83114;
-                                transform: scale(1.1);
-                            }
-
-                    .notifyProfile .grid-container .edit-profile h1 {
-                        margin-top: 100px;
-                        color: #363b6d;
-                        margin-left: 20px;
-                    }
-
-                    .notifyProfile .grid-container .edit-profile .header {
-                        color: white;
-                        position: relative;
-                        margin-bottom: 20px;
-                        width: 60%;
-                    }
-
-                        .notifyProfile .grid-container .edit-profile .header h1 {
-                            color: white;
-                            text-align: center;
-                            font-size: 19px;
-                            padding: 20px 10px;
-                            font-weight: 100;
-                            letter-spacing: 0.5px;
-                            z-index: 3;
-                            position: absolute;
-                            width: 50%;
-                            margin-top: 0;
-                        }
-
-                        .notifyProfile .grid-container .edit-profile .header:after {
-                            z-index: 2;
-                            background-color: #363b6d;
-                            width: 110%;
-                            transform: rotate(-20deg) skewX(0deg);
-                            opacity: 1;
-                            content: "";
-                            position: absolute;
-                            top: -150px;
-                            left: -30px;
-                            height: 200px;
-                            border-radius: 100px 283px 383px 319px / 132px 1px 24px 117px;
-                        }
-
-                    .notifyProfile .grid-container .edit-profile .profile-picture {
-                        border-radius: 50%;
-                        margin-left: 42%;
-                        height: 150px;
-                        width: 150px;
-                        cursor: pointer;
-                        position: relative;
-                        overflow: hidden;
-                        background-color: rgba(75, 78, 109, 0.3);
-                    }
-
-                        .notifyProfile .grid-container .edit-profile .profile-picture img {
-                            width: 100%;
-                            height: 100%;
-                            border-radius: 50%;
-                            object-fit: cover;
-                        }
-
-        .edit-profile .grid-area {
-            width: 100%;
-        }
-
-        
-
-        
-
-        .notifyProfile .grid-container .edit-profile .edit-interest {
-            width: auto;
-            clear: both;
-            margin: 20px;
-            color: #615f5e;
-        }
-
-            .notifyProfile .grid-container .edit-profile .edit-interest p {
-                height: 90px;
-                word-wrap: break-word;
-            }
-
-                .notifyProfile .grid-container .edit-profile .edit-interest p.p-small {
-                    height: 24px;
-                }
-
-        .notifyProfile .grid-container .edit-profile .edit-infos {
-            margin: 20px;
-            width: 100%;
-        }
-
-            .notifyProfile .grid-container .edit-profile .edit-infos .profile-data {
-                width: 400px;
-                display: flex;
-            }
-
-                .notifyProfile .grid-container .edit-profile .edit-infos .profile-data .data-details {
-                    display: flex;
-                    flex-direction: column;
-                    align-items: center;
-                    margin-right: 55px;
-                }
-
-                    .notifyProfile .grid-container .edit-profile .edit-infos .profile-data .data-details h5 {
-                        position: initial;
-                    }
-
-                    .notifyProfile .grid-container .edit-profile .edit-infos .profile-data .data-details h4 {
-                        font-size: 20px;
-                        color: #363b6d;
-                        font-weight: normal;
-                    }
-
-        .notifyProfile .grid-container .edit-profile .edit-picture {
-            display: flex;
-            width: 100%;
-            padding-right: 10px;
-            clear: both;
-            flex-wrap: wrap;
-        }
-
-            .notifyProfile .grid-container .edit-profile .edit-picture div {
-                height: 150px;
-                width: 150px;
-                margin-left: 10px;
-                margin-top: 10px;
                 border-radius: 0.25rem;
                 overflow: hidden;
-                cursor: pointer;
-                position: relative;
             }
 
-                .notifyProfile .grid-container .edit-profile .edit-picture div img {
-                    width: 100%;
-                    height: 100%;
-                    object-fit: cover;
-                    z-index: -1;
+            .notifyProfile .grid-container .profile {
+                grid-area: profile;
+            }
+
+                .notifyProfile .grid-container .profile .empPhoto {
+                    position: relative;
+                    overflow: hidden;
+                    height: 420px;
                 }
 
-                .notifyProfile .grid-container .edit-profile .edit-picture div.picture:hover:after {
-                    position: absolute;
-                    width: 100%;
-                    background-color: rgba(75, 78, 109, 0.8);
-                    bottom: 0px;
-                    color: white;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    transition: all 0.4s;
-                    font-size: 18px;
-                    letter-spacing: 1px;
-                    content: "Delete";
-                    height: 100%;
-                }
+                    .notifyProfile .grid-container .profile .empPhoto i {
+                        position: absolute;
+                        top: 20px;
+                        right: 20px;
+                        color: white;
+                        font-size: 25px;
+                        cursor: pointer;
+                    }
 
-                .notifyProfile .grid-container .edit-profile .edit-picture div.picture-add {
-                    background-color: rgba(75, 78, 109, 0.3);
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    color: white;
-                    font-size: 30px;
-                }
+                    .notifyProfile .grid-container .profile .empPhoto h3 {
+                        position: absolute;
+                        bottom: 10px;
+                        right: 20px;
+                        color: #e83114;
+                        z-index: 1;
+                        font-weight: normal;
+                        letter-spacing: 0.5px;
+                        cursor: default;
+                    }
 
-                    .notifyProfile .grid-container .edit-profile .edit-picture div.picture-add:hover {
+                    .notifyProfile .grid-container .profile .empPhoto .button {
+                        position: absolute;
+                        bottom: 0;
+                        left: 10px;
+                        z-index: 1;
+                        height: 60px;
+                        width: 60px;
+                        border-radius: 50%;
                         background-color: #363b6d;
-                    }
-
-        .notifyProfile .grid-container .matchs {
-            grid-area: matchs;
-            height: max-content;
-            max-height: 800px;
-            min-height: 300px;
-        }
-
-            .notifyProfile .grid-container .matchs .header {
-                color: white;
-                position: relative;
-                margin-bottom: 20px;
-            }
-
-                .notifyProfile .grid-container .matchs .header h1 {
-                    color: white;
-                    text-align: center;
-                    font-size: 19px;
-                    padding: 20px 10px;
-                    font-weight: 100;
-                    letter-spacing: 0.5px;
-                    z-index: 3;
-                    position: absolute;
-                    width: 100%;
-                }
-
-                .notifyProfile .grid-container .matchs .header:after {
-                    z-index: 2;
-                    background-color: #e83114;
-                    width: 110%;
-                    transform: rotate(10deg) skewX(0deg);
-                    opacity: 0.8;
-                    content: "";
-                    position: absolute;
-                    top: -105px;
-                    left: -10px;
-                    height: 200px;
-                    border-radius: 400px 0px 239px 0px / 123px 0px 121px 0px;
-                }
-
-                .notifyProfile .grid-container .matchs .header:before {
-                    z-index: 2;
-                    background-color: white;
-                    width: 110%;
-                    transform: rotate(10deg) skewX(0deg);
-                    opacity: 1;
-                    content: "";
-                    position: absolute;
-                    top: -105px;
-                    left: -10px;
-                    height: 200px;
-                    border-radius: 400px 0px 239px 0px / 123px 0px 121px 0px;
-                }
-
-            .notifyProfile .grid-container .matchs .display-matchs {
-                max-height: 730px;
-                margin: 70px 20px 20px 20px;
-                visibility: hidden;
-                overflow-y: auto;
-                padding-top: 35px;
-            }
-
-                .notifyProfile .grid-container .matchs .display-matchs:hover {
-                    visibility: visible;
-                }
-
-                .notifyProfile .grid-container .matchs .display-matchs::-webkit-scrollbar {
-                    width: 8px;
-                }
-
-                .notifyProfile .grid-container .matchs .display-matchs::-webkit-scrollbar-track {
-                    background: transparent;
-                }
-
-                .notifyProfile .grid-container .matchs .display-matchs::-webkit-scrollbar-thumb {
-                    background: #776876;
-                    border-radius: 3px;
-                }
-
-                    .notifyProfile .grid-container .matchs .display-matchs::-webkit-scrollbar-thumb:hover {
-                        background: #363b6d;
-                    }
-
-                .notifyProfile .grid-container .matchs .display-matchs .one-match {
-                    visibility: visible;
-                    cursor: pointer;
-                    width: 100%;
-                    height: 80px;
-                    margin-bottom: 15px;
-                }
-
-                    .notifyProfile .grid-container .matchs .display-matchs .one-match .one-match-content {
                         display: flex;
                         align-items: center;
-                    }
-
-                    .notifyProfile .grid-container .matchs .display-matchs .one-match img {
-                        width: 80px;
-                        height: 80px;
-                        border-radius: 50%;
-                        object-fit: cover;
-                        margin-right: 10px;
-                    }
-
-                    .notifyProfile .grid-container .matchs .display-matchs .one-match .match-info {
-                        height: 100%;
-                        width: auto;
-                        display: flex;
-                        flex-direction: column;
                         justify-content: center;
+                        padding-top: 1px;
+                        cursor: pointer;
+                        transition: all 0.4s;
                     }
 
-                        .notifyProfile .grid-container .matchs .display-matchs .one-match .match-info h5 {
+                        .notifyProfile .grid-container .profile .empPhoto .button:hover {
+                            bottom: 5px;
+                            box-shadow: 0px 2px 12px -4px rgba(0, 0, 0, 1);
+                        }
+
+                        .notifyProfile .grid-container .profile .empPhoto .button i {
+                            right: initial;
+                            top: initial;
+                            font-size: 25px;
                             position: initial;
                         }
 
-                        .notifyProfile .grid-container .matchs .display-matchs .one-match .match-info h4 {
-                            font-size: 18px;
-                            color: #363b6d;
-                            margin-bottom: 5px !important;
+                    .notifyProfile .grid-container .profile .empPhoto img {
+                        width: 100%;
+                        height: 420px;
+                        object-fit: cover;
+                    }
+
+                    .notifyProfile .grid-container .profile .empPhoto:after {
+                        background-color: white;
+                        width: 550px;
+                        transform: rotate(-8deg) skewX(0deg);
+                        opacity: 1;
+                        content: "";
+                        position: absolute;
+                        top: 360px;
+                        left: -110px;
+                        height: 250px;
+                        border-radius: 400px 0px 239px 0px / 123px 0px 121px 0px;
+                        transition: all 0.4s;
+                    }
+
+                    .notifyProfile .grid-container .profile .empPhoto:before {
+                        background-color: #e83114;
+                        width: 450px;
+                        transform: rotate(-14deg) skewX(0deg);
+                        opacity: 0.6;
+                        content: "";
+                        position: absolute;
+                        top: 325px;
+                        height: 250px;
+                        left: -55px;
+                        border-radius: 400px 0px 239px 0px / 123px 0px 121px 0px;
+                        transition: all 0.4s;
+                    }
+
+                .notifyProfile .grid-container .profile .profile-data {
+                    width: 100%;
+                    padding: 20px;
+                    padding-bottom: 10px;
+                    display: flex;
+                    justify-content: flex-end;
+                }
+
+                    .notifyProfile .grid-container .profile .profile-data .data-details {
+                        display: flex;
+                        flex-direction: column;
+                        align-items: center;
+                        margin-left: 55px;
+                    }
+
+                        .notifyProfile .grid-container .profile .profile-data .data-details h5 {
+                            position: initial;
                         }
 
-        .notifyProfile .grid-container .last-view, .notifyProfile .grid-container .last-like {
-            padding: 20px;
-            overflow: hidden;
+                        .notifyProfile .grid-container .profile .profile-data .data-details h4 {
+                            color: #363b6d;
+                            font-weight: normal;
+                        }
+
+                .notifyProfile .grid-container .profile .profile-more {
+                    display: flex;
+                    padding: 0 20px;
+                    justify-content: flex-end;
+                }
+
+                    .notifyProfile .grid-container .profile .profile-more h5 {
+                        position: initial;
+                        cursor: pointer;
+                        text-decoration: underline;
+                    }
+
+                        .notifyProfile .grid-container .profile .profile-more h5:hover {
+                            color: #e83114;
+                            opacity: 1;
+                        }
+
+            .notifyProfile .grid-container .last-view {
+                grid-area: last-view;
+            }
+
+            .notifyProfile .grid-container .last-like {
+                grid-area: last-like;
+            }
+
+            .notifyProfile .grid-container .edit-profile {
+                grid-area: edit-profile;
+                height: 800px;
+                padding-bottom: 20px;
+                width: 150%;
+            }
+
+                .notifyProfile .grid-container .edit-profile h3 {
+                    font-size: 20px;
+                    color: #363b6d;
+                    display: flex;
+                }
+
+                    .notifyProfile .grid-container .edit-profile h3 i {
+                        font-size: 18px;
+                        margin-left: 10px;
+                        cursor: pointer;
+                        transition: all 0.2s;
+                    }
+
+                        .notifyProfile .grid-container .edit-profile h3 i:hover {
+                            color: #e83114;
+                            transform: scale(1.1);
+                        }
+
+                .notifyProfile .grid-container .edit-profile h1 {
+                    margin-top: 100px;
+                    color: #363b6d;
+                    margin-left: 20px;
+                }
+
+                .notifyProfile .grid-container .edit-profile .header {
+                    color: white;
+                    position: relative;
+                    margin-bottom: 20px;
+                    width: 60%;
+                }
+
+                    .notifyProfile .grid-container .edit-profile .header h1 {
+                        color: white;
+                        text-align: center;
+                        font-size: 19px;
+                        padding: 20px 10px;
+                        font-weight: 100;
+                        letter-spacing: 0.5px;
+                        z-index: 3;
+                        position: absolute;
+                        width: 50%;
+                        margin-top: 0;
+                    }
+
+                    .notifyProfile .grid-container .edit-profile .header:after {
+                        z-index: 2;
+                        background-color: #363b6d;
+                        width: 110%;
+                        transform: rotate(-20deg) skewX(0deg);
+                        opacity: 1;
+                        content: "";
+                        position: absolute;
+                        top: -150px;
+                        left: -30px;
+                        height: 200px;
+                        border-radius: 100px 283px 383px 319px / 132px 1px 24px 117px;
+                    }
+
+                .notifyProfile .grid-container .edit-profile .profile-picture {
+                    border-radius: 50%;
+                    margin-left: 42%;
+                    height: 150px;
+                    width: 150px;
+                    cursor: pointer;
+                    position: relative;
+                    overflow: hidden;
+                    background-color: rgba(75, 78, 109, 0.3);
+                }
+
+                    .notifyProfile .grid-container .edit-profile .profile-picture img {
+                        width: 100%;
+                        height: 100%;
+                        border-radius: 50%;
+                        object-fit: cover;
+                    }
+
+    .edit-profile .grid-area {
+        width: 100%;
+    }
+
+
+
+
+
+    .notifyProfile .grid-container .edit-profile .edit-interest {
+        width: auto;
+        clear: both;
+        margin: 20px;
+        color: #615f5e;
+    }
+
+        .notifyProfile .grid-container .edit-profile .edit-interest p {
+            height: 90px;
+            word-wrap: break-word;
         }
 
-            .notifyProfile .grid-container .last-view img, .notifyProfile .grid-container .last-like img {
-                width: 120px;
-                height: 120px;
-                border-radius: 50%;
-                object-fit: cover;
+            .notifyProfile .grid-container .edit-profile .edit-interest p.p-small {
+                height: 24px;
             }
 
-            .notifyProfile .grid-container .last-view .empPhoto, .notifyProfile .grid-container .last-like .empPhoto {
-                position: relative;
-                border-radius: 50%;
-                overflow: hidden;
-                margin: 0 10px;
-                transition: all 0.3s;
-                box-shadow: 0px 2px 12px -4px rgba(0, 0, 0, 0.5);
-            }
+    .notifyProfile .grid-container .edit-profile .edit-infos {
+        margin: 20px;
+        width: 100%;
+    }
 
-                .notifyProfile .grid-container .last-view .empPhoto:after, .notifyProfile .grid-container .last-like .empPhoto:after {
-                    background-color: #363b6d;
-                    width: 130px;
-                    transform: rotate(-8deg) skewX(0deg);
-                    opacity: 0.6;
-                    content: "";
-                    position: absolute;
-                    bottom: 0px;
-                    left: 0;
-                    height: 20px;
-                    border-radius: 400px 0px 239px 0px / 123px 0px 121px 0px;
-                }
-
-                .notifyProfile .grid-container .last-view .empPhoto:before, .notifyProfile .grid-container .last-like .empPhoto:before {
-                    background-color: #e83114;
-                    width: 130px;
-                    transform: rotate(-14deg) skewX(0deg);
-                    opacity: 0.6;
-                    content: "";
-                    position: absolute;
-                    bottom: 0px;
-                    height: 30px;
-                    border-radius: 400px 0px 239px 0px / 123px 0px 121px 0px;
-                }
-
-        .notifyProfile .grid-container .profiles-display {
-            width: 100%;
-            margin-top: 20px;
-            padding-top: 10px;
-            height: 180px;
+        .notifyProfile .grid-container .edit-profile .edit-infos .profile-data {
+            width: 400px;
             display: flex;
-            overflow-x: auto;
-            visibility: hidden;
         }
 
-            .notifyProfile .grid-container .profiles-display:hover {
+            .notifyProfile .grid-container .edit-profile .edit-infos .profile-data .data-details {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                margin-right: 55px;
+            }
+
+                .notifyProfile .grid-container .edit-profile .edit-infos .profile-data .data-details h5 {
+                    position: initial;
+                }
+
+                .notifyProfile .grid-container .edit-profile .edit-infos .profile-data .data-details h4 {
+                    font-size: 20px;
+                    color: #363b6d;
+                    font-weight: normal;
+                }
+
+    .notifyProfile .grid-container .edit-profile .edit-picture {
+        display: flex;
+        width: 100%;
+        padding-right: 10px;
+        clear: both;
+        flex-wrap: wrap;
+    }
+
+        .notifyProfile .grid-container .edit-profile .edit-picture div {
+            height: 150px;
+            width: 150px;
+            margin-left: 10px;
+            margin-top: 10px;
+            border-radius: 0.25rem;
+            overflow: hidden;
+            cursor: pointer;
+            position: relative;
+        }
+
+            .notifyProfile .grid-container .edit-profile .edit-picture div img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                z-index: -1;
+            }
+
+            .notifyProfile .grid-container .edit-profile .edit-picture div.picture:hover:after {
+                position: absolute;
+                width: 100%;
+                background-color: rgba(75, 78, 109, 0.8);
+                bottom: 0px;
+                color: white;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                transition: all 0.4s;
+                font-size: 18px;
+                letter-spacing: 1px;
+                content: "Delete";
+                height: 100%;
+            }
+
+            .notifyProfile .grid-container .edit-profile .edit-picture div.picture-add {
+                background-color: rgba(75, 78, 109, 0.3);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: white;
+                font-size: 30px;
+            }
+
+                .notifyProfile .grid-container .edit-profile .edit-picture div.picture-add:hover {
+                    background-color: #363b6d;
+                }
+
+    .notifyProfile .grid-container .matchs {
+        grid-area: matchs;
+        height: max-content;
+        max-height: 800px;
+        min-height: 300px;
+    }
+
+        .notifyProfile .grid-container .matchs .header {
+            color: white;
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+            .notifyProfile .grid-container .matchs .header h1 {
+                color: white;
+                text-align: center;
+                font-size: 19px;
+                padding: 20px 10px;
+                font-weight: 100;
+                letter-spacing: 0.5px;
+                z-index: 3;
+                position: absolute;
+                width: 100%;
+            }
+
+            .notifyProfile .grid-container .matchs .header:after {
+                z-index: 2;
+                background-color: #e83114;
+                width: 110%;
+                transform: rotate(10deg) skewX(0deg);
+                opacity: 0.8;
+                content: "";
+                position: absolute;
+                top: -105px;
+                left: -10px;
+                height: 200px;
+                border-radius: 400px 0px 239px 0px / 123px 0px 121px 0px;
+            }
+
+            .notifyProfile .grid-container .matchs .header:before {
+                z-index: 2;
+                background-color: white;
+                width: 110%;
+                transform: rotate(10deg) skewX(0deg);
+                opacity: 1;
+                content: "";
+                position: absolute;
+                top: -105px;
+                left: -10px;
+                height: 200px;
+                border-radius: 400px 0px 239px 0px / 123px 0px 121px 0px;
+            }
+
+        .notifyProfile .grid-container .matchs .display-matchs {
+            max-height: 730px;
+            margin: 70px 20px 20px 20px;
+            visibility: hidden;
+            overflow-y: auto;
+            padding-top: 35px;
+        }
+
+            .notifyProfile .grid-container .matchs .display-matchs:hover {
                 visibility: visible;
             }
 
-            .notifyProfile .grid-container .profiles-display::-webkit-scrollbar {
-                height: 8px;
+            .notifyProfile .grid-container .matchs .display-matchs::-webkit-scrollbar {
+                width: 8px;
             }
 
-            .notifyProfile .grid-container .profiles-display::-webkit-scrollbar-track {
+            .notifyProfile .grid-container .matchs .display-matchs::-webkit-scrollbar-track {
                 background: transparent;
             }
 
-            .notifyProfile .grid-container .profiles-display::-webkit-scrollbar-thumb {
+            .notifyProfile .grid-container .matchs .display-matchs::-webkit-scrollbar-thumb {
                 background: #776876;
                 border-radius: 3px;
             }
 
-                .notifyProfile .grid-container .profiles-display::-webkit-scrollbar-thumb:hover {
+                .notifyProfile .grid-container .matchs .display-matchs::-webkit-scrollbar-thumb:hover {
                     background: #363b6d;
                 }
 
-            .notifyProfile .grid-container .profiles-display .one-profile {
+            .notifyProfile .grid-container .matchs .display-matchs .one-match {
                 visibility: visible;
-                float: left;
                 cursor: pointer;
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                height: 160px;
+                width: 100%;
+                height: 80px;
+                margin-bottom: 15px;
+            }
+
+                .notifyProfile .grid-container .matchs .display-matchs .one-match .one-match-content {
+                    display: flex;
+                    align-items: center;
+                }
+
+                .notifyProfile .grid-container .matchs .display-matchs .one-match img {
+                    width: 80px;
+                    height: 80px;
+                    border-radius: 50%;
+                    object-fit: cover;
+                    margin-right: 10px;
+                }
+
+                .notifyProfile .grid-container .matchs .display-matchs .one-match .match-info {
+                    height: 100%;
+                    width: auto;
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: center;
+                }
+
+                    .notifyProfile .grid-container .matchs .display-matchs .one-match .match-info h5 {
+                        position: initial;
+                    }
+
+                    .notifyProfile .grid-container .matchs .display-matchs .one-match .match-info h4 {
+                        font-size: 18px;
+                        color: #363b6d;
+                        margin-bottom: 5px !important;
+                    }
+
+    .notifyProfile .grid-container .last-view, .notifyProfile .grid-container .last-like {
+        padding: 20px;
+        overflow: hidden;
+    }
+
+        .notifyProfile .grid-container .last-view img, .notifyProfile .grid-container .last-like img {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .notifyProfile .grid-container .last-view .empPhoto, .notifyProfile .grid-container .last-like .empPhoto {
+            position: relative;
+            border-radius: 50%;
+            overflow: hidden;
+            margin: 0 10px;
+            transition: all 0.3s;
+            box-shadow: 0px 2px 12px -4px rgba(0, 0, 0, 0.5);
+        }
+
+            .notifyProfile .grid-container .last-view .empPhoto:after, .notifyProfile .grid-container .last-like .empPhoto:after {
+                background-color: #363b6d;
+                width: 130px;
+                transform: rotate(-8deg) skewX(0deg);
+                opacity: 0.6;
+                content: "";
+                position: absolute;
+                bottom: 0px;
+                left: 0;
+                height: 20px;
+                border-radius: 400px 0px 239px 0px / 123px 0px 121px 0px;
+            }
+
+            .notifyProfile .grid-container .last-view .empPhoto:before, .notifyProfile .grid-container .last-like .empPhoto:before {
+                background-color: #e83114;
+                width: 130px;
+                transform: rotate(-14deg) skewX(0deg);
+                opacity: 0.6;
+                content: "";
+                position: absolute;
+                bottom: 0px;
+                height: 30px;
+                border-radius: 400px 0px 239px 0px / 123px 0px 121px 0px;
+            }
+
+    .notifyProfile .grid-container .profiles-display {
+        width: 100%;
+        margin-top: 20px;
+        padding-top: 10px;
+        height: 180px;
+        display: flex;
+        overflow-x: auto;
+        visibility: hidden;
+    }
+
+        .notifyProfile .grid-container .profiles-display:hover {
+            visibility: visible;
+        }
+
+        .notifyProfile .grid-container .profiles-display::-webkit-scrollbar {
+            height: 8px;
+        }
+
+        .notifyProfile .grid-container .profiles-display::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .notifyProfile .grid-container .profiles-display::-webkit-scrollbar-thumb {
+            background: #776876;
+            border-radius: 3px;
+        }
+
+            .notifyProfile .grid-container .profiles-display::-webkit-scrollbar-thumb:hover {
+                background: #363b6d;
+            }
+
+        .notifyProfile .grid-container .profiles-display .one-profile {
+            visibility: visible;
+            float: left;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: 160px;
+            justify-content: space-between;
+        }
+
+            .notifyProfile .grid-container .profiles-display .one-profile h4 {
+                font-size: 18px;
+                color: #363b6d;
+            }
+
+            .notifyProfile .grid-container .profiles-display .one-profile:hover .empPhoto {
+                transform: scale(1.1);
+                box-shadow: 0px 2px 12px -4px rgba(0, 0, 0, 1);
+            }
+
+            .notifyProfile .grid-container .profiles-display .one-profile.online .empPhoto:before {
+                background-color: #64a878;
+            }
+
+            .notifyProfile .grid-container .profiles-display .one-profile.online .empPhoto:after {
+                background-color: #72c17c;
+            }
+
+            .notifyProfile .grid-container .profiles-display .one-profile.online h4 {
+                color: #72c17c;
+            }
+
+    @@media screen and (max-width: 1000px) {
+        .body-container {
+            width: 100%;
+            padding: 50px 10px 0 10px;
+        }
+
+        .notifyProfile .grid-container {
+            grid-gap: 0 10px;
+        }
+
+            .notifyProfile .grid-container .grid-area {
+                margin-bottom: 10px;
+            }
+
+            .notifyProfile .grid-container .edit-profile .header h1 {
+                width: 100%;
+                text-align: left;
+                margin-left: 10px;
+            }
+
+            .notifyProfile .grid-container .edit-profile .edit-picture {
                 justify-content: space-between;
             }
 
-                .notifyProfile .grid-container .profiles-display .one-profile h4 {
-                    font-size: 18px;
-                    color: #363b6d;
-                }
-
-                .notifyProfile .grid-container .profiles-display .one-profile:hover .empPhoto {
-                    transform: scale(1.1);
-                    box-shadow: 0px 2px 12px -4px rgba(0, 0, 0, 1);
-                }
-
-                .notifyProfile .grid-container .profiles-display .one-profile.online .empPhoto:before {
-                    background-color: #64a878;
-                }
-
-                .notifyProfile .grid-container .profiles-display .one-profile.online .empPhoto:after {
-                    background-color: #72c17c;
-                }
-
-                .notifyProfile .grid-container .profiles-display .one-profile.online h4 {
-                    color: #72c17c;
-                }
-
-        @@media screen and (max-width: 1000px) {
-            .body-container {
-                width: 100%;
-                padding: 50px 10px 0 10px;
+            .notifyProfile .grid-container .matchs .display-matchs {
+                margin: 70px 10px 20px 10px;
             }
 
-            .notifyProfile .grid-container {
-                grid-gap: 0 10px;
+            .notifyProfile .grid-container .profile .profile-data {
+                margin-top: 0;
             }
 
-                .notifyProfile .grid-container .grid-area {
-                    margin-bottom: 10px;
+                .notifyProfile .grid-container .profile .profile-data .data-details {
+                    margin-left: 20%;
                 }
+    }
 
-                .notifyProfile .grid-container .edit-profile .header h1 {
-                    width: 100%;
-                    text-align: left;
-                    margin-left: 10px;
-                }
-
-                .notifyProfile .grid-container .edit-profile .edit-picture {
-                    justify-content: space-between;
-                }
-
-                .notifyProfile .grid-container .matchs .display-matchs {
-                    margin: 70px 10px 20px 10px;
-                }
-
-                .notifyProfile .grid-container .profile .profile-data {
-                    margin-top: 0;
-                }
-
-                    .notifyProfile .grid-container .profile .profile-data .data-details {
-                        margin-left: 20%;
-                    }
+    @@media screen and (max-width: 750px) {
+        .notifyProfile .grid-container {
+            display: flex;
+            flex-direction: column;
         }
 
-        @@media screen and (max-width: 750px) {
-            .notifyProfile .grid-container {
-                display: flex;
-                flex-direction: column;
+            .notifyProfile .grid-container .profile {
+                height: 532px;
             }
 
-                .notifyProfile .grid-container .profile {
-                    height: 532px;
+                .notifyProfile .grid-container .profile .empPhoto:before {
+                    width: 200%;
+                    top: 50%;
+                    height: 50%;
                 }
 
-                    .notifyProfile .grid-container .profile .empPhoto:before {
-                        width: 200%;
-                        top: 50%;
-                        height: 50%;
-                    }
-
-                    .notifyProfile .grid-container .profile .empPhoto:after {
-                        width: 200%;
-                        top: 71%;
-                        height: 50%;
-                    }
-
-                .notifyProfile .grid-container .matchs .header:before {
-                    transform: rotate(4deg) skewX(0deg);
+                .notifyProfile .grid-container .profile .empPhoto:after {
+                    width: 200%;
+                    top: 71%;
+                    height: 50%;
                 }
 
-                .notifyProfile .grid-container .matchs .header:after {
-                    transform: rotate(4deg) skewX(0deg);
-                }
-
-                .notifyProfile .grid-container .edit-profile {
-                    height: auto;
-                }
-        }
-
-        @@media screen and (max-width: 550px) {
-            .notifyProfile .grid-container .profile .empPhoto:before {
-                width: 200%;
-                top: 60%;
-                height: 50%;
+            .notifyProfile .grid-container .matchs .header:before {
+                transform: rotate(4deg) skewX(0deg);
             }
 
-            .notifyProfile .grid-container .profile .empPhoto:after {
-                width: 200%;
-                top: 80%;
-                height: 50%;
+            .notifyProfile .grid-container .matchs .header:after {
+                transform: rotate(4deg) skewX(0deg);
             }
+
+            .notifyProfile .grid-container .edit-profile {
+                height: auto;
+            }
+    }
+
+    @@media screen and (max-width: 550px) {
+        .notifyProfile .grid-container .profile .empPhoto:before {
+            width: 200%;
+            top: 60%;
+            height: 50%;
         }
 
-        #user-boxes {
-            background: white;
-            max-width: 75vw;
-            margin-left: 100px;
+        .notifyProfile .grid-container .profile .empPhoto:after {
+            width: 200%;
+            top: 80%;
+            height: 50%;
         }
+    }
 
-        div .fa {
-            width: 100%;
-            height: 200px;
-        }
+    #user-boxes {
+        background: white;
+        max-width: 75vw;
+        margin-left: 100px;
+    }
 
-        *, :after, :before {
-            -webkit-box-sizing: border-box;
-            -moz-box-sizing: border-box;
-            box-sizing: border-box;
-        }
+    div .fa {
+        width: 100%;
+        height: 200px;
+    }
+
+    *, :after, :before {
+        -webkit-box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        box-sizing: border-box;
+    }
+
+    .medium-4 {
+        width: 33.33333%;
+    }
+
+    .column, .columns {
+        position: relative;
+        padding-left: .9375rem;
+        padding-right: .9375rem;
+        float: left;
+    }
+
+    .medium-4 h3 {
+        padding: 10px 0px 10px 0px;
+    }
+
+    #user-boxes .fa {
+        font-size: 3.4em;
+    }
+
+    #user-boxes .features {
+        text-align: center;
+    }
+
+    #user-boxes i {
+        padding: 1em;
+    }
+
+    .fa {
+        display: inline-block;
+        font: normal normal normal 14px/1 FontAwesome;
+        font-size: inherit;
+        text-rendering: auto;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        color: black;
+    }
+
+    #user-boxes .fa {
+        text-align: center;
+        background: white;
+        font-size: 6em;
+        border: 1px solid black;
+    }
+
+    @@media only screen and (max-width:749px) {
 
         .medium-4 {
-            width: 33.33333%;
+            width: 100%;
         }
 
         .column, .columns {
             position: relative;
-            padding-left: .9375rem;
-            padding-right: .9375rem;
-            float: left;
+            padding-left: 0rem;
+            padding-right: 0rem;
+            margin-bottom: 2em;
         }
+    }
 
-        .medium-4 h3 {
-            padding: 10px 0px 10px 0px;
+    .statistic-section {
+        padding-top: 70px;
+        padding-bottom: 70px;
+        background: #1f97b7; /* fallback for old browsers */
+        background: -webkit-linear-gradient(to right, #0072ff, #00c6ff);
+        background: linear-gradient(to right, #0072ff, #00c6ff);
+    }
+
+    .count-title {
+        font-size: 50px;
+        font-weight: normal;
+        margin-top: 10px;
+        margin-bottom: 0;
+        text-align: center;
+        font-weight: bold;
+        color: #1f97b7;
+    }
+
+    .stats-text {
+        font-size: 15px;
+        font-weight: normal;
+        margin-top: 15px;
+        margin-bottom: 0;
+        text-align: center;
+        color: #1f97b7;
+        text-transform: uppercase;
+        font-weight: bold;
+    }
+
+    .stats-line-black {
+        margin: 12px auto 0;
+        width: 55px;
+        height: 2px;
+        background-color: #1f97b7;
+    }
+
+    .stats-icon {
+        font-size: 35px;
+        margin: 0 auto;
+        float: none;
+        display: table;
+        color: #1f97b7;
+    }
+
+    @@media (max-width: 992px) {
+        .counter {
+            margin-bottom: 40px;
         }
+    }
 
-        #user-boxes .fa {
-            font-size: 3.4em;
-        }
+    .container {
+        position: relative;
+        width: 100%;
+    }
 
-        #user-boxes .features {
+    .overlay {
+        position: absolute;
+        bottom: 0;
+        background: #ff5151;
+        width: 80%;
+        transition: .5s ease-out;
+        opacity: 1;
+        color: white;
+        font-size: 20px;
+        text-align: center;
+    }
+
+    .container:hover .overlay {
+        opacity: 0;
+    }
+
+
+
+    @@media screen and (max-width: 767px) {
+        div .dataTables_length, div.dataTables_filter, div.dataTables_info, div.dataTables_paginate {
             text-align: center;
         }
+    }
 
-        #user-boxes i {
-            padding: 1em;
-        }
-
-        .fa {
-            display: inline-block;
-            font: normal normal normal 14px/1 FontAwesome;
-            font-size: inherit;
-            text-rendering: auto;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-            color: black;
-        }
-
-        #user-boxes .fa {
-            text-align: center;
-            background: white;
-            font-size: 6em;
-            border: 1px solid black;
-        }
-
-        @@media only screen and (max-width:749px) {
-
-            .medium-4 {
-                width: 100%;
-            }
-
-            .column, .columns {
-                position: relative;
-                padding-left: 0rem;
-                padding-right: 0rem;
-                margin-bottom: 2em;
-            }
-        }
-
-        .statistic-section {
-            padding-top: 70px;
-            padding-bottom: 70px;
-            background: #1f97b7; /* fallback for old browsers */
-            background: -webkit-linear-gradient(to right, #0072ff, #00c6ff);
-            background: linear-gradient(to right, #0072ff, #00c6ff);
-        }
-
-        .count-title {
-            font-size: 50px;
-            font-weight: normal;
-            margin-top: 10px;
-            margin-bottom: 0;
-            text-align: center;
-            font-weight: bold;
-            color: #1f97b7;
-        }
-
-        .stats-text {
-            font-size: 15px;
-            font-weight: normal;
-            margin-top: 15px;
-            margin-bottom: 0;
-            text-align: center;
-            color: #1f97b7;
-            text-transform: uppercase;
-            font-weight: bold;
-        }
-
-        .stats-line-black {
-            margin: 12px auto 0;
-            width: 55px;
-            height: 2px;
-            background-color: #1f97b7;
-        }
-
-        .stats-icon {
-            font-size: 35px;
-            margin: 0 auto;
-            float: none;
-            display: table;
-            color: #1f97b7;
-        }
-
-        @@media (max-width: 992px) {
-            .counter {
-                margin-bottom: 40px;
-            }
-        }
-
-        .container {
-            position: relative;
-            width: 100%;
-        }
-
-        .overlay {
-            position: absolute;
-            bottom: 0;
-            background: #ff5151;
-            width: 80%;
-            transition: .5s ease-out;
-            opacity: 1;
-            color: white;
-            font-size: 20px;
-            text-align: center;
-        }
-
-        .container:hover .overlay {
-            opacity: 0;
-        }
-
-
-
-        @@media screen and (max-width: 767px) {
-            div .dataTables_length, div.dataTables_filter, div.dataTables_info, div.dataTables_paginate {
-                text-align: center;
-            }
-        }
-
-        table.dataTable thead > tr > th {
-            padding-left: 18px;
-            padding-right: 18px;
-            font-family: 'open sans', sans-serif;
-            background: #1b83be !important;
-            color: #fff;
-        }
-    </style>
+    table.dataTable thead > tr > th {
+        padding-left: 18px;
+        padding-right: 18px;
+        font-family: 'open sans', sans-serif;
+        background: #1b83be !important;
+        color: #fff;
+    }
+</style>
 

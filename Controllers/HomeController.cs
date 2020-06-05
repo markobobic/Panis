@@ -101,13 +101,23 @@ namespace Panis.Controllers
             //two columns in user table readnotificaiton and count notifications 
             ApplicationUser currentUser = System.Web.HttpContext.Current.GetOwinContext().
             GetUserManager<ApplicationUserManager>().FindById(System.Web.HttpContext.Current.User.Identity.GetUserId());
+
             if (currentUser.ReadNotifications == false && deleteCount > 0)
             {
-                currentUser.ReadNotifications = true;
-                currentUser.CountNotifications = currentUser.CountNotifications - deleteCount;
-                await System.Web.HttpContext.Current.GetOwinContext().
+                if(currentUser.CountNotifications > deleteCount)
+                {
+                    currentUser.ReadNotifications = false;
+                    currentUser.CountNotifications = currentUser.CountNotifications - deleteCount;
+                    await System.Web.HttpContext.Current.GetOwinContext().
+                    GetUserManager<ApplicationUserManager>().UpdateAsync(currentUser);
+                }
+                else if (currentUser.CountNotifications == deleteCount)
+                {
+                    currentUser.ReadNotifications = true;
+                    currentUser.CountNotifications = currentUser.CountNotifications - deleteCount;
+                    await System.Web.HttpContext.Current.GetOwinContext().
                 GetUserManager<ApplicationUserManager>().UpdateAsync(currentUser);
-               
+                }
             }
             return Json(new EmptyResult(), JsonRequestBehavior.AllowGet);
         }
@@ -173,6 +183,8 @@ namespace Panis.Controllers
             return Json(data, JsonRequestBehavior.AllowGet);
 
         }
+
+
         protected override void Dispose(bool disposing)
         {
             if (disposing)

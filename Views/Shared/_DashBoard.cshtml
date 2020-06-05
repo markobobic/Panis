@@ -58,12 +58,12 @@
         <div class="collapse navbar-collapse navbar-right" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav">
                 <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" style="color:white">@ViewBag.FullName</a>
+                    <a href="#" class="dropdown-toggle" id="dropdownFullName" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" style="color:white">@ViewBag.FullName</a>
                     <ul class="dropdown-menu">
                         @using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm" }))
                         {
                             @Html.AntiForgeryToken()
-                            @:<li> <a class="nav-link text-center" href="javascript:document.getElementById('logoutForm').submit()" <i class="fa fa-sign-out"></i>Log out</a></li>
+                            @:<li> <a  style="color:white;" class="nav-link text-center" href="javascript:document.getElementById('logoutForm').submit()" <i class="fa fa-sign-out"></i>Log out</a></li>
 
 
                         }
@@ -71,51 +71,54 @@
                     </ul>
                 </li>
             </ul>
-            <a href="#" id="teamLead" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+            <a href="#" id="notifyDropDown" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+               
                 <div class="icons">
                     <div class="notification ">
-                        <a href="#">
-                            <div class="notBtn" href="#" style="width:70px">
-                                @if (@ViewBag.CountNotify == 0)
-                                {
-                                    <div class="number"></div>
-                                }
-                                else
-                                {
-                                    <div class="number">@ViewBag.CountNotify</div>
-                                }
-                                <i id="bell" class="fas fa-bell cent"></i>
-                                <div class="box">
-                                    <div class="display">
-                                        <div class="nothing">
-                                            <i class="fas fa-child stick"></i>
-                                        </div>
-                                        <div class="cont">
-                                            @foreach (string item in ViewBag.Notify)
-                                            {
-                                                if (item.Contains("absence"))
+                        <a href="javascript:void(0)">
+                                <div class="notBtn" href="#" style="width:70px">
+                                    @if (@ViewBag.CountNotify == 0)
+                                    {
+                                        <div class="numberNotify"></div>
+                                    }
+                                    else
+                                    {
+                                        <div class="numberNotify">@ViewBag.CountNotify</div>
+                                    }
+                                    <i id="bell" class="fas fa-bell cent"></i>
+                                    <div class="box">
+                                        <div class="display">
+                                            <div class="nothing">
+                                                <i class="fas fa-child stick"></i>
+                                            </div>
+                                            <div class="cont">
+                                                <h4 style="margin-left:15px;" class="display-4">Notifications</h4>
+                                                @foreach (string item in ViewBag.Notify)
                                                 {
+                                                    if (item.Contains("absence"))
+                                                    {
 
-                                                    string presentText = Regex.Replace(item, @"(\d+)(?!.*\d)"," ");
-                                                    <div class="sec new">
-                                                        @presentText
-                                                        <br />
-                                                        <button onclick="location.href ='@Url.Action("EmployeeProfile", "EmployeeProfiles")?id=@Regex.Match(item,@"(\d+)(?!.*\d)")'" class="btn btn-info text-center">Review</button>
-                                                    </div>
-                                                }
-                                                else
-                                                {
-                                                    <div class="sec new">
-                                                        @item
-                                                    </div>
-                                                }
+                                                        string presentText = Regex.Replace(item, @"(\d+)(?!.*\d)", " ");
+                                            <div class="sec new">
+                                                <p style="white-space: pre-line"> <i class="fas fa-bullhorn"></i>@presentText</p>
+                                                <button onclick="location.href ='@Url.Action("EmployeeProfile", "EmployeeProfiles")?id=@Regex.Match(item,@"(\d+)(?!.*\d)")'" class="btn btn-info text-center">Review</button>
+                                            </div>
+                                                    }
+                                                    else
+                                                    {
+                                            <div class="sec new">
+                                                <p style="white-space: pre-line"><i class="fas fa-bullhorn"></i>@item</p>
 
-                                            }
+                                            </div>
+                                                    }
+
+                                                }
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                            </div>
-                        </a>
+                                    </div>
+                         </a>
+
                     </div>
                 </div>
 
@@ -129,13 +132,17 @@
     .navbar {
         position: relative;
     }
-
+    ul.dropdown-menu {
+        background: linear-gradient(rgba(31, 151, 183, 1),rgba(52, 73, 94, 1));
+    }
     #navbarl {
         -moz-transform: scale(0.9, 0.9); /* Moz-browsers */
         zoom: 0.9; /* Other non-webkit browsers */
         zoom: 90%; /* Webkit browsers */
     }
-
+    .fa-bullhorn{
+        padding-right:5px;
+    }
     .navbar-brand {
         position: fixed;
         left: 50%;
@@ -144,7 +151,6 @@
     }
 
     /* Notifications */
-
 
 
     .box::-webkit-scrollbar-track {
@@ -158,13 +164,16 @@
         background-color: #F5F5F5;
         border-radius: 5px
     }
-
+    
     .box::-webkit-scrollbar-thumb {
         background-color: black;
         border: 2px solid black;
         border-radius: 5px
     }
-
+    #logoutForm {
+        text-align: center;
+      
+    }
 
     .icons {
         display: inline;
@@ -177,7 +186,7 @@
         display: inline;
     }
 
-    .number {
+    .numberNotify {
         height: 24px;
         width: 22px;
         background-color: #d63031;
@@ -191,7 +200,7 @@
         border-style: solid;
         border-width: 2px;
     }
-        .number:empty {
+        .numberNotify:empty {
             display: none;
         }
         
@@ -227,8 +236,12 @@
     #bell:hover {
         color: #d63031;
     }
-
-
+    #dropdownFullName:hover {
+        background: #1f97b7;
+    }
+    #dropdownFullName.dropdown-toggle {
+        background: linear-gradient(rgba(31, 151, 183, 1),rgba(52, 73, 94, 1));
+    }
     .content {
         padding: 20px;
         color: black;
@@ -279,7 +292,7 @@
     }
 
     .sec {
-        padding: 25px 10px;
+        padding: 20px 10px;
         background-color: #F4F4F4;
         transition: 0.5s;
     }
@@ -320,15 +333,15 @@
             $(".notBtn>.box").css({ "height": "0vh" });
 
         } else {
-            $(".number").css({ "display": "none" });
+            $(".numberNotify").css({ "display": "none" });
             $(".notBtn>.box").css({ "height": "60vh" });
         };
-        $(this).data('clicks', !click); // you have to set it
+        $(this).data('clicks', !click);
 
     });
 
-
-    $('.notBtn').click(function () {
+    
+    $('#bell').click(function () {
         $.ajax({
             url: "@(Url.Action("DeleteNotifyCount", "Home"))",
             type: "POST",
@@ -340,6 +353,24 @@
         });
          });
 
+    //$(document).mouseup(function (e) {
+      
+       
+    //    // if the target of the click isn't the container nor a descendant of the container
+    //    $(".notBtn").click(function (e) {
+    //        $(".icons").show();
+    //        e.stopPropagation();
+    //    });
 
+    //    $(".notBtn").click(function (e) {
+    //        $(".number").css({ "display": "none" });
+    //        $(".notBtn>.box").css({ "height": "60vh" });
+    //    });
 
+    //    $(document).click(function () {
+    //        $(".notBtn>.box").css({ "height": "0vh" });
+    //    });
+
+    //});
+    
 </script>

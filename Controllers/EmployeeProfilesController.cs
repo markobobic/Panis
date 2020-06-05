@@ -33,9 +33,18 @@ namespace Panis.Controllers
             var currentTeamLead =await db.Employees.FindAsync(teamLead.EmployeeID);
             ViewBag.TeamLeadPhoto = currentTeamLead.Photo;
             ViewBag.TeamLeadPhotoType = currentTeamLead.PhotoType;
-            ViewBag.Seniority = db.employeeEnrollments.Where(x=>x.EmployeeID==emp.EmployeeID).FirstOrDefault().Seniority.ToString();
+            ViewBag.Seniority = db.employeeEnrollments.Where(x => x.EmployeeID == emp.EmployeeID).FirstOrDefault().Seniority.ToString();
             var currentProject = await db.Realizations.Where(x => x.EmployeeID == emp.EmployeeID).OrderByDescending(x => x.RealizationID).FirstOrDefaultAsync();
-            ViewBag.CurrentProject = db.Projects.Where(x => x.ProjectID == currentProject.ProjectID).FirstOrDefault().Name;    
+            if(currentProject == null)
+            {
+                ViewBag.CurrentProject = "No current project";
+            }
+            else
+            {
+                var selectCurrentProject = db.Projects.Where(x => x.ProjectID == currentProject.ProjectID).FirstOrDefault();
+                ViewBag.CurrentProject = selectCurrentProject == null ? "No current project" : selectCurrentProject.Name;
+            }
+           
             return View();
         }
         [HttpGet]
@@ -73,7 +82,7 @@ namespace Panis.Controllers
             return Json(new EmptyResult(), JsonRequestBehavior.AllowGet);
         }
         [HttpPost]
-        public async Task<JsonResult> DeclineAbsence(int AbsenceID)
+        public async Task<JsonResult> DeclineAbsence(int AbsenceID,string Reason)
         {
             //if absence is declined then we are sending notification to that user and also to all hr staff
             //absence is also being deleted 
@@ -81,7 +90,14 @@ namespace Panis.Controllers
             var absenceType = db.AbsenceTypes.Find(absence.AbsenceTypeID);
             int employeeID = (int)Session["EmployeeID"];
             Notification notify = new Notification();
-            notify.Message = $"Your request for {absenceType.Name.ToLower()} from {absence.Start.ToString("MMMM dd, yyyy")} to {absence.End.ToString("MMMM dd, yyyy")} has been declined";
+            if(Reason == null || Reason == "")
+            {
+                notify.Message = $"Your request for {absenceType.Name.ToLower()} from {absence.Start.ToString("MMMM dd, yyyy")} to {absence.End.ToString("MMMM dd, yyyy")} has been declined.";
+            }
+            else
+            {
+                notify.Message = $"Your request for {absenceType.Name.ToLower()} from {absence.Start.ToString("MMMM dd, yyyy")} to {absence.End.ToString("MMMM dd, yyyy")} has been declined.\nReason: {Reason}";
+            }
             notify.EmployeeID = employeeID;
             db.Notifications.Add(notify);
             var user = db.Users.Where(x => x.EmployeeID == employeeID).FirstOrDefault();
