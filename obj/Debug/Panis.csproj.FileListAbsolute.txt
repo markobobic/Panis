@@ -155,3 +155,4 @@ C:\Users\marko\source\repos\Panis\Panis\bin\StructureMap.Web.pdb
 C:\Users\marko\source\repos\Panis\Panis\bin\StructureMap.Web.xml
 C:\Users\marko\source\repos\Panis\Panis\obj\Debug\Panis.Migrations.SectorProject.resources
 C:\Users\marko\source\repos\Panis\Panis\obj\Debug\Panis.Migrations.isTeamLead.resources
+C:\Users\marko\source\repos\Panis\Panis\obj\Debug\Panis.Migrations.Rating.resources

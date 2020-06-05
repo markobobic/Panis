@@ -227,6 +227,7 @@
     <Compile Include="Controllers\EmployeeProfilesController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
+    <Compile Include="Controllers\RatingsController.cs" />
     <Compile Include="Controllers\RealizationsController.cs" />
     <Compile Include="Controllers\SendMailController.cs" />
     <Compile Include="DataTableModel\EmployeeSearchClass.cs" />
@@ -320,6 +321,10 @@
     <Compile Include="Migrations\202005190541359_isTeamLead.designer.cs">
       <DependentUpon>202005190541359_isTeamLead.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202006051713055_Rating.cs" />
+    <Compile Include="Migrations\202006051713055_Rating.designer.cs">
+      <DependentUpon>202006051713055_Rating.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Absence.cs" />
     <Compile Include="Models\AbsenceOfEmployee.cs" />
@@ -362,6 +367,7 @@
     <Content Include="Content\Images\panonitSlika.png" />
     <Content Include="Content\Images\transparentForProject.png" />
     <Content Include="Content\Images\transparentQuestnMark.png" />
+    <Content Include="Content\rating.css" />
     <Content Include="Content\Shared.css" />
     <Content Include="Content\Site.css" />
     <Content Include="favicon.ico" />
@@ -371,6 +377,7 @@
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
+    <Content Include="Scripts\rating.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -422,6 +429,8 @@
     <Content Include="Views\EmployeeProfiles\EmployeeProfile.cshtml" />
     <Content Include="Views\SendMail\Index.cshtml" />
     <Content Include="Views\SendMail\SendEMail.cshtml" />
+    <Content Include="Views\Ratings\Index.cshtml" />
+    <Content Include="Views\Shared\_Rating.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
@@ -474,6 +483,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202005190541359_isTeamLead.resx">
       <DependentUpon>202005190541359_isTeamLead.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202006051713055_Rating.resx">
+      <DependentUpon>202006051713055_Rating.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

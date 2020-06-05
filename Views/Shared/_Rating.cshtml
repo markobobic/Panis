@@ -1,0 +1,222 @@
+﻿@model  Panis.Models.Employee
+
+<div class="containerRating">
+    <div class="card-profile">
+        <div class="card-profile_visual"> <img style="height:100%; width:100%;" src="https://miro.medium.com/proxy/0*pAdZLfSqNrMZAAPA.jpg" alt="Alternate Text" /></div>
+        <span class="result"></span>
+        <div class="card-profile_user-stats">
+            <div class="display-1" style="padding-left:4.6em">@Model.FirstName @Model.LastName</div>
+            <div class="ratting-item" style="padding-left:4em" data-pid="@Model.EmployeeID">
+                <input class="rating " name="vote" type="radio" value="1" />
+                <input class="rating" name="vote" type="radio" value="2" />
+                <input class="rating" name="vote" type="radio" value="3" />
+                <input class="rating" name="vote" type="radio" value="4" />
+                <input class="rating" name="vote" type="radio" value="5" />
+            </div>
+            
+            <div class="display-1 text-center">Average rating: <span id="avgRating">@Model.Rating</span></div>
+            
+            <div class="stats-holder">
+
+                <div class="user-stats">
+                    <strong>Position</strong>
+                    <span class="labelForRating">Developer</span>
+                </div>
+                <div class="user-stats">
+                    <strong>Address</strong>
+                    <span class="labelForRating">@Model.LivingCity, @Model.LivingStreet:@Model.LivingStreetNumber</span>
+                </div>
+                <div class="user-stats">
+                    <strong>Seniority</strong>
+                    <span class="labelForRating">Junior</span>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+<style>
+    @@font-face {
+        font-family: "ProximaNova-Regular";
+        src: url("https://s3-us-west-2.amazonaws.com/s.cdpn.io/64/ProximaNova-Regular.eot");
+        src: url("https://s3-us-west-2.amazonaws.com/s.cdpn.io/64/ProximaNova-Regular.eot?#iefix") format("embedded-opentype"), url("https://s3-us-west-2.amazonaws.com/s.cdpn.io/64/ProximaNova-Regular.woff") format("woff"), url("https://s3-us-west-2.amazonaws.com/s.cdpn.io/64/ProximaNova-Regular.ttf") format("truetype"), url("https://s3-us-west-2.amazonaws.com/s.cdpn.io/64/ProximaNova-Regular.svg#rocketdesign-font") format("svg");
+        font-weight: normal;
+        font-style: normal;
+    }
+
+    :root {
+        font-size: 16px;
+    }
+
+    * {
+        box-sizing: border-box;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+    }
+
+
+    .containerRating {
+        max-width: 300px;
+        width: 100%;
+        height: 500px;
+        position: relative;
+        display: inline-block;
+        margin-left: 0px;
+    }
+
+    .card-profile {
+        float: left;
+        position: absolute;
+        top: 32%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 75%;
+        height: 330px;
+        background: #fff;
+        border-radius: 10px;
+        z-index: 1;
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+        display:inline-block;
+        
+    }
+    
+    .card-profile:after {
+        content: '';
+        display: block;
+        position: absolute;
+        width: 100%;
+        height: 100px;
+        bottom: 0;
+        box-shadow: 0 36px 64px -34px rgba(0, 0, 0, 1), 0 16px 14px -14px rgba(0, 0, 0, 0.6), 0 22px 18px -18px rgba(0, 0, 0, 0.4), 0 22px 38px -18px rgba(0, 0, 0, 1);
+        transform: scaleX(0.7) scaleY(1.3) translateY(-15%);
+        z-index: -1;
+        opacity: 0.25;
+    }
+
+    .card-profile_visual {
+        height: 68%;
+        overflow: hidden;
+        position: relative;
+        background: linear-gradient(to bottom, #3b3c3f, #263d85, #172551);
+        border-top-left-radius: 10px;
+        border-top-right-radius: 10px;
+    }
+
+        .card-profile_visual:before, .card-profile_visual:after {
+            display: block;
+            content: '';
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            z-index: 0;
+            opacity: 0.5;
+            mix-blend-mode: lighten;
+        }
+
+        .card-profile_visual:before {
+            filter: grayscale(100%);
+        }
+
+        .card-profile_visual:after {
+            z-index: 2;
+            mix-blend-mode: lighten;
+            opacity: 1;
+        }
+
+    .card-profile_user-infos {
+        position: absolute;
+        z-index: 3;
+        left: 0;
+        right: 0;
+        margin: auto;
+        top: calc(68% - 100px);
+        color: #fff;
+        text-align: center;
+    }
+
+        .card-profile_user-infos a:after {
+            content: '';
+            font-style: normal;
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            display: block;
+            background-image: url("https://s3-us-west-2.amazonaws.com/s.cdpn.io/64/icon-add-f.svg");
+            background-repeat: no-repeat;
+            background-size: 30%;
+            background-position: center center;
+            left: 0;
+            top: 0;
+        }
+
+        .card-profile_user-infos .infos_name, .card-profile_user-infos .infos_nick {
+            display: block;
+            clear: both;
+            padding: 0.5em 0;
+            padding-top: 0;
+            position: absolute;
+            width: 100%;
+            text-align: center;
+            font-size: 18px;
+            top: 8px;
+            font-weight: 800;
+        }
+
+        .card-profile_user-infos .infos_nick {
+            top: 32px;
+            font-size: 14px;
+            font-weight: 300;
+        }
+
+    .card-profile_user-stats {
+        background: #fff;
+        float: left;
+        width: 100%;
+        height: calc(100% - 68% + 2px);
+        border-bottom-left-radius: 10px;
+        border-bottom-right-radius: 10px;
+        background-image: linear-gradient(to bottom, #e5e4e5, #c2c1c2);
+        max-height:600px;
+
+    }
+
+        .card-profile_user-stats .stats-holder {
+            position: absolute;
+            width: 100%;
+            top: calc(70% + 4em);
+            display: flex;
+        }
+
+        .card-profile_user-stats .user-stats {
+            flex: 1;
+            text-align: center;
+        }
+
+            .card-profile_user-stats .user-stats strong {
+                
+                float: left;
+                clear: both;
+                width: 100%;
+                color: #b3b1b2;
+                font-size: 14px;
+                font-weight: 500;
+                letter-spacing: -0.2px;
+               
+            }
+
+            .card-profile_user-stats .user-stats span {
+                font-size: 14px;
+                color: #5e5e5e;
+                
+                
+            }
+    .card-profile_user-stats {
+        padding-bottom:160px !important;
+    }
+</style>
+
+
+
+

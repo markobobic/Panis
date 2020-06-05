@@ -50,6 +50,8 @@ namespace Panis.Models
         public virtual ICollection<Project> Projects { get; set; }
         public bool IsTeamLead { get; set; }
 
+        public double Rating { get; set; }
+
         public string FullName
         {
             get

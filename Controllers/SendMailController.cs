@@ -19,9 +19,17 @@ namespace Panis.Controllers
         }
 
         [HttpGet]
-        public ActionResult SendEMail()
+        public ActionResult SendEMail(string button)
         {
-            ViewBag.FullName = (string)Session["fullName"]; 
+            if(button == "deliver") 
+            { 
+            ViewBag.Subject = (string)Session["fullName"] + "- Dostava dokumentacije za bolovanje";
+            }
+            else
+            {
+                ViewBag.Subject = (string)Session["fullName"] + "- Zahtev za HR-a 1 na 1";
+            }
+
             return View();
         }
         [HttpPost]
