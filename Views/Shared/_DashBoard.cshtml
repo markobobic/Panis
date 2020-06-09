@@ -61,7 +61,7 @@
         <div class="collapse navbar-collapse navbar-right" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav">
                 <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" id="dropdownFullName" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" style="color:white">@ViewBag.FullName</a>
+                    <a href="#" class="dropdown-toggle" id="dropdownFullName" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" style="color:white"><i style="font-size:15pt"; class="fas fa-power-off"></i></a>
                     <ul class="dropdown-menu">
                         @using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm" }))
                         {
@@ -96,23 +96,31 @@
                                             </div>
                                             <div class="cont">
                                                 <h4 style="margin-left:15px;" class="display-4">Notifications</h4>
+                                                @if ((ViewBag.Notify as ICollection<string>).Count() == 0)
+                                                {
+                                                    <br /> <br /> <br /> <br />
+                                                    <div class="text-center">
+                                                        <h2 class="display-4">There is no notifications</h2>
+                                                        <i style="font-size:40px;" class="far fa-bell-slash"></i>
+                                                    </div>
+                                                }
                                                 @foreach (string item in ViewBag.Notify)
                                                 {
                                                     if (item.Contains("absence"))
                                                     {
 
                                                         string presentText = Regex.Replace(item, @"(\d+)(?!.*\d)", " ");
-                                            <div class="sec new">
-                                                <p style="white-space: pre-line"> <i class="fas fa-bullhorn"></i>@presentText</p>
-                                                <button onclick="location.href ='@Url.Action("EmployeeProfile", "EmployeeProfiles")?id=@Regex.Match(item,@"(\d+)(?!.*\d)")'" class="btn btn-info text-center">Review</button>
-                                            </div>
+                                                        <div class="sec new">
+                                                            <p style="white-space: pre-line"> <i class="fas fa-bullhorn"></i>@presentText</p>
+                                                            <button onclick="location.href ='@Url.Action("EmployeeProfile", "EmployeeProfiles")?id=@Regex.Match(item,@"(\d+)(?!.*\d)")'" class="btn btn-info text-center">Review</button>
+                                                        </div>
                                                     }
                                                     else
                                                     {
-                                            <div class="sec new">
-                                                <p style="white-space: pre-line"><i class="fas fa-bullhorn"></i>@item</p>
+                                                        <div class="sec new">
+                                                            <p style="white-space: pre-line"><i class="fas fa-bullhorn"></i>@item</p>
 
-                                            </div>
+                                                        </div>
                                                     }
 
                                                 }
@@ -135,13 +143,22 @@
     .navbar {
         position: relative;
     }
+    @@supports (-moz-appearance:none) {
+        #navbarl {
+            -moz-transform: scale(0.9, 0.9); /* Moz-browsers */
+            width: 110%;
+        }
+    }
+
+    
     ul.dropdown-menu {
         background: linear-gradient(rgba(31, 151, 183, 1),rgba(52, 73, 94, 1));
     }
     #navbarl {
-        -moz-transform: scale(0.9, 0.9); /* Moz-browsers */
         zoom: 0.9; /* Other non-webkit browsers */
         zoom: 90%; /* Webkit browsers */
+       
+
     }
     .fa-bullhorn{
         padding-right:5px;
@@ -167,7 +184,7 @@
         background-color: #F5F5F5;
         border-radius: 5px
     }
-    
+
     .box::-webkit-scrollbar-thumb {
         background-color: black;
         border: 2px solid black;
@@ -175,7 +192,7 @@
     }
     #logoutForm {
         text-align: center;
-      
+
     }
 
     .icons {
@@ -206,7 +223,7 @@
         .numberNotify:empty {
             display: none;
         }
-        
+
 
     .notBtn {
         transition: 0.5s;
@@ -234,6 +251,7 @@
         -moz-box-shadow: 10px 10px 23px 0px rgba(0,0,0,0.1);
         box-shadow: 10px 10px 23px 0px rgba(0,0,0,0.1);
         cursor: context-menu;
+        
     }
 
     #bell:hover {
@@ -274,6 +292,7 @@
     }
 
         .cont:empty {
+
             display: none;
         }
 
@@ -303,7 +322,7 @@
     .profCont {
         padding-left: 15px;
     }
-    
+
 
     .txt {
         vertical-align: top;
@@ -334,8 +353,9 @@
         if (click) {
 
             $(".notBtn>.box").css({ "height": "0vh" });
-
+            $('.box').css('border', '');
         } else {
+            $('.box').css('border', '1px solid gray');
             $(".numberNotify").css({ "display": "none" });
             $(".notBtn>.box").css({ "height": "60vh" });
         };
@@ -345,6 +365,7 @@
 
     
     $('#bell').click(function () {
+        
         $.ajax({
             url: "@(Url.Action("DeleteNotifyCount", "Home"))",
             type: "POST",
@@ -354,7 +375,10 @@
             success: function (data) {
             }
         });
-         });
+    });
+
+
+   
 
     //$(document).mouseup(function (e) {
       

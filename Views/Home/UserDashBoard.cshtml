@@ -2,7 +2,7 @@
 <head>
     <title>Dashboard</title>
     <meta charset="utf-8">
-    
+
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
     <link rel="stylesheet" type="text/css" href=" https://cdn.datatables.net/buttons/1.6.1/css/buttons.dataTables.min.css" />
@@ -21,7 +21,7 @@
                 }
                 else
                 {
-                    <img id="profilePiciture" class="avatar  img-circle img-thumbnail" src=@("data:" + Model.PhotoType + ";base64," + Convert.ToBase64String(Model.Photo)) style="max-height:100px;  margin-left:45px; max-width:100px;" alt="" />
+                    <img id="profilePiciture" class="avatar  img-circle img-thumbnail" src=@("data:" + Model.PhotoType + ";base64," + Convert.ToBase64String(Model.Photo)) style="max-height:100px;  margin-left:10px; max-width:100px;" alt="" />
 
                 }
             </div></hr><br>
@@ -53,30 +53,31 @@
                 {
                     <li class="list-group-item text-right"><span class="pull-left"><strong>Education</strong></span>/</li>
                 }
-            </ul>
-            <div class="text-center">
-                <button onclick=" @Url.Action("Edit", "Employee")" class="btn btn-lg btn-success" id="editProfile"><span class="glyphicon glyphicon-edit"></span> Edit</button>
 
-            </div>
+                <div onclick="@Url.Action("Edit", "Employee")" id="editProfile" class="edit-button ">
+                    <span class="glyphicon glyphicon-edit"></span>
+                </div>
+
+            </ul>
             <br />
             <div class="panel panel-default ">
                 <div class="panel-heading text-muted">Absences</div>
                 <ul class="skill-list">
                     <li class="skill">
                         <h3>Vacations</h3>
-                        <progress class="skill-1" max="100" value="50">
+                        <progress class="skill-1" max="100" value="30">
                             <strong>Skill Level: 50%</strong>
                         </progress>
                     </li>
                     <li class="skill">
-                        <h3>Sick Leave</h3>
-                        <progress class="skill-2" max="100" value="75">
+                        <h3>Free Days</h3>
+                        <progress class="skill-2" max="100" value="25">
                             <strong>Skill Level: 75%</strong>
                         </progress>
                     </li>
                     <li class="skill">
-                        <h3>Free Days</h3>
-                        <progress class="skill-3" max="100" value="25">
+                        <h3>Sick Leave</h3>
+                        <progress class="skill-3" max="100" value="65">
                             <strong>Skill Level: 25%</strong>
                         </progress>
                     </li>
@@ -100,7 +101,7 @@
                                 <div class="container">
                                     <div class="counter">
                                         <div style="width: 100%;
-    height: 200px;" class="fa fa-clock-o fa-2x stats-icon">
+                                     height: 200px;" class="fa fa-clock-o fa-2x stats-icon">
                                             <h2 class="timer count-title count-number">@ViewBag.Experience</h2>
                                             <div class="stats-line-black"></div>
                                             <p class="stats-text">Month's Experience</p>
@@ -129,8 +130,8 @@
                             <div class="medium-4 columns">
                                 <div class="container">
                                     <div class="counter">
-                                        <div  style="width: 100%;
-                                         height: 200px;"class="fa fa-code fa-2x stats-icon">
+                                        <div style="width: 100%;
+                                         height: 200px;" class="fa fa-code fa-2x stats-icon">
                                             <h2 class="count-title">
                                                 @ViewBag.Level
                                             </h2>
@@ -225,293 +226,322 @@
         </div>
     </div>
 </div>
-@section scripts{
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
-    <script src="https://www.amcharts.com/lib/3/amcharts.js"></script>
-    <script src="https://www.amcharts.com/lib/3/pie.js"></script>
-    <script src="https://www.amcharts.com/lib/3/themes/light.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/waypoints/2.0.3/waypoints.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Counter-Up/1.0.0/jquery.counterup.min.js"></script>
-    <script type="text/javascript" language="javascript" src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.21.0/moment.min.js"></script>
-    
-    <style>
-        .container {
-            -moz-transform: scale(0.9, 0.9); /* Moz-browsers */
-            zoom: 0.9; /* Other non-webkit browsers */
-            zoom: 90%; /* Webkit browsers */
-        }
 
-        #chartdiv {
-            width: 100%;
-            height: 435px;
-            font-size: 11px;
-        }
-
-        @@media screen and (max-width: 767px) {
-            div .dataTables_length, div.dataTables_filter, div.dataTables_info, div.dataTables_paginate {
-                text-align: center;
-            }
-        }
-
-        table.dataTable thead > tr > th {
-            padding-left: 18px;
-            padding-right: 18px;
-            font-family: 'open sans', sans-serif;
-            background: #1b83be !important;
-            color: #fff;
-        }
-
-
-
-
-        h1 {
-    font-size: 5px;
-    font-weight: 800;
-}
-
-h3 {
-    font-size: 1em;
-}
-
-progress, progress[role] {
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
-    border: none;
-    background-size: auto;
-    height: 10px;
-    width: 100%;
-}
-
-
-.skill-list {
-    list-style: none;
-    margin: 0;
-    padding: 1em;
-}
-
-
-.skill {
-    margin-bottom: 1em;
-    position: relative;
-    h3
-
-{
-    color: #fff;
-    left: 1em;
-    line-height: 1;
-    position: absolute;
-    top: 1em;
-}
-
-::-webkit-progress-value {
-    -webkit-animation: bar-fill 2s;
-    width: 0px;
-}
-
-}
-
-
-.skill-1::-webkit-progress-value {
-    background: #ff9e2c;
-}
-
-.skill-1::-moz-progress-bar {
-    background: #ff9e2c;
-}
-
-.skill-2::-webkit-progress-value {
-    background: #4ecdc4;
-}
-
-.skill-2::-moz-progress-bar {
-    background: #4ecdc4;
-}
-
-.skill-3::-webkit-progress-value {
-    background: #ff6b6b;
-}
-
-.skill-3::-moz-progress-bar {
-    background: #ff6b6b;
-}
-
-
-@@-webkit-keyframes bar-fill {
-    0% {
-        width: 0;
-    }
-}
-
-@@keyframes bar-fill {
-    0% {
-        width: 0;
-    }
-}
-
-
-
-#editIcon {
-    position: relative;
-    top: -20px;
-    left: 60%;
-    border-radius: 50%;
-    height: 30px;
-    width: 30px;
-    display: flex !important;
-    align-items: center;
-    justify-content: center;
-    background-color: white;
-    color: #1f97b7;
-    box-shadow: 0 0 8px 3px #B8B8B8;
-}
-
-
-
-.btn-success {
-    color: #fff;
-    background-color: #1f97b7;
-    border-color: #1f97b7;
-}
-
-    .btn-success:hover, .btn-success:active, .btn-success:focus {
-        color: #ffffff !important;
-        background-color: #34495E !important;
-        border-color: #34495E !important;
+<style>
+    .container {
+        -moz-transform: scale(0.9, 0.9); /* Moz-browsers */
+        zoom: 0.9; /* Other non-webkit browsers */
+        zoom: 90%; /* Webkit browsers */
     }
 
- #user-boxes {
-    background: white;
-    padding: 50px;
-    max-width: 75vw;
-    margin: 0 auto;
-}
+    #chartdiv {
+        width: 100%;
+        height: 435px;
+        font-size: 11px;
+    }
 
-
-
-
-*, :after, :before {
-    -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    box-sizing: border-box;
-}
-
-.medium-4 {
-    width: 33.33333%;
-}
-
-.column, .columns {
-    position: relative;
-    padding-left: .9375rem;
-    padding-right: .9375rem;
-    float: left;
-}
-
-.medium-4 h3 {
-    padding: 10px 0px 10px 0px;
-}
-
-#user-boxes .fa {
-    font-size: 3.4em;
-}
-
-#user-boxes .features {
-    text-align: center;
-}
-
-#user-boxes i {
-    padding: 1em;
-}
-
-.fa {
-    display: inline-block;
-    font: normal normal normal 14px/1 FontAwesome;
-    font-size: inherit;
-    text-rendering: auto;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-}
-
-#user-boxes .fa {
-    text-align: center;
-    background: white;
-    display: block;
-    margin: auto;
-    font-size: 4em;
-    border: 1px solid black;
-}
-
-
-.statistic-section {
-    padding-top: 70px;
-    padding-bottom: 70px;
-    background: #1f97b7; /* fallback for old browsers */
-    background: -webkit-linear-gradient(to right, #0072ff, #00c6ff);
-    background: linear-gradient(to right, #0072ff, #00c6ff);
-}
-
-.count-title {
-    font-size: 50px;
-    font-weight: normal;
-    margin-top: 10px;
-    margin-bottom: 0;
-    text-align: center;
-    font-weight: bold;
-    color: #1f97b7;
-}
-
-        .stats-text {
-            font-size: 15px;
-            font-weight: normal;
-            margin-top: 15px;
-            margin-bottom: 0;
+    @@media screen and (max-width: 767px) {
+        div .dataTables_length, div.dataTables_filter, div.dataTables_info, div.dataTables_paginate {
             text-align: center;
-            color: #1f97b7;
-            text-transform: uppercase;
-            font-weight: bold;
+        }
+    }
+
+    table.dataTable thead > tr > th {
+        padding-left: 18px;
+        padding-right: 18px;
+        font-family: 'open sans', sans-serif;
+        background: #1b83be !important;
+        color: #fff;
+    }
+
+
+
+
+    h1 {
+        font-size: 5px;
+        font-weight: 800;
+    }
+
+    h3 {
+        font-size: 1em;
+    }
+
+    progress, progress[role] {
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+        border: none;
+        background-size: auto;
+        height: 10px;
+        width: 100%;
+    }
+
+
+    .skill-list {
+        list-style: none;
+        margin: 0;
+        padding: 1em;
+    }
+
+
+    .skill {
+        margin-bottom: 1em;
+        position: relative;
+        h3
+
+    {
+        color: #fff;
+        left: 1em;
+        line-height: 1;
+        position: absolute;
+        top: 1em;
+    }
+
+    ::-webkit-progress-value {
+        -webkit-animation: bar-fill 2s;
+        width: 0px;
+    }
+
+    }
+
+
+    .skill-1::-webkit-progress-value {
+        background: #ff9e2c;
+    }
+
+    .skill-1::-moz-progress-bar {
+        background: #ff9e2c;
+    }
+
+    .skill-2::-webkit-progress-value {
+        background: #4ecdc4;
+    }
+
+    .skill-2::-moz-progress-bar {
+        background: #4ecdc4;
+    }
+
+    .skill-3::-webkit-progress-value {
+        background: #ff6b6b;
+    }
+
+    .skill-3::-moz-progress-bar {
+        background: #ff6b6b;
+    }
+
+
+    @@-webkit-keyframes bar-fill {
+        0% {
+            width: 0;
+        }
+    }
+
+    @@keyframes bar-fill {
+        0% {
+            width: 0;
+        }
+    }
+
+
+
+    #editIcon {
+        position: relative;
+        top: -20px;
+        left: 52%;
+        border-radius: 50%;
+        height: 30px;
+        width: 30px;
+        display: flex !important;
+        align-items: center;
+        justify-content: center;
+        background-color: white;
+        color: #1f97b7;
+        box-shadow: 0 0 8px 3px #B8B8B8;
+    }
+
+
+
+    .btn-success {
+        color: #fff;
+        background-color: #1f97b7;
+        border-color: #1f97b7;
+    }
+
+        .btn-success:hover, .btn-success:active, .btn-success:focus {
+            color: #ffffff !important;
+            background-color: #34495E !important;
+            border-color: #34495E !important;
         }
 
-.stats-line-black {
-    margin: 12px auto 0;
-    width: 55px;
-    height: 2px;
-    background-color: #1f97b7;
-}
-
-.stats-icon {
-    font-size: 35px;
-    margin: 0 auto;
-    float: none;
-    display: table;
-    color: #1f97b7;
-}
-
-
-
-.container {
-    position: relative;
-    width: 100%;
-}
-
-.overlay {
-    position: absolute;
-    bottom: 0;
-    background: #34495E;
-    width: 90%;
-    transition: .5s ease-out;
-    opacity: 1;
-    color: white;
-    font-size: 20px;
-    text-align: center;
-}
+    #user-boxes {
+        background: white;
+        padding: 50px;
+        max-width: 75vw;
+        margin: 0 auto;
+    }
 
 
 
 
-    </style>
+    *, :after, :before {
+        -webkit-box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        box-sizing: border-box;
+    }
 
-    <script>
+    .medium-4 {
+        width: 33.33333%;
+    }
+
+    .column, .columns {
+        position: relative;
+        padding-left: .9375rem;
+        padding-right: .9375rem;
+        float: left;
+    }
+
+    .medium-4 h3 {
+        padding: 10px 0px 10px 0px;
+    }
+
+    #user-boxes .fa {
+        font-size: 3.4em;
+    }
+
+    #user-boxes .features {
+        text-align: center;
+    }
+
+    #user-boxes i {
+        padding: 1em;
+    }
+
+    .fa {
+        display: inline-block;
+        font: normal normal normal 14px/1 FontAwesome;
+        font-size: inherit;
+        text-rendering: auto;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+    }
+
+    #user-boxes .fa {
+        text-align: center;
+        background: white;
+        display: block;
+        margin: auto;
+        font-size: 4em;
+        border: 3px solid #1e1e1e;
+    }
+
+
+    .statistic-section {
+        padding-top: 70px;
+        padding-bottom: 70px;
+        background: #1f97b7; /* fallback for old browsers */
+        background: -webkit-linear-gradient(to right, #0072ff, #00c6ff);
+        background: linear-gradient(to right, #0072ff, #00c6ff);
+    }
+
+    .count-title {
+        font-size: 50px;
+        font-weight: normal;
+        margin-top: 10px;
+        margin-bottom: 0;
+        text-align: center;
+        font-weight: bold;
+        color: #1f97b7;
+    }
+
+    .stats-text {
+        font-size: 15px;
+        font-weight: normal;
+        margin-top: 15px;
+        margin-bottom: 0;
+        text-align: center;
+        color: #1f97b7;
+        text-transform: uppercase;
+        font-weight: bold;
+    }
+
+    .stats-line-black {
+        margin: 12px auto 0;
+        width: 55px;
+        height: 2px;
+        background-color: #1f97b7;
+    }
+
+    .stats-icon {
+        font-size: 35px;
+        margin: 0 auto;
+        float: none;
+        display: table;
+        color: #1f97b7;
+    }
+
+
+
+    .container {
+        position: relative;
+        width: 100%;
+    }
+
+    .overlay {
+        position: absolute;
+        bottom: 0;
+        background: #34495E;
+        width: 90%;
+        transition: .5s ease-out;
+        opacity: 1;
+        color: white;
+        font-size: 20px;
+        text-align: center;
+    }
+
+
+    .edit-button {
+        background-color: #1f97b7;
+        color: #0b0c10;
+        padding: 2em 2em;
+        height: 1em;
+        width: 1em;
+        border-radius: 100%;
+        left: 43%;
+        margin-top: -25px !important;
+        box-shadow: 0px 0px 0px 2px white;
+        position: relative;
+    }
+
+
+    .glyphicon-edit {
+        margin-left: -8px !important;
+        margin-top: -10px;
+        font-size: 20px;
+        position: relative !important;
+        text-align: center;
+        display: block;
+        color: white;
+    }
+
+    .edit-button:hover {
+        cursor: pointer;
+    }
+
+        .edit-button:hover .glyphicon-edit {
+            color: #34495E;
+        }
+</style>
+@section scripts{
+<script src="~/Scripts/jquery-3.4.1.min.js"></script>
+<script src="https://www.amcharts.com/lib/3/amcharts.js"></script>
+<script src="https://www.amcharts.com/lib/3/pie.js"></script>
+<script src="https://www.amcharts.com/lib/3/themes/light.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/waypoints/2.0.3/waypoints.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Counter-Up/1.0.0/jquery.counterup.min.js"></script>
+<script type="text/javascript" language="javascript" src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.21.0/moment.min.js"></script>
+
+<script>
     $(document).ready(function ($) {
         $('.count-number').counterUp({
             delay: 10,
@@ -550,21 +580,11 @@ progress, progress[role] {
         }
     });
 
-    $('#editProfile').one("click", function () {
-        $("#profilePiciture").after('<i id="editIcon" class="fa fa-edit" data-toggle="tooltip" data-placement="right" title="You can edit photo by clicking here" ></i>');
-        $('#editIcon').tooltip({ trigger: 'manual' }).tooltip('show');
-        setTimeout(function () { $('#editIcon').tooltip('hide'); }, 2000);
-        $("#editIcon").click(function () {
-            $("#inputID").click();
-        });
-        $('#tabs').append('<li><a data-toggle="tab" id="editTab" href="#editDetails">Edit Personal Details</a></li>');
-        $("#editTab").click();
-        $('#editProfile').remove();
-    });
-    $('#project-box').one("click", function () {
+
+        $('#project-box').one("click", function () {
+
         $('#tabs').append('<li><a data-toggle="tab" id="projects" href="#showProjects">Projects</a></li>');
         $("#projects").click();
-        $.noConflict();
         $(document).ready(function () {
             dataTable = $("#Table").DataTable({
                 "ajax": {
@@ -610,7 +630,18 @@ progress, progress[role] {
             })
         });
     });
+        $('#editProfile').one("click", function () {
+            $("#profilePiciture").after('<i id="editIcon" class="fa fa-edit" data-toggle="tooltip" data-placement="right" title="You can edit photo by clicking here" ></i>');
+            $('#editIcon').tooltip({ trigger: 'manual' }).tooltip('show');
+            setTimeout(function () { $('#editIcon').tooltip('hide'); }, 2000);
+            $("#editIcon").click(function () {
+                $("#inputID").click();
+            });
+            $('#tabs').append('<li><a data-toggle="tab" id="editTab" href="#editDetails">Edit Personal Details</a></li>');
+            $("#editTab").click();
 
+            $('#editProfile').remove();
+        });
     function readURL(input) {
         if (input.files && input.files[0]) {
             var reader = new FileReader();
@@ -622,7 +653,7 @@ progress, progress[role] {
             reader.readAsDataURL(input.files[0]);
         }
     }
-    </script>
+</script>
 }
 
 

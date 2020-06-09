@@ -1,10 +1,49 @@
 ﻿@model IEnumerable<Panis.Models.Employee>
-<br /><br /><br /><br /><br />
+<br /><br /><br /><div class="container head">
+                      
+<h1>Your team</h1>
+                     
+</div> <br /><br />
+
+                        
 @foreach (var p in Model)
 {
     @Html.Partial("_Rating", p)
 }
 <link href="@Url.Content("~/Content/rating.css")" rel="stylesheet" />
+<style>
+    .head {
+        text-align: center;
+        display: block;
+    }
+
+        .head h1 {
+            font-weight: 200;
+            position: relative;
+            display:block;
+            font-family: Verdana;
+            color: #34495E;
+        }
+
+            .head h1:before, .head h1:after {
+                content: "";
+                height: 3px;
+                width: 450px;
+                background: #1f97b7;
+                display:block;
+                position:absolute;
+                top: 50%;
+            }
+
+            .head h1:before {
+                left: 0;
+            }
+
+            .head h1:after {
+                right: 0;
+            }
+ 
+</style>
 @section scripts {
     <script src="@Url.Content("~/Scripts/rating.js")"></script>
     <script>
