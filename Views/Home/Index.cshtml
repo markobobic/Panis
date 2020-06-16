@@ -1,135 +1,132 @@
-﻿<!-- FONTAWESOME 5 AND NORMALIZED CSS INSTALLED-->
-<!-- View settings for more info.-->
-    
-    
-        <div id="cubes">
-            <div class="cube p2">
-                <div class="name">
-                    <h1>Brain</h1>
-                    <p>Manager</p>
-                </div>
-                <div class="innerBorder"></div>
-                <div class="darken"></div>
-                <div class="content">
-                    <ul>
-                        <li><a href=""><span class="fab fa-twitter"></span></a></li>
-                        <li><a href=""><span class="fab fa-facebook-f"></span></a></li>
-                        <li><a href=""><span class="fab fa-instagram"></span></a></li>
-                        <li><a href=""><span class="fab fa-youtube"></span></a></li>
-                    </ul>
-                </div>
-            </div>
-            <div class="cube p1">
-                <div class="name">
-                    <h1>Jessica</h1>
-                    <p>Community Manager</p>
-                </div>
-                <div class="innerBorder"></div>
-                <div class="darken"></div>
-                <div class="content">
-                    <ul>
-                        <li><a href=""><span class="fab fa-twitter"></span></a></li>
-                        <li><a href=""><span class="fab fa-facebook-f"></span></a></li>
-                        <li><a href=""><span class="fab fa-instagram"></span></a></li>
-                        <li><a href=""><span class="fab fa-youtube"></span></a></li>
-                    </ul>
-                </div>
-            </div>
-            <div class="cube p3">
-                <div class="name">
-                    <h1>Chris</h1>
-                    <p>Web Developer</p>
-                </div>
-                <div class="innerBorder"></div>
-                <div class="darken"></div>
-                <div class="content">
-                    <ul>
-                        <li><a href=""><span class="fab fa-twitter"></span></a></li>
-                        <li><a href=""><span class="fab fa-facebook-f"></span></a></li>
-                        <li><a href=""><span class="fab fa-instagram"></span></a></li>
-                        <li><a href=""><span class="fab fa-youtube"></span></a></li>
-                    </ul>
-                </div>
-            </div>
-            <div class="cube p4">
-                <div class="name">
-                    <h1>James</h1>
-                    <p>UX / UI Designer</p>
-                </div>
-                <div class="innerBorder"></div>
-                <div class="darken"></div>
-                <div class="content">
-                    <ul>
-                        <li><a href=""><span class="fab fa-twitter"></span></a></li>
-                        <li><a href=""><span class="fab fa-facebook-f"></span></a></li>
-                        <li><a href=""><span class="fab fa-instagram"></span></a></li>
-                        <li><a href=""><span class="fab fa-youtube"></span></a></li>
-                    </ul>
-                </div>
-            </div>
-            <div class="cube p5">
-                <div class="name">
-                    <h1>Rebecca</h1>
-                    <p>Graphics Designer</p>
-                </div>
-                <div class="innerBorder"></div>
-                <div class="darken"></div>
-                <div class="content">
-                    <ul>
-                        <li><a href=""><span class="fab fa-twitter"></span></a></li>
-                        <li><a href=""><span class="fab fa-facebook-f"></span></a></li>
-                        <li><a href=""><span class="fab fa-instagram"></span></a></li>
-                        <li><a href=""><span class="fab fa-youtube"></span></a></li>
-                    </ul>
-                </div>
-            </div>
-            <div class="cube p6">
-                <div class="name">
-                    <h1>James</h1>
-                    <p>UX / UI Designer</p>
-                </div>
-                <div class="innerBorder"></div>
-                <div class="darken"></div>
-                <div class="content">
-                    <ul>
-                        <li><a href=""><span class="fab fa-twitter"></span></a></li>
-                        <li><a href=""><span class="fab fa-facebook-f"></span></a></li>
-                        <li><a href=""><span class="fab fa-instagram"></span></a></li>
-                        <li><a href=""><span class="fab fa-youtube"></span></a></li>
-                    </ul>
-                </div>
-            </div>
-       
-        <div class="moreTeam"><a href="#"><span>Meet more of the team</span><span class="fas fa-angle-right"></span></a></div>
+﻿<br />
+<br />
+
+
+@foreach (var teamLead in ViewBag.TeamLeads)
+{
+
+<div class="flip-container">
+    <div class="flipper">
+        <div class="front">
+            <img class="profile-picture" src="http://sogomarketingagency.com/wp-content/uploads/brandons-profile-pic-e1407772966502.jpg" width="300px" height="300px">
+            <div class="profile-devider"></div>
+            <h3 class="profile-name">Brandon</h3>
+            <h4 class="profile-title">Blogger</h4>
+        </div>
+        <div class="back">
+            <div class="flip-padding">nesto</div>
+        </div>
     </div>
+</div>
+}
+
+
 
 
 <style>
-    .head {
+
+
+    .flip-container {
+        margin: 0 auto;
+        -webkit-perspective: 1000;
+        -moz-perspective: 1000;
+        float: left;
+        margin-right: 20px;
+        width: 100px;
+        height: 100px;
+    }
+
+        .flip-container:hover .flipper {
+            -webkit-transform: rotateY(180deg);
+            -moz-transform: rotateY(180deg);
+            width: 100px;
+            height: 100px;
+        }
+
+    .flipper {
+        -webkit-transition: 0.6s;
+        -webkit-transform-style: preserve-3d;
+        -moz-transition: 0.6s;
+        -moz-transform-style: preserve-3d;
+        position: relative;
+        width: 100px;
+        height: 100px;
+    }
+
+    .front, .back {
+        -webkit-backface-visibility: hidden;
+        -moz-backface-visibility: hidden;
+        position: absolute;
+        top: 0;
+        left: 0;
+        border: 1px solid #ccc;
+        width: 100px;
+        height: 100px;
+    }
+
+    .front {
+        z-index: 1;
+        background: #fff;
+    }
+
+    .flip-container, .front, .back {
+        width: 100px;
+        height: 100px;
+    }
+
+    .back {
+        -webkit-transform: rotateY(-180deg);
+        -moz-transform: rotateY(-180deg);
+        background: #f6f6f6;
+        width: 100px;
+        height: 100px;
+    }
+
+    .flip-padding {
+        padding: 20px;
+    }
+
+    .profile-picture {
+        width: 100px;
+        height: 100px;
+    }
+
+    .profile-name, .profile-title {
         text-align: center;
     }
 
-        .head h1 {
-            font-weight: 400;
-            position: relative;
+    .profile-name {
+        font-size: 24px;
+        margin-top: 20px;
+        font-weight: 400;
+        margin-bottom: 0px;
+    }
+
+    .profile-title {
+        font-size: 16px;
+        margin-top: 5px;
+        font-weight: 300;
+        color: #2196F3;
+    }
+
+    .profile-devider {
+        width: 102%;
+        height: 4px !important;
+        background: #243B55;
+        position: relative;
+        margin: 0 auto;
+        margin-top: -4px;
+    }
+
+        .profile-devider:after {
+            content: '';
+            position: absolute;
+            border-style: solid;
+            border-width: 15px 15px 0;
+            border-color: #243B55 transparent;
+            display: block;
+            width: 0;
+            z-index: 1;
+            left: 35px;
         }
-
-            .head h1:before, .head h1:after {
-                content: "";
-                height: 1px;
-                width: 150px;
-                background: #aaa;
-                display: block;
-                position: absolute;
-                top: 50%;
-            }
-
-            .head h1:before {
-                left: 0;
-            }
-
-            .head h1:after {
-                right: 0;
-            }
- 
 </style>

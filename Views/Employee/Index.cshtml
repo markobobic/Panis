@@ -53,10 +53,8 @@
     <script>
 
 
-        $(document).ready(loadTable());
+        $(document).ready(function () {
         var UserIsAdmin = @Html.Raw(@isAdmin);
-        console.log(UserIsAdmin);
-        function loadTable() {
             var table = $('#deductions').DataTable({
                 "async": true,
                 "proccessing": true,
@@ -123,9 +121,12 @@
                 ],
                 "responsive": true,
                 "dom": 'Bfrtlip',
-                buttons: [
-                    'copy', 'csv', 'excel', 'pdf', 'print'
-                ],
+                buttons: ['print', 'copyHtml5', 'excelHtml5', 'csvHtml5', 'pdfHtml5'],
+                initComplete: function () {
+                    var btns = $('.dt-button');
+                    btns.addClass('btn btn-info btn-sm');
+                    btns.removeClass('dt-button');
+                },
                 columnDefs: [
                     {
                         targets: 3,
@@ -135,14 +136,14 @@
 
 
             })
-        }
-
+        
+       
 
         $('input').attr('class', 'form-control');
         if (!UserIsAdmin) {
             $(".dt-buttons").css("display", "none");
         }
-
+        });
 
 
     </script>
@@ -185,10 +186,9 @@
     }
 
     table.dataTable thead > tr > th {
-        padding-left: 18px;
-        padding-right: 18px;
-        font-family: 'open sans', sans-serif;
-        background: #1b83be !important;
+        background: #141E30 !important;
         color: #fff;
+        padding: 10px 5px;
     }
+    
 </style>

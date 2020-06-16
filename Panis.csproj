@@ -358,6 +358,7 @@
     <Compile Include="ViewModels\EmployeeViewModel.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="ViewModels\MailModel.cs" />
+    <Compile Include="ViewModels\MediorSeniorViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap-defaul.min.css" />
@@ -431,6 +432,8 @@
     <Content Include="Views\SendMail\SendEMail.cshtml" />
     <Content Include="Views\Ratings\Index.cshtml" />
     <Content Include="Views\Shared\_Rating.cshtml" />
+    <Content Include="Views\Employee\RemoveTeamLead.cshtml" />
+    <Content Include="Views\Employee\TeamLeads.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />

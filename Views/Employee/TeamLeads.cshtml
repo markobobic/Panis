@@ -1,0 +1,247 @@
+﻿
+<head>
+    <link href="~/Content/CreateEdit.css" rel="stylesheet" />
+</head>
+
+<br />
+<br />
+<br />
+<br />
+
+<h2 class="display-3 text-center "> All team leads </h2>
+<div class="container">
+    @foreach (Panis.Models.Employee teamLead in ViewBag.TeamLeads)
+    {
+
+        <div class="flip-container teamLeads" data-id="@teamLead.EmployeeID">
+            <div class="flipper">
+                <div class="front">
+                    @if (teamLead.Photo == null)
+                    {
+                        <img class="profile-picture" src="http://ssl.gstatic.com/accounts/ui/avatar_2x.png" width="300px" height="300px" />
+                    }
+                    else
+                    {
+                        <img class="profile-picture" src=@("data:" + teamLead.PhotoType + ";base64," + Convert.ToBase64String(teamLead.Photo)) width="300px" height="300px" />
+                    }
+                    <div class="profile-devider"></div>
+                    <h3 class="profile-name">@teamLead.FirstName @teamLead.LastName</h3>
+                    <h4 class="profile-title">@teamLead.CityFromID</h4>
+                </div>
+                <div class="back">
+                    @using (Html.BeginForm("Edit", "Employee", FormMethod.Post))
+                    {
+                        <div class="text-center">
+                            <p>Unpromote</p>
+                            <label class="switch" style="margin: 0px;">
+                                <input id="unpromote6" data-id="@teamLead.EmployeeID" name="unpromote" type="checkbox" value="true" class="switch-input unpromoted">
+                                <span class="switch-label" data-on="Yes" data-off="No"></span>
+                                <span class="switch-handle"></span>
+                            </label>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+    }
+
+</div>
+<br />
+<br />
+<br />
+<br />
+<div class="container" id="promoted2" style="display:none">
+    <h2 class="display-3 text-center"> Promoted </h2>
+
+
+
+</div>
+<br />
+<br />
+<br />
+<div class="container">
+    <h2 class="display-3 text-center"> All medior&senior developers </h2>
+
+    @foreach (Panis.ViewModels.MediorSeniorViewModel mediorSenior in ViewBag.MediorSenior)
+    {
+
+        <div class="flip-container" data-id="@mediorSenior.EmployeeID">
+            <div class="flipper">
+                <div class="front">
+                    @if (mediorSenior.Photo == null)
+                    {
+                        <img class="profile-picture" src="http://ssl.gstatic.com/accounts/ui/avatar_2x.png" width="300px" height="300px" />
+                    }
+                    else
+                    {
+                        <img class="profile-picture" src=@("data:" + mediorSenior.PhotoType + ";base64," + Convert.ToBase64String(mediorSenior.Photo)) width="300px" height="300px" />
+                    }
+                    <div class="profile-devider"></div>
+                    <h3 class="profile-name">@mediorSenior.FirstName @mediorSenior.LastName</h3>
+                    <h4 class="profile-title">@mediorSenior.City</h4>
+                </div>
+                <div class="back">
+                    @using (Html.BeginForm("Edit", "Employee", FormMethod.Post))
+                    {
+                        <div class="text-center">
+                            <p>Promote</p>
+                            <label class="switch" style="margin: 0px;">
+                                <input id="isTeamLead" name="IsTeamLead" data-id="@mediorSenior.EmployeeID" type="checkbox" value="true" class="switch-input promoted">
+                                <span class="switch-label" data-on="Yes" data-off="No"></span>
+                                <span class="switch-handle"></span>
+                            </label>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+    }
+
+</div>
+
+
+
+<style>
+
+
+    .flip-container {
+        margin: 0 auto;
+        -webkit-perspective: 1000;
+        -moz-perspective: 1000;
+        float: left;
+        margin-right: 20px;
+        width: 100px;
+        height: 100px;
+    }
+
+        .flip-container:hover .flipper {
+            -webkit-transform: rotateY(180deg);
+            -moz-transform: rotateY(180deg);
+            width: 100px;
+            height: 100px;
+        }
+
+    .flipper {
+        -webkit-transition: 0.6s;
+        -webkit-transform-style: preserve-3d;
+        -moz-transition: 0.6s;
+        -moz-transform-style: preserve-3d;
+        position: relative;
+        width: 100px;
+        height: 100px;
+    }
+
+    .front, .back {
+        -webkit-backface-visibility: hidden;
+        -moz-backface-visibility: hidden;
+        position: absolute;
+        top: 0;
+        left: 0;
+        border: 1px solid #ccc;
+        width: 100px;
+        height: 100px;
+    }
+
+    .front {
+        z-index: 1;
+        background: #fff;
+    }
+
+    .flip-container, .front, .back {
+        width: 100px;
+        height: 100px;
+    }
+
+    .back {
+        -webkit-transform: rotateY(-180deg);
+        -moz-transform: rotateY(-180deg);
+        background: #f6f6f6;
+        width: 100px;
+        height: 100px;
+    }
+
+    .flip-padding {
+        padding: 20px;
+    }
+
+    .profile-picture {
+        width: 100px;
+        height: 100px;
+    }
+
+    .profile-name, .profile-title {
+        text-align: center;
+    }
+
+    .profile-name {
+        font-size: 24px;
+        margin-top: 20px;
+        font-weight: 400;
+        margin-bottom: 0px;
+    }
+
+    .profile-title {
+        font-size: 16px;
+        margin-top: 5px;
+        font-weight: 300;
+        color: #2196F3;
+    }
+
+    .profile-devider {
+        width: 102%;
+        height: 4px !important;
+        background: #243B55;
+        position: relative;
+        margin: 0 auto;
+        margin-top: -4px;
+    }
+
+        .profile-devider:after {
+            content: '';
+            position: absolute;
+            border-style: solid;
+            border-width: 15px 15px 0;
+            border-color: #243B55 transparent;
+            display: block;
+            width: 0;
+            z-index: 1;
+            left: 35px;
+        }
+</style>
+
+
+<script>
+    @*function approved() {
+            var val = $('#approve').data('value');
+            $.ajax({
+                type: 'POST',
+                url: "@(Url.Action("ApproveAbsence", "EmployeeProfiles"))",
+                data: { AbsenceID: val },
+                cache: false,
+                async: true,
+                success: function (data) {
+                    $('#deductions').DataTable().ajax.reload();
+                }
+             });
+        }*@
+
+    $(".unpromoted").click(function () {
+        var nesto = $(this).data("id");
+        var nesto2 = $(this).val();
+       
+        $(".flip-container[data-id='" + nesto + "']").remove();
+
+    });
+
+    $(".promoted").click(function () {
+        
+        var nesto3 = $(this).data("id");
+        var nesto4 = $(this).val();
+        
+        $("#promoted2").css("display", "block");
+        $("#promoted2").append($(".flip-container[data-id='" + nesto3 + "']"));
+
+    });
+</script>

@@ -1,4 +1,5 @@
 ﻿using MoreLinq;
+using Panis.Extensions;
 using Panis.Models;
 using System;
 using System.Collections.Generic;
@@ -78,6 +79,21 @@ namespace Panis.Controllers
             var user = db.Users.Where(x => x.EmployeeID == employeeID).FirstOrDefault();
             user.CountNotifications = user.CountNotifications + 1;
             user.ReadNotifications = false;
+            List<Realization> realizations = new List<Realization>();
+            foreach (DateTime day in ExtensionClass.EachDay(absence.Start, absence.End))
+            {
+                Realization realization = new Realization();
+                realization.Hours = 8;
+                realization.ProjectID = 1;
+                realization.RealizationTypeID = 1;
+                realization.Subject = "Absence";
+                realization.Description = "Absence";
+                realization.EmployeeID = employeeID;
+                realization.Start = day;
+                realization.DepartmentID = 1;
+                realizations.Add(realization);
+            }
+            db.Realizations.AddRange(realizations);
             await db.SaveChangesAsync();
             return Json(new EmptyResult(), JsonRequestBehavior.AllowGet);
         }

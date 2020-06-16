@@ -1,0 +1,262 @@
+﻿@model  IEnumerable<Panis.Models.Employee>
+
+<link href="https://hasankhan.co.uk/ao/css/custom-theme/jquery-ui-1.10.3.custom.css" rel="stylesheet" />
+<body>
+    <br /><br>
+    <!-- Add your site or application content here -->
+    <div class="container">
+
+        <!--header and nav will go here-->
+
+        <section>
+            <!--drag from div-->
+            <div class="col1">
+                <ul id="gallery" class="gallery ui-helper-reset ui-helper-clearfix">
+                    @foreach (var teamLead in Model.ToList())
+                    {
+                        <li>
+                            @if (teamLead.Photo == null)
+                            {
+                                <img id="profilePiciture2" class="avatar img-circle img-thumbnail" src="http://ssl.gstatic.com/accounts/ui/avatar_2x.png" style="max-height:100px; max-width:100px;" alt="">
+
+                            }
+                            else
+                            {
+                                <img id="profilePiciture" class="avatar  img-circle img-thumbnail" src=@("data:" + teamLead.PhotoType + ";base64," + Convert.ToBase64String(teamLead.Photo)) style="max-height:100px;  max-width:100px;" alt="" />
+                            }
+                        </li>
+                    }
+                </ul>
+
+            </div><!--col1-->
+            <!--drag into div-->
+            <div class="container d-inline-block">
+                
+                <i style="font-size:80px; margin-left:80px; margin-top:120px;" class="fas fa-arrows-alt-h"></i>
+
+
+                <div class="col2">
+                    <div id="transfer">
+                        <h4 class="display-2"><span>Remove team leads by dropping them here</span></h4>
+                    </div><!--transfer-->
+                </div><!--col2-->
+        </section><!--section-->
+
+        <section>
+            <div class="col3">
+                <button class="generate"></button>
+                <button class="reset"></button>
+            </div><!--col3-->
+        </section>
+    </div><!--container-->
+    </div>
+    @*<div id="gen_dialog">
+            <p class="diag-content"></p>
+        </div>*@
+</body>
+
+@section scripts {
+<script src="https://hasankhan.co.uk/ao/js/jquery-1.9.1.js"></script>
+<script src="https://hasankhan.co.uk/ao/js/jquery-ui-1.10.3.custom.js"></script>
+<script src="https://hasankhan.co.uk/ao/js/vendor/modernizr-2.6.2.min.js"></script>
+
+<script>
+    $(function () {
+        // there's the gallery and the transfer
+        var $gallery = $("#gallery"),
+            $transfer = $("#transfer"),
+            $gen_dialog = $('#gen_dialog');
+
+        // let the gallery items be draggable
+        $("li", $gallery).draggable({
+            cancel: "a.ui-icon", // clicking an icon won't initiate dragging
+            revert: "invalid", // when not dropped, the item will revert back to its initial position
+            containment: "document",
+            helper: "clone",
+            cursor: "move"
+        });
+
+        // let the transfer be droppable, accepting the gallery items
+        $transfer.droppable({
+            accept: "#gallery > li",
+            activeClass: "ui-state-highlight",
+            drop: function (event, ui) {
+                deleteImage(ui.draggable);
+                alert("brisem iz baze");
+            }
+        });
+
+        // let the gallery be droppable as well, accepting items from the transfer
+        $gallery.droppable({
+            accept: "#transfer li",
+            activeClass: "custom-state-active",
+            drop: function (event, ui) {
+                recycleImage(ui.draggable);
+                alert("vracam u bazu");
+            }
+        });
+
+        // set up the generate button's dialog box
+        //$gen_dialog.dialog({
+        //    autoOpen: false,
+        //    height: 140,
+        //    'title': 'Generated Report',
+        //    modal: true
+        //});
+
+        // function for generating info of icon/s in drop box
+        $('button.generate').click(function () {
+            var content = $('ul li h5', $transfer).map(function (i, v) {
+                return $(this).text();
+            }).get();
+            //$gen_dialog.find('.diag-content').html(content.join(', ')).end().dialog('open');
+        });
+        //function for resetting the icons back to original positions
+        $('button.reset').click(function () {
+            $('ul li', $transfer).each(function () {
+                recycleImage($(this));
+            });
+        });
+
+        toggleButtons();
+
+        // image deletion function
+        function deleteImage($item) {
+            $item.fadeOut(function () {
+                var $list = $("ul", $transfer).length ?
+                    $("ul", $transfer) :
+                    $("<ul class='gallery ui-helper-reset'/>").appendTo($transfer);
+
+                $item.find("a.ui-icon-transferthick-e-w").remove();
+                $item.appendTo($list).fadeIn(function () {
+                    $item
+                        .animate({ width: "48px" })
+                        .find("img")
+                        .animate({ height: "36px" }, function () {
+                            toggleButtons();
+                        });
+                });
+            });
+        }
+
+        // image recycle function
+        function recycleImage($item) {
+            $item.fadeOut(function () {
+                $item
+                    .find("a.ui-icon-transfer-e-w")
+                    .remove()
+                    .end()
+                    .css("width", "96px")
+                    .find("img")
+                    .css("height", "72px")
+                    .end()
+                    .appendTo($gallery)
+                    .fadeIn(function () {
+                        toggleButtons();
+                    });
+            });
+        }
+        // display buttons when icon transferred across
+        function toggleButtons() {
+            $('div.col3 button').toggle($('> ul > li', $transfer).length > 0);
+        }
+
+
+        // resolve the icons behavior with event delegation
+        $("ul.gallery > li").click(function (event) {
+            var $item = $(this),
+                $target = $(event.target);
+
+            if ($target.is("a.ui-icon-transferthick-e-w")) {
+                deleteImage($item);
+            } else if ($target.is("a.ui-icon-transfer-e-w")) {
+                recycleImage($item);
+            }
+
+            return false;
+        });
+    });
+</script>
+    }
+<style>
+    body {
+        background: #e2e1e0;
+       
+    }
+    section .col1 {
+        width: 40%;
+        float: left;
+        border: 1px solid black;
+        border-radius: 5px;
+        margin-top: 40px;
+        min-height: 250px;
+        background: #fff;
+    }
+
+    section .col2 {
+        width: 40%;
+        float: right;
+        border: 1px solid black;
+        border-radius: 5px;
+        margin-top: 40px;
+        padding: 1%;
+        background: #fff;
+        min-height: 250px;
+    }
+
+   
+
+    .gallery.custom-state-active {
+        background: #eee;
+    }
+
+    .gallery li {
+        float: left;
+        padding: 0.2em ;
+        margin: 0.2em 0.2em;
+        text-align: center;
+    }
+
+        .gallery li h5 {
+            margin: 0 0 0.4em;
+            cursor: move;
+        }
+
+        .gallery li a {
+            float: right;
+        }
+
+            .gallery li a.ui-icon-zoomin {
+                float: left;
+            }
+
+        .gallery li img {
+            width: 100%;
+            cursor: move;
+        }
+
+    #transfer {
+        float: right;
+        width: 100%;
+        min-height: 250px;
+    }
+
+        #transfer h4 {
+            line-height: 16px;
+            margin: 0 0 0.4em;
+        }
+
+            #transfer h4 .ui-icon {
+                float: left;
+            }
+
+        #transfer .gallery h5 {
+            display: none;
+        }
+
+    
+
+    #gen_dialog {
+        display: none;
+    }
+</style>

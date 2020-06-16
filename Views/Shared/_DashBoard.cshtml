@@ -42,13 +42,16 @@
             <i class="fas fa-star"></i><a href="/Ratings/Index">Ratings</a>
         </li>
         <li>
+            <i class="fas fa-exchange-alt"></i><a href="/Employee/TeamLeads"> Un/Promoting</a>
+        </li>
+
+        <li>
             <i class="fas fa-file"></i><a href="#"> Documents</a>
         </li>
 
-
     </ul>
 </aside>
-<nav class="navbar-fixed-top navbar-expand-sm" id="navbarl" style=" background: linear-gradient(rgba(31, 151, 183, 1),rgba(52, 73, 94, 1));">
+<nav class="navbar-fixed-top navbar-expand-sm" id="navbarl">
     <div class="container-fluid">
         <div class="navbar-header">
             <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
@@ -95,7 +98,7 @@
                                                 <i class="fas fa-child stick"></i>
                                             </div>
                                             <div class="cont">
-                                                <h4 style="margin-left:15px;" class="display-4">Notifications</h4>
+                                                <h4 style="margin-left:15px; color:white;" class="display-4">Notifications</h4>
                                                 @if ((ViewBag.Notify as ICollection<string>).Count() == 0)
                                                 {
                                                     <br /> <br /> <br /> <br />
@@ -104,6 +107,7 @@
                                                         <i style="font-size:40px;" class="far fa-bell-slash"></i>
                                                     </div>
                                                 }
+                                               
                                                 @foreach (string item in ViewBag.Notify)
                                                 {
                                                     if (item.Contains("absence"))
@@ -157,8 +161,9 @@
     #navbarl {
         zoom: 0.9; /* Other non-webkit browsers */
         zoom: 90%; /* Webkit browsers */
-       
-
+        background: #141E30; /* fallback for old browsers */
+        background: -webkit-linear-gradient(to bottom, #243B55, #141E30); /* Chrome 10-25, Safari 5.1-6 */
+        background: linear-gradient(to bottom, #243B55, #141E30); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
     }
     .fa-bullhorn{
         padding-right:5px;
@@ -260,9 +265,7 @@
     #dropdownFullName:hover {
         background: #1f97b7;
     }
-    #dropdownFullName.dropdown-toggle {
-        background: linear-gradient(rgba(31, 151, 183, 1),rgba(52, 73, 94, 1));
-    }
+   
     .content {
         padding: 20px;
         color: black;
@@ -288,7 +291,7 @@
         top: 0;
         width: 100%;
         height: 100%;
-        background-color: #F4F4F4;
+        background-color: #141E30;
     }
 
         .cont:empty {
@@ -337,7 +340,7 @@
 
     .new {
         border-style: none none solid none;
-        border-color: red;
+        border-color: #141E30;
     }
 
     .sec:hover {

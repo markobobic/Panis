@@ -154,7 +154,7 @@ namespace Panis.Controllers
             else if(currentUser.EmpPosition == WorkPosition.HR && currentUser.ReadNotifications == false)
             {
                 ViewBag.Notify = db.Notifications.OrderByDescending(x => x.ID).
-                Take((int?)currentUser.CountNotifications == null ? 0 : (int)currentUser.CountNotifications).Select(x => x.Message).ToList();
+                Take((int?)currentUser.CountNotifications == null ? 0 : (int)currentUser.CountNotifications).OrderByDescending(x => x.ID).Take(15).Select(x => x.Message).ToList();
                 ViewBag.CountNotify = currentUser.CountNotifications;
             }
 

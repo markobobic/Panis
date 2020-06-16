@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
     <link href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Electrolize&display=swap" rel="stylesheet">
 
 </head>
 
@@ -46,6 +47,7 @@
 
     body {
         background-color: white;
+        font-family: 'Electrolize', sans-serif;
     }
 
     #contents {
@@ -70,7 +72,9 @@
         float: left;
         height: 100%;
         width: 17%;
-        background-color: #34495E;
+        background: #141E30; /* fallback for old browsers */
+        background: -webkit-linear-gradient(to bottom, #243B55, #141E30); /* Chrome 10-25, Safari 5.1-6 */
+        background: linear-gradient(to bottom, #243B55, #141E30); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
         color: #CCC;
         -webkit-transform: translateX(0);
         -moz-transform: translateX(0);
@@ -82,16 +86,9 @@
         z-index: 9999999
     }
 
-        .side-nav .close-aside {
-            position: absolute;
-            top: 7px;
-            right: 7px;
-            cursor: pointer;
-            color: #EEE;
-        }
+       
 
         .side-nav .heading {
-            background-color: #34495E;
             padding: 10px 15px 15px 30px;
             overflow: hidden;
             border-bottom: 1px solid #2a2b3c
@@ -120,6 +117,13 @@
 
     .side-nav .heading .info > h3 > a:hover {
         color: #FFF;
+    }
+    h1,
+    p {
+        padding: 0;
+        margin: 0;
+        color: var(--secondaryColor);
+        font-family: 'Electrolize', sans-serif;
     }
 
     .side-nav .heading .info > p {

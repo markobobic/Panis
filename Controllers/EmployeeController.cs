@@ -468,8 +468,31 @@ namespace Panis.Controllers
 
         }
         #endregion
+        [HttpGet]
+        public ActionResult RemoveTeamLead()
+        {
+            var teamLeads = db.Employees.Where(x => x.IsTeamLead == true);
+            return View(teamLeads);
+        }
 
-
+        public ActionResult TeamLeads()
+        {
+            ViewBag.TeamLeads = db.Employees.Where(x => x.IsTeamLead == true);
+           var nesto = (from emp in db.Employees
+                                    join empLevel in db.employeeEnrollments on emp.EmployeeID equals empLevel.EmployeeID
+                                    where emp.IsTeamLead == false
+                                    select new MediorSeniorViewModel
+                                    {
+                                      EmployeeID= emp.EmployeeID,
+                                       Photo = emp.Photo,
+                                       FirstName = emp.FirstName,
+                                       LastName = emp.LastName,
+                                       City = emp.CityFromID
+                                    }).ToList();
+            ViewBag.MediorSenior = nesto;
+            return View();
+        }
+        
         protected override void Dispose(bool disposing)
         {
             if (disposing)
