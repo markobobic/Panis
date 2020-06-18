@@ -156,3 +156,11 @@ C:\Users\marko\source\repos\Panis\Panis\bin\StructureMap.Web.xml
 C:\Users\marko\source\repos\Panis\Panis\obj\Debug\Panis.Migrations.SectorProject.resources
 C:\Users\marko\source\repos\Panis\Panis\obj\Debug\Panis.Migrations.isTeamLead.resources
 C:\Users\marko\source\repos\Panis\Panis\obj\Debug\Panis.Migrations.Rating.resources
+C:\Users\marko\source\repos\Panis\Panis\bin\Microsoft.AspNet.SignalR.Core.dll
+C:\Users\marko\source\repos\Panis\Panis\bin\Microsoft.AspNet.SignalR.SystemWeb.dll
+C:\Users\marko\source\repos\Panis\Panis\bin\Microsoft.AspNet.SignalR.Core.pdb
+C:\Users\marko\source\repos\Panis\Panis\bin\Microsoft.AspNet.SignalR.Core.xml
+C:\Users\marko\source\repos\Panis\Panis\bin\Microsoft.AspNet.SignalR.SystemWeb.pdb
+C:\Users\marko\source\repos\Panis\Panis\bin\Microsoft.AspNet.SignalR.SystemWeb.xml
+C:\Users\marko\source\repos\Panis\Panis\obj\Debug\Panis.Migrations.Chat.resources
+C:\Users\marko\source\repos\Panis\Panis\obj\Debug\Panis.Migrations.ChatForusers.resources

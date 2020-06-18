@@ -8,6 +8,7 @@ using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
+using Panis.Hooks;
 using Panis.Models;
 
 namespace Panis.Controllers
@@ -17,15 +18,19 @@ namespace Panis.Controllers
     {
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
+        private const string DefaultPath = "Content/Images/UsersImage/imgDefault.jpg";
+        private ChatHub _chatHub;
 
         public AccountController()
         {
+            _chatHub = new ChatHub(new ApplicationDbContext());
         }
 
-        public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager )
+        public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager)
         {
             UserManager = userManager;
             SignInManager = signInManager;
+            _chatHub = new ChatHub(new ApplicationDbContext());
         }
 
         public ApplicationSignInManager SignInManager
@@ -34,9 +39,9 @@ namespace Panis.Controllers
             {
                 return _signInManager ?? HttpContext.GetOwinContext().Get<ApplicationSignInManager>();
             }
-            private set 
-            { 
-                _signInManager = value; 
+            private set
+            {
+                _signInManager = value;
             }
         }
 

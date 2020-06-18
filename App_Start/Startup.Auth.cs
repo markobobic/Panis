@@ -1,10 +1,12 @@
 ﻿using System;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
+using Microsoft.AspNet.SignalR;
 using Microsoft.Owin;
 using Microsoft.Owin.Security.Cookies;
 using Microsoft.Owin.Security.Google;
 using Owin;
+using Panis.Hooks;
 using Panis.Models;
 
 namespace Panis
@@ -63,6 +65,10 @@ namespace Panis
             //    ClientId = "",
             //    ClientSecret = ""
             //});
+            GlobalHost.DependencyResolver.Register(typeof(ChatHub),
+                () => new ChatHub(new ApplicationDbContext()));
+
+            app.MapSignalR();
         }
     }
 }
