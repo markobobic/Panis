@@ -14,7 +14,7 @@ MoreLINQ</br>
 EntityFramework plus </br>
 AmCharts.js</br>
 FullCalendar.js</br>
- Bootbox.js</br>
+Bootbox.js</br>
 StructureMap(IoC)</br>
 
 <br />
