@@ -17,7 +17,7 @@ FullCalendar.js</br>
 Bootbox.js</br>
 StructureMap(IoC)</br>
 
-<br />
+
 ## Function
 
 Chat: Employees can chat with each other.
