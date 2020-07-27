@@ -4,13 +4,19 @@ The application is intended for monitoring the absence of employees, as well as 
 
 The frameworks and libraries used for this app are listed below.
 <br />
-C#, ASP.NET MVC <br />
-Entity Framework (Code First)<br />
-SQL Server for persistence<br />
-Bootstrap, jQuery<br />
-Autofac for Dependency Injection<br />
-ASP.Net Identity: User and Role, Admin Area<br />
-Authentication and Authorization<br />
+C#,ASP.NET MVC 5</br>
+EntityFramework 6.4 (Code-first)</br>
+jQuery 3.4.1</br>
+ASP Identity,OWIN</br>
+Bootstrap 4</br>
+Razor</br>
+MoreLINQ</br>
+EntityFramework plus </br>
+AmCharts.js</br>
+FullCalendar.js</br>
+ Bootbox.js</br>
+StructureMap(IoC)</br>
+
 <br />
 ## Function
 
