@@ -45,6 +45,7 @@ StructureMap(IoC)</br>
   
   </br>
   <p align="center">Adding employee<img src="https://scontent.fbeg2-1.fna.fbcdn.net/v/t1.0-9/117933326_2650856095166006_7061594307759032459_o.jpg?_nc_cat=111&_nc_sid=8024bb&_nc_ohc=51diK5fJhL4AX8XOiNe&_nc_ht=scontent.fbeg2-1.fna&oh=c73b4e99628cfa3496e88b6f69f50294&oe=5F600BB6"> 
+  </br> <p align="center">And much more!</p>
 
 ## Function
 
