@@ -166,5 +166,25 @@ namespace Panis.Services
 
             return employeeSave;
             }
+
+        public async Task<List<Employee>> GetAllTeamLeads()
+        {
+            return await db.Employees.Where(x => x.IsTeamLead == true).ToListAsync();
+        }
+       public async Task<List<MediorSeniorViewModel>> GetAllMediorSenior()
+        {
+            var mediorSenior = (from emp in db.Employees
+                         join empLevel in db.employeeEnrollments on emp.EmployeeID equals empLevel.EmployeeID
+                         where emp.IsTeamLead == false
+                         select new MediorSeniorViewModel
+                         {
+                             EmployeeID = emp.EmployeeID,
+                             Photo = emp.Photo,
+                             FirstName = emp.FirstName,
+                             LastName = emp.LastName,
+                             City = emp.CityFromID
+                         }).ToListAsync();
+            return await mediorSenior;
+        }
     }
 }

@@ -251,7 +251,6 @@
     <Compile Include="Hooks\ChatHub.cs" />
     <Compile Include="Hooks\ConnectionMapping.cs" />
     <Compile Include="Interfaces\IAbsence.cs" />
-    <Compile Include="Interfaces\IAbsenceOfEmployee.cs" />
     <Compile Include="Interfaces\IAbsenceTypeRepo.cs" />
     <Compile Include="Interfaces\IClientSector.cs" />
     <Compile Include="Interfaces\IDepartment.cs" />
@@ -370,9 +369,12 @@
     <Compile Include="Services\EmployeeRepo.cs" />
     <Compile Include="Services\GenericRepository.cs" />
     <Compile Include="Services\NotificationRepo.cs" />
+    <Compile Include="Services\ProjectRepo.cs" />
+    <Compile Include="Services\RealizationRepo.cs" />
     <Compile Include="Services\TeamLeadRepo.cs" />
     <Compile Include="Services\UnitOfWork.cs" />
     <Compile Include="Services\UserRepo.cs" />
+    <Compile Include="ViewModels\AbsenceAndTypeViewModel.cs" />
     <Compile Include="ViewModels\EmployeeViewModel.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="ViewModels\MailModel.cs" />
@@ -592,7 +594,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Views\Base\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

@@ -475,21 +475,10 @@ namespace Panis.Controllers
             return View(teamLeads);
         }
 
-        public ActionResult TeamLeads()
+        public async Task<ActionResult> TeamLeads()
         {
-            ViewBag.TeamLeads = db.Employees.Where(x => x.IsTeamLead == true);
-           var nesto = (from emp in db.Employees
-                                    join empLevel in db.employeeEnrollments on emp.EmployeeID equals empLevel.EmployeeID
-                                    where emp.IsTeamLead == false
-                                    select new MediorSeniorViewModel
-                                    {
-                                      EmployeeID= emp.EmployeeID,
-                                       Photo = emp.Photo,
-                                       FirstName = emp.FirstName,
-                                       LastName = emp.LastName,
-                                       City = emp.CityFromID
-                                    }).ToList();
-            ViewBag.MediorSenior = nesto;
+            ViewBag.TeamLeads = await _dbEmployees.GetAllTeamLeads();
+            ViewBag.MediorSenior = await _dbEmployees.GetAllMediorSenior();
             return View();
         }
         

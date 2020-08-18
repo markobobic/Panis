@@ -39,5 +39,10 @@ namespace Panis.Services
             employeeEnrollment.WorkStart = emp.WorkStart;
             return employeeEnrollment;
         }
+
+        public string GetSeniority(int employeeID)
+        {
+            return db.employeeEnrollments.Where(x => x.EmployeeID == employeeID).FirstOrDefault().Seniority.ToString();
+        }
     }
 }

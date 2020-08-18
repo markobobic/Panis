@@ -23,7 +23,6 @@ namespace Panis.Hooks
 
         public string GetUserList(string roomId, string conversationId)
         {
-
             roomId = roomId ?? RoomId;
             conversationId = conversationId ?? string.Empty;
             //eleminate current user from available users
@@ -37,7 +36,7 @@ namespace Panis.Hooks
                                  File.Exists(Context.Request.GetHttpContext().Server.MapPath(Path.Combine("~", user.ImagePath))) ?
                                  user.ImagePath : DefaultUserImage : DefaultUserImage),
                                  Id = user.UserName,
-                                 Name = user.FirstName + " " + user.LastName,
+                                 Name = user.FirstName,
                                  RoomId = roomId,
                                  Status = (_connections.GetConnections(user.Email).Count() == 0 ? "0" : RoomId)
                              }).ToList();
@@ -65,7 +64,7 @@ namespace Panis.Hooks
                                  File.Exists(Context.Request.GetHttpContext().Server.MapPath(Path.Combine("~", user.ImagePath))) ?
                                  user.ImagePath : DefaultUserImage : DefaultUserImage),
                                 Id = user.UserName,
-                                Name = user.FirstName + " " + user.LastName,
+                                Name = user.FirstName,
                                 RoomId = RoomId,
                                 Status = (_connections.GetConnections(user.Email).Count() == 0 ? "0" : "1"),
                                 CurrentId = Context.User.Identity.Name
@@ -121,7 +120,7 @@ namespace Panis.Hooks
                                  File.Exists(Context.Request.GetHttpContext().Server.MapPath(Path.Combine("~", user.ImagePath))) ?
                                  user.ImagePath : DefaultUserImage : DefaultUserImage),
                                 Id = user.UserName,
-                                Name = user.FirstName + " " + user.LastName,
+                                Name = user.FirstName,
                                 RoomId = RoomId,
                                 Status = (_connections.GetConnections(user.Email).Count() == 0 ? "0" : "1")
                             }).FirstOrDefault();
@@ -137,7 +136,7 @@ namespace Panis.Hooks
         }
 
         public string GetMessageHistory(string roomId,
-            string conversationId, string otherUserId)
+              string conversationId, string otherUserId)
         {
             var userId = Context.User.Identity.Name;
 
@@ -214,7 +213,7 @@ namespace Panis.Hooks
                                                    File.Exists(Context.Request.GetHttpContext().Server.MapPath(Path.Combine("~", user.ImagePath))) ?
                                                    user.ImagePath : DefaultUserImage : DefaultUserImage),
                                                    Id = user.UserName,
-                                                   Name = user.FirstName + " " + user.LastName,
+                                                   Name = user.FirstName,
                                                    RoomId = RoomId,
                                                    Status = (_connections.GetConnections(user.Email).Count() == 0 ? "0" : "1")
                                                }).ToList();
@@ -240,5 +239,4 @@ namespace Panis.Hooks
             return base.OnReconnected();
         }
     }
-
 }

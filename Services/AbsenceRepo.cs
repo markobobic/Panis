@@ -1,5 +1,6 @@
 ﻿using Panis.Interfaces;
 using Panis.Models;
+using Panis.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -106,6 +107,16 @@ namespace Panis.Services
         {
             Dispose(true);
             GC.SuppressFinalize(this);
+        }
+
+
+        public IQueryable<AbsenceAndTypeViewModel> GetRequestAbsencesAndTypes(int employeeID)
+        {
+           return db.Absences.Join(db.AbsenceTypes,
+               absence => absence.AbsenceTypeID,
+               absenceType => absenceType.AbsenceTypeID,
+               (absence, absenceType) => new AbsenceAndTypeViewModel { AbsenceName = absence, AbsenceType = absenceType })
+               .Where(x => x.AbsenceName.EmployeeID == employeeID && x.AbsenceName.Approved == false);
         }
     }
 }

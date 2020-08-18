@@ -1,5 +1,6 @@
 ﻿using MoreLinq;
 using Panis.Extensions;
+using Panis.Interfaces;
 using Panis.Models;
 using System;
 using System.Collections.Generic;
@@ -15,6 +16,30 @@ namespace Panis.Controllers
 {
     public class EmployeeProfilesController : BaseController
     {
+        IUserRepo _dbUser;
+        INotification _dbNotify;
+        ITeamLead _dbTeamLeads;
+        IEmployee _dbEmployees;
+        IProject _dbProjects;
+        IRealization _dbRealizations;
+        IAbsence _dbAbsences;
+        IEmployeeEnrollments _dbEmployeeEnrollments;
+        IAbsenceTypeRepo _dbAbsencesType;
+        public EmployeeProfilesController(IUserRepo dbUser, INotification dbNotify,
+            IProject dbProjects, IAbsenceTypeRepo dbAbsencesType, IRealization dbRealizations,IAbsence dbAbsences, ITeamLead dbTeamLeads, IEmployee dbEmployees, IEmployeeEnrollments dbEEmployeeEnrollments)
+        {
+            _dbUser = dbUser;
+            _dbNotify = dbNotify;
+            _dbTeamLeads = dbTeamLeads;
+            _dbEmployees = dbEmployees;
+            _dbEmployeeEnrollments = dbEEmployeeEnrollments;
+            _dbRealizations = dbRealizations;
+            _dbProjects = dbProjects;
+            _dbAbsences = dbAbsences;
+            _dbAbsencesType = dbAbsencesType;
+
+        }
+
         // GET: EmployeeProfiles
         public ActionResult Index()
         {
@@ -25,24 +50,24 @@ namespace Panis.Controllers
         {
             //by employee id we are getting all necesessery data to view
             Session["EmployeeID"] = id;
-            var emp = db.Employees.Find(id);
+            var emp = await _dbEmployees.GetEmployeeByID(id);
             ViewBag.FullName = emp.FullName;
             ViewBag.PhotoType = emp.PhotoType;
             ViewBag.EmpPhoto = emp.Photo;
             ViewBag.City = emp.LivingCity;
-            var teamLead = await db.TeamLeads.FindAsync(emp.TeamLeadID);
-            var currentTeamLead =await db.Employees.FindAsync(teamLead.EmployeeID);
+            var teamLead =  _dbTeamLeads.GetById(emp.TeamLeadID);
+            var currentTeamLead =await _dbEmployees.GetEmployeeByID(teamLead.EmployeeID);
             ViewBag.TeamLeadPhoto = currentTeamLead.Photo;
             ViewBag.TeamLeadPhotoType = currentTeamLead.PhotoType;
-            ViewBag.Seniority = db.employeeEnrollments.Where(x => x.EmployeeID == emp.EmployeeID).FirstOrDefault().Seniority.ToString();
-            var currentProject = await db.Realizations.Where(x => x.EmployeeID == emp.EmployeeID).OrderByDescending(x => x.RealizationID).FirstOrDefaultAsync();
-            if(currentProject == null)
+            ViewBag.Seniority = _dbEmployeeEnrollments.GetSeniority(id);
+            var latestRealization = await _dbRealizations.GetLatestRealization(emp.EmployeeID);
+            if(latestRealization == null)
             {
                 ViewBag.CurrentProject = "No current project";
             }
             else
             {
-                var selectCurrentProject = db.Projects.Where(x => x.ProjectID == currentProject.ProjectID).FirstOrDefault();
+                var selectCurrentProject = await _dbProjects.GetLatestProject(latestRealization.ProjectID);
                 ViewBag.CurrentProject = selectCurrentProject == null ? "No current project" : selectCurrentProject.Name;
             }
            
@@ -53,14 +78,9 @@ namespace Panis.Controllers
         {
             //getting absences for particular employee to present in table 
                int employeeID = (int)Session["EmployeeID"];
-               var dataJoin  =  db.Absences.Join(db.AbsenceTypes,
-               absence => absence.AbsenceTypeID,
-               absenceType => absenceType.AbsenceTypeID,
-               (absence, absenceType) => new { Absence = absence, AbsenceType = absenceType })
-               .Where(x => x.Absence.EmployeeID == employeeID && x.Absence.Approved==false);
-                var data = await dataJoin
-                .Select(x => new { AbsenceID = x.Absence.AbsenceID,TypeOfAbsence = x.AbsenceType.Name, Start = x.Absence.Start, End = x.Absence.End }).ToListAsync();
-
+               var absencesRequests = _dbAbsences.GetRequestAbsencesAndTypes(employeeID);
+               var data = await absencesRequests
+               .Select(x => new { AbsenceID = x.AbsenceName.AbsenceID,TypeOfAbsence = x.AbsenceType.Name, Start = x.AbsenceName.Start, End = x.AbsenceName.End }).ToListAsync();
             return Json(data, JsonRequestBehavior.AllowGet);
 
         }
@@ -76,24 +96,10 @@ namespace Panis.Controllers
             notify.Message = $"Your request for {absenceType.Name.ToLower()} from {absence.Start.ToString("MMMM dd, yyyy")} to {absence.End.ToString("MMMM dd, yyyy")} has been approved";
             notify.EmployeeID = employeeID;
             db.Notifications.Add(notify);
-            var user = db.Users.Where(x => x.EmployeeID == employeeID).FirstOrDefault();
+            var user = await _dbUser.GetUserByEmployeeID(employeeID);
             user.CountNotifications = user.CountNotifications + 1;
             user.ReadNotifications = false;
-            List<Realization> realizations = new List<Realization>();
-            foreach (DateTime day in ExtensionClass.EachDay(absence.Start, absence.End))
-            {
-                Realization realization = new Realization();
-                realization.Hours = 8;
-                realization.ProjectID = 1;
-                realization.RealizationTypeID = 1;
-                realization.Subject = "Absence";
-                realization.Description = "Absence";
-                realization.EmployeeID = employeeID;
-                realization.Start = day;
-                realization.DepartmentID = 1;
-                realizations.Add(realization);
-            }
-            db.Realizations.AddRange(realizations);
+            _dbRealizations.PopulateCalendarWhenEmployeeAbsent(absence.Start, absence.End, employeeID);
             await db.SaveChangesAsync();
             return Json(new EmptyResult(), JsonRequestBehavior.AllowGet);
         }
@@ -116,7 +122,7 @@ namespace Panis.Controllers
             }
             notify.EmployeeID = employeeID;
             db.Notifications.Add(notify);
-            var user = db.Users.Where(x => x.EmployeeID == employeeID).FirstOrDefault();
+            var user = await _dbUser.GetUserByEmployeeID(employeeID);
             user.CountNotifications = user.CountNotifications + 1;
             user.ReadNotifications = false;
             db.Absences.Remove(absence);

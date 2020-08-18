@@ -48,7 +48,8 @@ namespace Panis.DependencyResolution {
             For<IUserStore<ApplicationUser>>().Use<UserStore<ApplicationUser>>();
             For<DbContext>().Use(() => new ApplicationDbContext());
             For<IAuthenticationManager>().Use(() => HttpContext.Current.GetOwinContext().Authentication);
-           
+            For<IRealization>().Use<RealizationRepo>().Transient();
+            For<IProject>().Use<ProjectRepo>().Transient();
 
         }
 

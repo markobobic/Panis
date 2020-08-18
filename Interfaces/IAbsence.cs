@@ -1,4 +1,5 @@
 ﻿using Panis.Models;
+using Panis.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,5 +19,6 @@ namespace Panis.Interfaces
         Absence MapData(Absence absence, int EmployeeID);
         Task<Absence> UpdateMapDataAsync(Absence absence,int EmployeeID);
         Task SaveChangesAsync();
+        IQueryable<AbsenceAndTypeViewModel> GetRequestAbsencesAndTypes(int employeeID);
     }
 }

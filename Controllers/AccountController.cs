@@ -84,6 +84,9 @@ namespace Panis.Controllers
             switch (result)
             {
                 case SignInStatus.Success:
+                    var user = UserManager.FindByName(model.UserName);
+                    user.LastActivity = DateTimeOffset.Now;
+                    var status = UserManager.Update(user);
                     return RedirectToLocal(returnUrl);
                 case SignInStatus.LockedOut:
                     return View("Lockout");

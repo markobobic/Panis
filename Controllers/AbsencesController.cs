@@ -84,9 +84,9 @@ namespace Panis.Controllers
                    
                 }
             }
-            catch
+            catch (Exception exception)
             {
-
+                throw exception;
             }
             return new JsonResult { Data = new { status } };
            

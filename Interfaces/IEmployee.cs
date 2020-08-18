@@ -25,5 +25,8 @@ namespace Panis.Interfaces
 
         Employee MapDataEdit(Employee employeeSave, EmployeeViewModel employee, HttpPostedFileBase image);
 
+        Task<List<Employee>> GetAllTeamLeads();
+        Task<List<MediorSeniorViewModel>> GetAllMediorSenior();
+
     }
 }

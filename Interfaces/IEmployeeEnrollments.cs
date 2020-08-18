@@ -11,6 +11,7 @@ namespace Panis.Interfaces
     public interface IEmployeeEnrollments
     {
         EmployeeEnrollment MapData(EmployeeViewModel emp,int employeeID);
+        string GetSeniority(int employeeID);
 
     }
 }
