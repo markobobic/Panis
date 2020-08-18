@@ -29,5 +29,5 @@ Sending email - To HR deparment.<br />
 Rating employees - Team lead rates employees.<br />
 
 
-<p align="center">Login<img src="https://drive.google.com/file/d/1X3kJYBb8DP2sxsgcZoGOZ2MCeo5ujrPq/view?usp=sharing" width="350" title="Login"> 
+<p align="center">Login<img src="https://scontent.fbeg2-1.fna.fbcdn.net/v/t1.0-9/117878963_2650856325165983_4578639210605453630_o.jpg?_nc_cat=104&_nc_sid=8024bb&_nc_ohc=tDqqPdfMPaoAX8E4DVS&_nc_ht=scontent.fbeg2-1.fna&oh=5fb3f5ea7ec9668d651703838b21ecae&oe=5F60E593" width="350" title="Login"> 
 
