@@ -1,7 +1,5 @@
 ## Panis
-The application is intended for monitoring the absence of employees, as well as records and ratings of the performance of employees on projects. Real time notifications and chat.</br>
-
-
+The application is intended for monitoring the absence of employees, as well as records and ratings of the performance of employees on projects. Real time notifications and chat.
 The frameworks and libraries used for this app are listed below.
 <br />
 C#,ASP.NET MVC 5</br>
@@ -27,13 +25,13 @@ StructureMap(IoC)</br>
   </br>
    <p align="center">After requested absence<img src="https://scontent.fbeg2-1.fna.fbcdn.net/v/t1.0-9/117950638_2650866931831589_3334825783296158480_o.jpg?_nc_cat=103&_nc_sid=8024bb&_nc_ohc=CtZiHdgVoWEAX8cQJzW&_nc_ht=scontent.fbeg2-1.fna&oh=4294d05b4158894700df5077c1eb4247&oe=5F636570" > 
   </br>
-<p align="center">HR gets notifications and you can also see chat<img src="https://scontent.fbeg2-1.fna.fbcdn.net/v/t1.0-9/118161435_2650866971831585_7925088046672913751_o.jpg?_nc_cat=103&_nc_sid=8024bb&_nc_ohc=U7u8Mh6vo3cAX-RWKLD&_nc_ht=scontent.fbeg2-1.fna&oh=d84c60a9cb3765cc3bcada345bc9cade&oe=5F630476"> 
+<p align="center">HR gets notifications <img src="https://scontent.fbeg2-1.fna.fbcdn.net/v/t1.0-9/118161435_2650866971831585_7925088046672913751_o.jpg?_nc_cat=103&_nc_sid=8024bb&_nc_ohc=U7u8Mh6vo3cAX-RWKLD&_nc_ht=scontent.fbeg2-1.fna&oh=d84c60a9cb3765cc3bcada345bc9cade&oe=5F630476"> 
 </br>
-<p align="center">Open notification<img src="https://scontent.fbeg2-1.fna.fbcdn.net/v/t1.0-9/117973449_2650868671831415_7502703271799680985_o.jpg?_nc_cat=104&_nc_sid=8024bb&_nc_ohc=yRhVYmYU1nEAX_pJlf5&_nc_ht=scontent.fbeg2-1.fna&oh=71c7d06259eecfffb9ec94ea765118bf&oe=5F61B6B5"> 
+<p align="center">Open notification and you can also see chat<img src="https://scontent.fbeg2-1.fna.fbcdn.net/v/t1.0-9/117973449_2650868671831415_7502703271799680985_o.jpg?_nc_cat=104&_nc_sid=8024bb&_nc_ohc=yRhVYmYU1nEAX_pJlf5&_nc_ht=scontent.fbeg2-1.fna&oh=71c7d06259eecfffb9ec94ea765118bf&oe=5F61B6B5"> 
   </br>
   <p align="center">When clicked on review button (part1)<img src="https://scontent.fbeg2-1.fna.fbcdn.net/v/t1.0-9/117907614_2650868818498067_3177991895345124585_o.jpg?_nc_cat=111&_nc_sid=8024bb&_nc_ohc=tBSl6erB0vsAX_gp-sd&_nc_ht=scontent.fbeg2-1.fna&oh=214c09bddd98970ce569bc4c714fa1f6&oe=5F637CA6"> 
   </br>
-  <p align="center">When clicked on review button (part2)<img src="hhttps://scontent.fbeg2-1.fna.fbcdn.net/v/t1.0-9/117948026_2650868678498081_5769563585486023615_o.jpg?_nc_cat=107&_nc_sid=8024bb&_nc_ohc=asxwupOEFD4AX8qCaYz&_nc_ht=scontent.fbeg2-1.fna&oh=eb62f193c0a6db7fe4f3ccb8eea8f49e&oe=5F608CCB"> 
+  <p align="center">When clicked on review button (part2)<img src="https://scontent.fbeg2-1.fna.fbcdn.net/v/t1.0-9/117948026_2650868678498081_5769563585486023615_o.jpg?_nc_cat=107&_nc_sid=8024bb&_nc_ohc=asxwupOEFD4AX8qCaYz&_nc_ht=scontent.fbeg2-1.fna&oh=eb62f193c0a6db7fe4f3ccb8eea8f49e&oe=5F608CCB"> 
    </br>
   <p align="center">If HR decline<img src="https://scontent.fbeg2-1.fna.fbcdn.net/v/t1.0-9/118040480_2650856098499339_1132242229683757367_o.jpg?_nc_cat=100&_nc_sid=8024bb&_nc_ohc=Vgi1aj_ClZkAX86jYIC&_nc_ht=scontent.fbeg2-1.fna&oh=2260b1373354522875d8469c082243b3&oe=5F61BEF3"> 
    </br>
@@ -47,12 +45,6 @@ StructureMap(IoC)</br>
   
   </br>
   <p align="center">Adding employee<img src="https://scontent.fbeg2-1.fna.fbcdn.net/v/t1.0-9/117933326_2650856095166006_7061594307759032459_o.jpg?_nc_cat=111&_nc_sid=8024bb&_nc_ohc=51diK5fJhL4AX8XOiNe&_nc_ht=scontent.fbeg2-1.fna&oh=c73b4e99628cfa3496e88b6f69f50294&oe=5F600BB6"> 
- 
-
-<h4 align="center>>And much more</h4>
-
-  
-  
 
 ## Function
 
